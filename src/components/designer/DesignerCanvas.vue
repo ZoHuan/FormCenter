@@ -3,29 +3,54 @@
     <div v-if="components.length === 0" class="canvas-empty">
       <div class="empty-box"><p>拖拽组件到此处开始设计</p></div>
     </div>
-    <div v-else class="canvas-list">
-      <div
-        v-for="(comp, idx) in components"
-        :key="comp.id"
-        class="canvas-row"
-        :style="{ width: widthPct(comp.colspan) }"
-      >
-        <FieldCard
-          :schema="comp"
-          :selected="comp.id === selectedId"
-          @select="$emit('select', comp.id)"
-          @remove="$emit('remove', comp.id)"
-        />
-      </div>
-    </div>
+    <draggable
+      v-else
+      :list="localComponents"
+      item-key="id"
+      class="canvas-list"
+      handle=".drag-handle"
+      ghost-class="ghost"
+      :animation="300"
+      @change="onSortChange"
+    >
+      <template #item="{ element: comp }">
+        <div class="canvas-row" :style="{ width: widthPct(comp.colspan) }">
+          <FieldCard
+            :schema="comp"
+            :selected="comp.id === selectedId"
+            @select="$emit('select', comp.id)"
+            @remove="$emit('remove', comp.id)"
+          />
+        </div>
+      </template>
+    </draggable>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, watch } from 'vue'
+import draggable from 'vuedraggable'
 import type { ComponentType, ComponentSchema } from '@/types'
 import FieldCard from './FieldCard.vue'
-defineProps<{ components: ComponentSchema[]; selectedId: string | null }>()
-defineEmits<{ select: [id: string | null]; remove: [id: string]; move: [from: number, to: number] }>()
+
+const props = defineProps<{ components: ComponentSchema[]; selectedId: string | null }>()
+const emit = defineEmits<{ select: [id: string | null]; remove: [id: string]; move: [from: number, to: number] }>()
+
+const localComponents = computed({
+  get: () => props.components,
+  set: (val) => {
+    const fromIdx = props.components.findIndex((c) => c.id === val.find((v, i) => v.id !== props.components[i]?.id)?.id)
+    const toIdx = fromIdx >= 0 ? val.findIndex((v) => v.id === props.components[fromIdx]?.id) : -1
+    if (fromIdx >= 0 && toIdx >= 0 && fromIdx !== toIdx) {
+      emit('move', fromIdx, toIdx)
+    }
+  },
+})
+
+function onSortChange(e: { moved?: { oldIndex: number; newIndex: number } }) {
+  if (e.moved) emit('move', e.moved.oldIndex, e.moved.newIndex)
+}
+
 function onDrop(e: DragEvent) {
   const type = e.dataTransfer?.getData('componentType') as ComponentType
   if (type) window.dispatchEvent(new CustomEvent('palette-drop', { detail: { type } }))
@@ -69,6 +94,12 @@ function widthPct(c: number): string {
 .canvas-row {
   margin-bottom: 4px;
   animation: card-enter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
+.ghost {
+  opacity: 0.4;
+  border: 2px dashed var(--color-primary-light) !important;
+  border-radius: var(--radius-md);
 }
 
 @keyframes card-enter {

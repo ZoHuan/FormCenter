@@ -116,11 +116,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, reactive } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
+import { useDraft } from '@/composables/useDraft'
 import { validate } from '@/utils/validators'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
@@ -130,6 +131,8 @@ const route = useRoute()
 const router = useRouter()
 const listStore = useFormListStore()
 const subStore = useFormSubmissionStore()
+const formId = route.params.formId as string
+const { startAutoSave, stopAutoSave, save: saveDraft, clear: clearDraft, hasDraft } = useDraft(formId)
 
 const isPreview = computed(() => route.query.preview === '1')
 const previewMode = ref<'mobile' | 'pc'>('mobile')
@@ -169,10 +172,9 @@ onMounted(() => {
 })
 
 function initForm(form: FormSchema) {
-  form.components.forEach((c) => {
-    if (c.field) formData[c.field] = c.defaultValue ?? ''
-  })
+  form.components.forEach((c) => { if (c.field) formData[c.field] = c.defaultValue ?? '' })
   loadState.value = 'ready'
+  startAutoSave(() => ({ ...formData }))
 }
 
 const visibleComponents = computed(() => schema.value?.components.filter((c) => !c.hidden) ?? [])
@@ -204,9 +206,35 @@ function discardDraft() {
 
 function handleSaveDraft() {
   if (!schema.value) return
-  subStore.saveDraft(schema.value.id, { ...formData })
+  saveDraft({ ...formData })
   ElMessage.success('已暂存')
 }
+
+async function handleSubmit() {
+  if (!schema.value) return
+  let hasError = false
+  for (const c of visibleComponents.value) {
+    const err = validate(formData[c.field], { required: c.required, ...(c.props as Record<string, unknown>) })
+    if (err) { fieldErrors[c.field] = err; hasError = true } else { delete fieldErrors[c.field] }
+  }
+  if (hasError) {
+    const first = visibleComponents.value.find((c) => fieldErrors[c.field])
+    if (first) document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    return
+  }
+  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', { confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning' })
+  submitting.value = true
+  const ok = subStore.submit(schema.value.id, { ...formData })
+  submitting.value = false
+  if (ok) { clearDraft(); stopAutoSave(); loadState.value = 'submitted' }
+  else ElMessage.error('提交失败，请重试')
+}
+
+function resetForm() {
+  loadState.value = 'ready'
+  if (schema.value) initForm(schema.value)
+}
+onUnmounted(stopAutoSave)
 
 async function handleSubmit() {
   if (!schema.value) return
