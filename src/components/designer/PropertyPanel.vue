@@ -76,11 +76,12 @@
         <TriggerRuleEditor v-if="hasOptions" :component="comp" :all-components="allComponents" @update="(p) => emit('update', p)" />
         <CalcEditor v-if="calcTypes.includes(comp.type)" :component="comp" @update="(p) => emit('update', p)" />
         <RateEditor v-if="comp.type === 'rate'" :component="comp" @update="(p) => emit('update', p)" />
+        <RelationEditor v-if="comp.type === 'relation'" :component="comp" @update="(p) => emit('update', p)" />
       </div>
     </div>
-    <div v-if="comp.type === 'table'" class="section">
+    <div v-if="comp.type === 'table' || comp.type === 'cross-table'" class="section">
       <div class="section-header" @click="toggleSection('table')">
-        <span class="section-arrow" :class="{ open: openSections.table }">▸</span>表格列管理
+        <span class="section-arrow" :class="{ open: openSections.table }">▸</span>{{ comp.type === 'cross-table' ? '交叉表管理' : '表格列管理' }}
       </div>
       <div v-show="openSections.table" class="section-body">
         <div v-for="(col, i) in tableColumns" :key="i" class="table-col-item">
@@ -111,6 +112,7 @@ import type { ComponentSchema } from '@/types'
 import TriggerRuleEditor from './TriggerRuleEditor.vue'
 import RateEditor from './RateEditor.vue'
 import CalcEditor from './CalcEditor.vue'
+import RelationEditor from './RelationEditor.vue'
 
 const calcTypes = ['input', 'numeric', 'date', 'textarea']
 
