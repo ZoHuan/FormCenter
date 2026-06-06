@@ -76,12 +76,12 @@ function handlePreview() {
 
 <style scoped lang="scss">
 .designer-page { height: 100vh; display: flex; flex-direction: column; }
-.toolbar { height: 56px; display: flex; align-items: center; padding: 0 16px; gap: 16px; border-bottom: 1px solid #E8E5E0; background: #fff; }
+.toolbar { height: 56px; display: flex; align-items: center; padding: 0 16px; gap: 16px; border-bottom: 1px solid var(--color-border); background: var(--color-card); }
 .title-input { border: none; font-size: 18px; font-weight: 600; flex: 1; outline: none; }
 .toolbar-right { display: flex; gap: 8px; }
 .designer-body { flex: 1; display: flex; overflow: hidden; }
-.panel-left { width: 260px; border-right: 1px solid #E8E5E0; overflow-y: auto; background: #FAFAF8; }
-.canvas-area { flex: 1; overflow-y: auto; background: #F0EFEC; padding: 24px; }
-.panel-right { width: 300px; border-left: 1px solid #E8E5E0; overflow-y: auto; background: #fff; }
-.no-select { padding: 24px; text-align: center; color: #9C9790; font-size: 14px; }
+.panel-left { width: 260px; border-right: 1px solid var(--color-border); overflow-y: auto; background: var(--color-primary-bg); }
+.canvas-area { flex: 1; overflow-y: auto; background: var(--color-canvas); padding: 24px; }
+.panel-right { width: 300px; border-left: 1px solid var(--color-border); overflow-y: auto; background: var(--color-card); }
+.no-select { padding: 24px; text-align: center; color: var(--color-text-muted); font-size: 14px; }
 </style>

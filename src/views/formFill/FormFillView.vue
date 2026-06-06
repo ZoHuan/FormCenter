@@ -172,22 +172,22 @@ function resetForm() {
 </script>
 
 <style scoped lang="scss">
-.fill-page { min-height: 100vh; background: #F8F7F5; display: flex; justify-content: center; padding: 24px 16px; }
+.fill-page { min-height: 100vh; background: var(--color-page); display: flex; justify-content: center; padding: 24px 16px; }
 .fill-center { max-width: 720px; width: 100%; display: flex; align-items: center; justify-content: center; min-height: 60vh; }
 .fill-success { flex-direction: column; text-align: center; gap: 16px; }
-.success-icon { width: 72px; height: 72px; background: #5B7B4A; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto; }
+.success-icon { width: 72px; height: 72px; background: var(--color-success); color: var(--color-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto; }
 .success-actions { display: flex; gap: 12px; margin-top: 16px; }
 .draft-dialog { text-align: center; display: flex; flex-direction: column; gap: 12px; }
-.draft-time { color: #9C9790; font-size: 13px; }
+.draft-time { color: var(--color-text-muted); font-size: 13px; }
 .fill-form { max-width: 720px; width: 100%; }
-.form-card { background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.form-card { background: var(--color-card); border-radius: 12px; padding: 32px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
 .form-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
-.form-desc { color: #6B6560; font-size: 14px; margin-bottom: 24px; }
+.form-desc { color: var(--color-text-secondary); font-size: 14px; margin-bottom: 24px; }
 .fields { display: flex; flex-direction: column; gap: 20px; }
 .field-item { display: flex; flex-direction: column; gap: 4px; }
 .field-label { font-size: 13px; font-weight: 500; }
-.required { color: #B54A3A; }
+.required { color: var(--color-error); }
 .field-input :deep(.el-input__wrapper), .field-input :deep(.el-select__wrapper) { border-radius: 8px; }
-.field-error { color: #B54A3A; font-size: 12px; }
+.field-error { color: var(--color-error); font-size: 12px; }
 .form-actions { display: flex; gap: 12px; margin-top: 32px; justify-content: flex-end; }
 </style>

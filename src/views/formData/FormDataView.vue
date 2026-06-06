@@ -41,4 +41,4 @@ function handleExport() {
 }
 function formatTime(ts:number){return new Date(ts).toLocaleString('zh-CN')}
 </script>
-<style scoped lang="scss">.data-page{min-height:100vh;background:#F8F7F5}.data-content{max-width:1100px;margin:0 auto;padding:32px 24px}.data-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}.data-header h2{font-size:20px;font-weight:600;flex:1}</style>
+<style scoped lang="scss">.data-page{min-height:100vh;background:var(--color-page)}.data-content{max-width:1100px;margin:0 auto;padding:32px 24px}.data-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}.data-header h2{font-size:20px;font-weight:600;flex:1}</style>

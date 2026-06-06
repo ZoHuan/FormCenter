@@ -42,19 +42,58 @@ const typeLabel = computed(() => {
 </script>
 
 <style scoped lang="scss">
-.field-card { background: #fff; border: 1px solid #E8E5E0; border-radius: 8px; overflow: hidden; transition: border-color .15s, box-shadow .15s; }
-.field-card:hover { border-color: #C8C4BD; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-.field-card.selected { border: 2px solid #2858C8; box-shadow: 0 0 0 4px rgba(40,88,200,.08); }
-.card-header { height: 32px; display: flex; align-items: center; padding: 0 8px; background: #FAFAF8; border-bottom: 1px solid #F0EFEC; gap: 4px; }
-.drag-handle { color: #9C9790; font-size: 12px; cursor: grab; width: 16px; text-align: center; }
-.card-label { font-size: 13px; font-weight: 500; color: #1A1814; }
-.required-star { color: #B54A3A; font-size: 11px; margin-left: 2px; }
-.type-tag { margin-left: auto; font-size: 11px; color: #9C9790; background: #F0EFEC; border-radius: 3px; padding: 1px 6px; }
-.btn-delete { border: none; background: none; color: #9C9790; font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1; }
-.btn-delete:hover { color: #B54A3A; }
-.card-preview { padding: 8px 12px 12px; min-height: 36px; display: flex; align-items: center; }
-.preview-input { color: #9C9790; font-size: 13px; }
-.preview-select { color: #9C9790; font-size: 13px; }
-.preview-table { color: #9C9790; font-size: 13px; }
-.preview-sign { color: #9C9790; font-size: 13px; }
+.field-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+
+  &:hover {
+    border-color: var(--color-border-hover);
+    box-shadow: var(--shadow-xs);
+  }
+
+  &.selected {
+    border: 2px solid var(--color-primary);
+    box-shadow: var(--shadow-focus);
+  }
+}
+
+.card-header {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: var(--color-primary-bg);
+  border-bottom: 1px solid var(--color-canvas);
+  gap: 4px;
+}
+
+.drag-handle { color: var(--color-text-muted); font-size: 12px; cursor: grab; width: 16px; text-align: center; }
+.card-label { font-size: 13px; font-weight: 500; color: var(--color-text); }
+.required-star { color: var(--color-error); font-size: 11px; margin-left: 2px; }
+
+.type-tag {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: var(--color-canvas);
+  border-radius: 3px;
+  padding: 1px 6px;
+}
+
+.btn-delete {
+  border: none; background: none; color: var(--color-text-muted);
+  font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1;
+  &:hover { color: var(--color-error); }
+}
+
+.card-preview {
+  padding: 8px 12px 12px; min-height: 36px; display: flex; align-items: center;
+}
+
+.preview-input, .preview-select, .preview-table, .preview-sign {
+  color: var(--color-text-muted); font-size: 13px;
+}
 </style>
