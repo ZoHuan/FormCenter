@@ -48,7 +48,7 @@ const labels: Record<string, string> = {
 function typeLabel(t: string) { return labels[t] ?? t }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .palette { padding: 12px 8px; }
 .palette-title { font-size: 13px; font-weight: 600; padding: 4px 8px 12px; }
 .group-title { font-size: 11px; font-weight: 500; color: #6B6560; padding: 6px 8px; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 4px; }

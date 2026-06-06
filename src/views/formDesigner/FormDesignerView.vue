@@ -74,7 +74,7 @@ function handlePreview() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .designer-page { height: 100vh; display: flex; flex-direction: column; }
 .toolbar { height: 56px; display: flex; align-items: center; padding: 0 16px; gap: 16px; border-bottom: 1px solid #E8E5E0; background: #fff; }
 .title-input { border: none; font-size: 18px; font-weight: 600; flex: 1; outline: none; }

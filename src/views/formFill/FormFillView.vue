@@ -171,7 +171,7 @@ function resetForm() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .fill-page { min-height: 100vh; background: #F8F7F5; display: flex; justify-content: center; padding: 24px 16px; }
 .fill-center { max-width: 720px; width: 100%; display: flex; align-items: center; justify-content: center; min-height: 60vh; }
 .fill-success { flex-direction: column; text-align: center; gap: 16px; }

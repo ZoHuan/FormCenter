@@ -95,7 +95,7 @@ function onNumRangeChange() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .prop-panel { padding: 16px; }
 .prop-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
 .section { margin-bottom: 4px; }

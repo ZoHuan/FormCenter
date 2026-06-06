@@ -106,7 +106,7 @@ function handleTemplate(key: string) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .list-page { min-height: 100vh; background: var(--color-page); }
 .list-content { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
 .list-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }

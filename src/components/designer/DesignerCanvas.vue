@@ -51,7 +51,7 @@ function widthPct(c: number): string {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .canvas { min-height: 400px; }
 .canvas-empty { display: flex; align-items: center; justify-content: center; min-height: 300px; }
 .empty-box { border: 2px dashed #C8C4BD; border-radius: 12px; padding: 32px 48px; text-align: center; }

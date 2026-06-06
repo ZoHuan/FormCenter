@@ -41,7 +41,7 @@ const typeLabel = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .field-card { background: #fff; border: 1px solid #E8E5E0; border-radius: 8px; overflow: hidden; transition: border-color .15s, box-shadow .15s; }
 .field-card:hover { border-color: #C8C4BD; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
 .field-card.selected { border: 2px solid #2858C8; box-shadow: 0 0 0 4px rgba(40,88,200,.08); }
