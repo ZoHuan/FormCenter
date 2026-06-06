@@ -40,8 +40,17 @@
         <span class="section-arrow" :class="{ open: openSections.options }">▸</span>选项
       </div>
       <div v-show="openSections.options" class="section-body">
-        <div class="prop-row">
-          <label>默认值</label><el-input v-model="comp.defaultValue" size="small" @input="emitUpdate" />
+        <div v-for="(opt, i) in optionList" :key="i" class="option-row">
+          <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
+          <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
+          <el-button link type="danger" size="small" @click="removeOption(i)">×</el-button>
+        </div>
+        <el-button link type="primary" size="small" @click="addOption">+ 添加选项</el-button>
+        <div class="prop-row" style="margin-top:8px">
+          <label>默认值</label>
+          <el-select v-model="comp.defaultValue" size="small" clearable @change="emitUpdate">
+            <el-option v-for="opt in optionList" :key="opt.value" :label="opt.label" :value="opt.value" />
+          </el-select>
         </div>
       </div>
     </div>
@@ -83,6 +92,23 @@ function emitUpdate() {
 const hasOptions = computed(() => ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree'].includes(comp.type))
 const hasTextLimit = computed(() => ['input', 'textarea'].includes(comp.type))
 const isNumeric = computed(() => comp.type === 'numeric')
+
+const optionList = computed<{ label: string; value: string }[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.options as Array<{ label: string; value: string }>) ?? [],
+  set: () => {},
+})
+
+function addOption() {
+  const list = [...optionList.value, { label: `选项${optionList.value.length + 1}`, value: `${optionList.value.length}` }]
+  ;(comp.props as Record<string, unknown>).options = list
+  emitUpdate()
+}
+
+function removeOption(index: number) {
+  const list = optionList.value.filter((_: unknown, i: number) => i !== index)
+  ;(comp.props as Record<string, unknown>).options = list
+  emitUpdate()
+}
 const maxLen = computed({
   get: () => ((comp.props as Record<string, unknown>)?.maxLength as number) ?? 0,
   set: () => {},
