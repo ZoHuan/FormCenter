@@ -4,7 +4,17 @@
       <el-button link @click="handleBack">← 返回</el-button>
       <input v-model="formTitle" class="title-input" placeholder="请输入表单标题" @blur="onTitleBlur" />
       <div class="toolbar-right">
-        <el-button @click="handlePreview" :disabled="!schema?.id">预览</el-button>
+        <el-dropdown trigger="click" style="margin-right:8px">
+          <el-button>更多 ▾</el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="toggleStatus('draft')" v-if="schema?.status !== 'draft'">切换为草稿</el-dropdown-item>
+              <el-dropdown-item @click="toggleStatus('open')" v-if="schema?.status !== 'open'">切换为收集中</el-dropdown-item>
+              <el-dropdown-item @click="toggleStatus('closed')" v-if="schema?.status !== 'closed'">切换为已关闭</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <el-button @click="handlePreview">预览</el-button>
         <el-button type="primary" @click="handleSave">保存</el-button>
       </div>
     </div>
@@ -122,8 +132,15 @@ function handleSave() {
   if (route.path === '/formDesigner') router.replace(`/formDesigner/${id}`)
 }
 
+function toggleStatus(status: 'draft' | 'open' | 'closed') {
+  if (status === 'open' && store.components.length === 0) return ElMessage.warning('请先添加组件')
+  if (store.schema) { store.schema.status = status; store.save() }
+  ElMessage.success(status === 'open' ? '已发布，可通过链接收集数据' : status === 'closed' ? '已停止收集' : '已切换为草稿')
+}
+
 function handlePreview() {
-  if (store.schema?.id) window.open(`/fill/${store.schema.id}?preview=1`)
+  const id = store.schema?.id || store.save()
+  if (id) window.open(`/fill/${id}?preview=1`)
 }
 </script>
 
