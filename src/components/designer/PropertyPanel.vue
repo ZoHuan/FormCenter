@@ -74,6 +74,7 @@
       </div>
       <div v-show="openSections.advanced" class="section-body">
         <TriggerRuleEditor v-if="hasOptions" :component="comp" :all-components="allComponents" @update="(p) => emit('update', p)" />
+        <RateEditor v-if="comp.type === 'rate'" :component="comp" @update="(p) => emit('update', p)" />
       </div>
     </div>
     <div v-if="comp.type === 'table'" class="section">
@@ -107,6 +108,7 @@
 import { reactive, computed, watch } from 'vue'
 import type { ComponentSchema } from '@/types'
 import TriggerRuleEditor from './TriggerRuleEditor.vue'
+import RateEditor from './RateEditor.vue'
 
 const props = defineProps<{ component: ComponentSchema; allComponents?: ComponentSchema[] }>()
 const allComponents = computed(() => props.allComponents ?? [])
