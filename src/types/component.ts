@@ -25,3 +25,62 @@ export type ComponentType =
 export type TableColumnType =
   | 'input' | 'textarea' | 'numeric' | 'date'
   | 'selection' | 'chooser' | 'multi-chooser' | 'image'
+
+export interface TriggerRule {
+  id: string
+  type: 'trigger'
+  sourceField: string
+  sourceValue: string
+  targetField: string
+  action: 'show' | 'hide' | 'require' | 'optional' | 'enable' | 'disable'
+}
+
+export interface ValidationRule {
+  id: string
+  type: 'validation' | 'calculation' | 'logic' | 'reset'
+  description?: string
+  expression?: string
+  targetField?: string
+  condition?: string
+  message?: string
+  sourceField?: string
+  resetTargets?: string[]
+}
+
+export interface ComponentBase {
+  id: string
+  type: ComponentType
+  field: string
+  label: string
+  required: boolean
+  hidden: boolean
+  editable: boolean
+  colspan: 1 | 2 | 3 | 4
+  appStyle: 0 | 1
+  defaultValue?: unknown
+  description?: string
+  tooltip?: string
+  triggerRules?: TriggerRule[]
+  validationRules?: ValidationRule[]
+}
+
+export interface TableColumnSchema {
+  id: string
+  title: string
+  field: string
+  type: TableColumnType
+  width?: number
+  required?: boolean
+  hidden?: boolean
+  editable?: boolean
+  description?: string
+  defaultValue?: unknown
+}
+
+export type ComponentProps = Record<string, unknown>
+
+export type ComponentSchema = ComponentBase & ComponentProps & {
+  subComponents?: ComponentSchema[]
+  fillup?: unknown[]
+}
+
