@@ -1,0 +1,17 @@
+{
+  "name": "FormCenter",
+  "short_name": "FormCenter",
+  "description": "轻量表单构建与数据收集工具",
+  "start_url": "/forms",
+  "display": "standalone",
+  "background_color": "#F8F7F5",
+  "theme_color": "#2858C8",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "220x220",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
