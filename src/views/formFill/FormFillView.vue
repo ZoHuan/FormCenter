@@ -236,49 +236,11 @@ function resetForm() {
 }
 onUnmounted(stopAutoSave)
 
-async function handleSubmit() {
-  if (!schema.value) return
-
-  let hasError = false
-  for (const c of visibleComponents.value) {
-    const err = validate(formData[c.field], { required: c.required, ...(c.props as Record<string, unknown>) })
-    if (err) {
-      fieldErrors[c.field] = err
-      hasError = true
-    } else {
-      delete fieldErrors[c.field]
-    }
-  }
-  if (hasError) {
-    const first = visibleComponents.value.find((c) => fieldErrors[c.field])
-    if (first)
-      document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    return
-  }
-
-  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
-  submitting.value = true
-  const ok = subStore.submit(schema.value.id, { ...formData })
-  submitting.value = false
-  if (ok) {
-    subStore.clearDraft(schema.value.id)
-    loadState.value = 'submitted'
-  } else ElMessage.error('提交失败，请重试')
-}
-
 function handleBackToDesigner() {
   if (schema.value?.id) window.open(`/formDesigner/${schema.value.id}`, '_self')
   else router.push('/forms')
 }
 
-function resetForm() {
-  loadState.value = 'ready'
-  if (schema.value) initForm(schema.value)
-}
 </script>
 
 <style scoped lang="scss">
