@@ -57,44 +57,7 @@
                 <span v-if="comp.required" class="required">*</span>
               </label>
               <div class="field-input">
-                <el-input
-                  v-if="comp.type === 'input' || comp.type === 'textarea' || comp.type === 'serial-number'"
-                  v-model="formData[comp.field]"
-                  :placeholder="comp.description"
-                  :type="comp.type === 'textarea' ? 'textarea' : 'text'"
-                  :disabled="comp.type === 'serial-number'"
-                />
-                <el-input-number
-                  v-else-if="comp.type === 'numeric'"
-                  v-model="formData[comp.field]"
-                  :placeholder="comp.description"
-                />
-                <el-select
-                  v-else-if="isSelectType(comp.type)"
-                  v-model="formData[comp.field]"
-                  :placeholder="comp.description"
-                >
-                  <el-option
-                    v-for="opt in ((comp.props as Record<string, unknown>)?.options as Array<{
-                      label: string
-                      value: string
-                    }>) ?? []"
-                    :key="opt.value"
-                    :label="opt.label"
-                    :value="opt.value"
-                  />
-                </el-select>
-                <el-rate v-else-if="comp.type === 'rate'" v-model="formData[comp.field]" />
-                <el-checkbox v-else-if="comp.type === 'commitment'" v-model="formData[comp.field]" :label="comp.description" />
-                <el-date-picker v-else-if="comp.type === 'date' || comp.type === 'date-range'" v-model="formData[comp.field]" :type="comp.type === 'date-range' ? 'daterange' : 'date'" />
-                <div v-else-if="comp.type === 'signature'" class="sig-pad">
-                  <canvas v-if="formData[comp.field]" class="sig-preview" />
-                  <el-button v-else size="small" @click="formData[comp.field] = ''">点击签名</el-button>
-                </div>
-                <div v-else-if="comp.type === 'QRCode'" class="qr-display">
-                  <el-input v-model="formData[comp.field]" placeholder="输入二维码内容" disabled />
-                </div>
-                <el-input v-else v-model="formData[comp.field]" :placeholder="comp.description" />
+                <FieldRenderer :comp="comp" :model-value="formData[comp.field]" @update:model-value="(v) => (formData[comp.field] = v)" />
               </div>
               <p v-if="fieldErrors[comp.field]" class="field-error">{{ fieldErrors[comp.field] }}</p>
             </div>
@@ -125,6 +88,7 @@ import { useDraft } from '@/composables/useDraft'
 import { validate } from '@/utils/validators'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
+import FieldRenderer from '@/components/fields/FieldRenderer.vue'
 import type { FormSchema, ComponentSchema } from '@/types'
 
 const route = useRoute()
