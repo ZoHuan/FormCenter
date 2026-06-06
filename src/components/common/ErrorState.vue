@@ -1,5 +1,13 @@
-<template><div class="state-container"><p class="error-title">{{ text }}</p><button v-if="actionText" class="retry-btn" @click="$emit('action')">{{ actionText }}</button></div></template>
-<script setup lang="ts">defineProps<{ text?: string; actionText?: string }>(); defineEmits(['action'])</script>
+<template>
+  <div class="state-container">
+    <p class="error-title">{{ text }}</p>
+    <button v-if="actionText" class="retry-btn" @click="$emit('action')">{{ actionText }}</button>
+  </div>
+</template>
+<script setup lang="ts">
+defineProps<{ text?: string; actionText?: string }>()
+defineEmits(['action'])
+</script>
 <style scoped lang="scss">
 .state-container {
   display: flex;
@@ -9,7 +17,11 @@
   gap: 16px;
 }
 
-.error-title { font-size: 16px; font-weight: 600; color: var(--color-text); }
+.error-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
 
 .retry-btn {
   padding: 8px 20px;
@@ -20,6 +32,8 @@
   font-size: 14px;
   cursor: pointer;
 
-  &:hover { background: var(--color-primary-bg); }
+  &:hover {
+    background: var(--color-primary-bg);
+  }
 }
 </style>

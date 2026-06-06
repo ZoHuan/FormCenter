@@ -11,7 +11,9 @@
       <span v-if="isTextLike" class="preview-input">{{ schema.description || '请输入' }}</span>
       <span v-else-if="isSelectLike" class="preview-select">请选择 ▾</span>
       <span v-else-if="isDate" class="preview-input">____/__/__</span>
-      <span v-else-if="schema.type === 'table'" class="preview-table">表格 ({{ (schema.subComponents?.length ?? 0) }} 列)</span>
+      <span v-else-if="schema.type === 'table'" class="preview-table"
+        >表格 ({{ schema.subComponents?.length ?? 0 }} 列)</span
+      >
       <span v-else-if="schema.type === 'signature'" class="preview-sign">签名区</span>
       <span v-else class="preview-input">{{ schema.type }}</span>
     </div>
@@ -26,16 +28,53 @@ const props = defineProps<{ schema: ComponentSchema; selected: boolean }>()
 defineEmits<{ select: []; remove: [] }>()
 
 const isTextLike = computed(() => ['input', 'textarea', 'numeric', 'serial-number'].includes(props.schema.type))
-const isSelectLike = computed(() => ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'region', 'map-location', 'user-tree', 'org-tree'].includes(props.schema.type))
+const isSelectLike = computed(() =>
+  [
+    'chooser',
+    'multi-chooser',
+    'selection',
+    'cascader',
+    'tree',
+    'region',
+    'map-location',
+    'user-tree',
+    'org-tree',
+  ].includes(props.schema.type),
+)
 const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type))
 
 const typeLabel = computed(() => {
   const m: Record<string, string> = {
-    input: '入', textarea: '多', numeric: '#', 'serial-number': 'NO', chooser: '○', 'multi-chooser': '☐', selection: '▾',
-    cascader: '└→', tree: '🌳', date: '日', 'date-range': '日↔', image: '📎', singleImage: '🖼', signature: '✍',
-    rate: '★', table: '表', 'cross-table': '交', relation: '链', commitment: '☑', region: '地', 'map-location': '📍',
-    'user-tree': '👤', 'org-tree': '🏢', 'signature-name': '签', QRCode: '码', title: 'T', subtitle: 't', 'group-title': 'G',
-    separator: '—', 'point-out': 'ⓘ',
+    input: '入',
+    textarea: '多',
+    numeric: '#',
+    'serial-number': 'NO',
+    chooser: '○',
+    'multi-chooser': '☐',
+    selection: '▾',
+    cascader: '└→',
+    tree: '🌳',
+    date: '日',
+    'date-range': '日↔',
+    image: '📎',
+    singleImage: '🖼',
+    signature: '✍',
+    rate: '★',
+    table: '表',
+    'cross-table': '交',
+    relation: '链',
+    commitment: '☑',
+    region: '地',
+    'map-location': '📍',
+    'user-tree': '👤',
+    'org-tree': '🏢',
+    'signature-name': '签',
+    QRCode: '码',
+    title: 'T',
+    subtitle: 't',
+    'group-title': 'G',
+    separator: '—',
+    'point-out': 'ⓘ',
   }
   return m[props.schema.type] ?? props.schema.type
 })
@@ -47,7 +86,9 @@ const typeLabel = computed(() => {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: border-color .15s, box-shadow .15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 
   &:hover {
     border-color: var(--color-border-hover);
@@ -70,9 +111,23 @@ const typeLabel = computed(() => {
   gap: 4px;
 }
 
-.drag-handle { color: var(--color-text-muted); font-size: 12px; cursor: grab; width: 16px; text-align: center; }
-.card-label { font-size: 13px; font-weight: 500; color: var(--color-text); }
-.required-star { color: var(--color-error); font-size: 11px; margin-left: 2px; }
+.drag-handle {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  cursor: grab;
+  width: 16px;
+  text-align: center;
+}
+.card-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+.required-star {
+  color: var(--color-error);
+  font-size: 11px;
+  margin-left: 2px;
+}
 
 .type-tag {
   margin-left: auto;
@@ -84,16 +139,30 @@ const typeLabel = computed(() => {
 }
 
 .btn-delete {
-  border: none; background: none; color: var(--color-text-muted);
-  font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1;
-  &:hover { color: var(--color-error); }
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  &:hover {
+    color: var(--color-error);
+  }
 }
 
 .card-preview {
-  padding: 8px 12px 12px; min-height: 36px; display: flex; align-items: center;
+  padding: 8px 12px 12px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
 }
 
-.preview-input, .preview-select, .preview-table, .preview-sign {
-  color: var(--color-text-muted); font-size: 13px;
+.preview-input,
+.preview-select,
+.preview-table,
+.preview-sign {
+  color: var(--color-text-muted);
+  font-size: 13px;
 }
 </style>

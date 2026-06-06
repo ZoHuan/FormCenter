@@ -18,7 +18,14 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
 
   switch (type) {
     case 'title':
-      return { ...base, type: 'title', label: '大标题', field: '', colspan: 1, props: { fontSize: 24, textAlign: 'center' } }
+      return {
+        ...base,
+        type: 'title',
+        label: '大标题',
+        field: '',
+        colspan: 1,
+        props: { fontSize: 24, textAlign: 'center' },
+      }
     case 'subtitle':
       return { ...base, type: 'subtitle', label: '小标题', field: '', colspan: 1, props: { fontSize: 18 } }
     case 'group-title':
@@ -30,17 +37,55 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
     case 'input':
       return { ...base, type: 'input', label: '单行文本', description: '请输入', props: { maxLength: 100 } }
     case 'textarea':
-      return { ...base, type: 'textarea', label: '多行文本', description: '请输入', props: { autoSize: true, minRows: 1, maxRows: 10 } }
+      return {
+        ...base,
+        type: 'textarea',
+        label: '多行文本',
+        description: '请输入',
+        props: { autoSize: true, minRows: 1, maxRows: 10 },
+      }
     case 'numeric':
       return { ...base, type: 'numeric', label: '数字', description: '请输入' }
     case 'serial-number':
       return { ...base, type: 'serial-number', label: '编号', editable: false }
     case 'chooser':
-      return { ...base, type: 'chooser', label: '单选框', props: { options: [{ label: '选项1', value: '0' }, { label: '选项2', value: '1' }] } }
+      return {
+        ...base,
+        type: 'chooser',
+        label: '单选框',
+        props: {
+          options: [
+            { label: '选项1', value: '0' },
+            { label: '选项2', value: '1' },
+          ],
+        },
+      }
     case 'multi-chooser':
-      return { ...base, type: 'multi-chooser', label: '复选框', props: { options: [{ label: '选项1', value: '0' }, { label: '选项2', value: '1' }], layoutDirection: 'horizontal' } }
+      return {
+        ...base,
+        type: 'multi-chooser',
+        label: '复选框',
+        props: {
+          options: [
+            { label: '选项1', value: '0' },
+            { label: '选项2', value: '1' },
+          ],
+          layoutDirection: 'horizontal',
+        },
+      }
     case 'selection':
-      return { ...base, type: 'selection', label: '下拉框', description: '请选择', props: { options: [{ label: '选项1', value: '0' }, { label: '选项2', value: '1' }] } }
+      return {
+        ...base,
+        type: 'selection',
+        label: '下拉框',
+        description: '请选择',
+        props: {
+          options: [
+            { label: '选项1', value: '0' },
+            { label: '选项2', value: '1' },
+          ],
+        },
+      }
     case 'cascader':
       return { ...base, type: 'cascader', label: '级联选框', description: '请选择' }
     case 'tree':
@@ -48,7 +93,13 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
     case 'date':
       return { ...base, type: 'date', label: '日期', description: '请选择日期', props: { dateType: 'date' } }
     case 'date-range':
-      return { ...base, type: 'date-range', label: '日期区间', description: '请选择日期区间', props: { dateType: 'daterange' } }
+      return {
+        ...base,
+        type: 'date-range',
+        label: '日期区间',
+        description: '请选择日期区间',
+        props: { dateType: 'daterange' },
+      }
     case 'image':
       return { ...base, type: 'image', label: '文件附件', props: { maxCount: 3, maxSize: 10240 } }
     case 'singleImage':
@@ -58,9 +109,21 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
     case 'rate':
       return { ...base, type: 'rate', label: '评分', props: { maxScore: 5, icon: 'star' } }
     case 'table':
-      return { ...base, type: 'table', label: '表格', subComponents: [], props: { showTitle: true, initialRows: 3, columns: [], showIndex: true } }
+      return {
+        ...base,
+        type: 'table',
+        label: '表格',
+        subComponents: [],
+        props: { showTitle: true, initialRows: 3, columns: [], showIndex: true },
+      }
     case 'cross-table':
-      return { ...base, type: 'cross-table', label: '交叉表', subComponents: [], props: { showTitle: true, initialRows: 3, columns: [], showIndex: true } }
+      return {
+        ...base,
+        type: 'cross-table',
+        label: '交叉表',
+        subComponents: [],
+        props: { showTitle: true, initialRows: 3, columns: [], showIndex: true },
+      }
     case 'relation':
       return { ...base, type: 'relation', label: '关联查询', props: { showTitle: true } }
     case 'commitment':

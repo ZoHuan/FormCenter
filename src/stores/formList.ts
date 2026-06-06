@@ -13,7 +13,7 @@ export const useFormListStore = defineStore('formList', () => {
   const filteredForms = computed(() =>
     keyword.value
       ? forms.value.filter((f) => f.title.toLowerCase().includes(keyword.value.toLowerCase()))
-      : forms.value
+      : forms.value,
   )
 
   function init() {
@@ -35,7 +35,16 @@ export const useFormListStore = defineStore('formList', () => {
 
   function create(title: string): FormSchema {
     const now = Date.now()
-    const schema: FormSchema = { id: nanoid(), title, description: '', status: 'draft', components: [], version: 1, createdAt: now, updatedAt: now }
+    const schema: FormSchema = {
+      id: nanoid(),
+      title,
+      description: '',
+      status: 'draft',
+      components: [],
+      version: 1,
+      createdAt: now,
+      updatedAt: now,
+    }
     forms.value.push(schema)
     save()
     return schema

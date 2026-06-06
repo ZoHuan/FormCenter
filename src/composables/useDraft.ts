@@ -13,7 +13,10 @@ export function useDraft(formId: string) {
   }
 
   function stopAutoSave() {
-    if (timer) { clearInterval(timer); timer = null }
+    if (timer) {
+      clearInterval(timer)
+      timer = null
+    }
   }
 
   function save(data: Record<string, unknown>) {

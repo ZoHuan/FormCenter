@@ -12,7 +12,7 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
   const isDirty = ref(false)
 
   const selectedComponent = computed(() =>
-    selectedId.value ? components.value.find((c) => c.id === selectedId.value) ?? null : null
+    selectedId.value ? (components.value.find((c) => c.id === selectedId.value) ?? null) : null,
   )
 
   function load(id: string) {
@@ -28,7 +28,16 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
 
   function reset() {
     const now = Date.now()
-    schema.value = { id: '', title: '', description: '', status: 'draft', components: [], version: 1, createdAt: now, updatedAt: now }
+    schema.value = {
+      id: '',
+      title: '',
+      description: '',
+      status: 'draft',
+      components: [],
+      version: 1,
+      createdAt: now,
+      updatedAt: now,
+    }
     components.value = []
     selectedId.value = null
     isDirty.value = false
@@ -90,5 +99,19 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
     return schema.value.id
   }
 
-  return { schema, components, selectedId, isDirty, selectedComponent, load, reset, addComponent, removeComponent, updateComponent, selectComponent, moveComponent, save }
+  return {
+    schema,
+    components,
+    selectedId,
+    isDirty,
+    selectedComponent,
+    load,
+    reset,
+    addComponent,
+    removeComponent,
+    updateComponent,
+    selectComponent,
+    moveComponent,
+    save,
+  }
 })

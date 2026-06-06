@@ -4,8 +4,18 @@
       <div class="empty-box"><p>拖拽组件到此处开始设计</p></div>
     </div>
     <div v-else class="canvas-list">
-      <div v-for="(comp, idx) in components" :key="comp.id" class="canvas-row" :style="{ width: widthPct(comp.colspan) }">
-        <FieldCard :schema="comp" :selected="comp.id === selectedId" @select="$emit('select', comp.id)" @remove="$emit('remove', comp.id)" />
+      <div
+        v-for="(comp, idx) in components"
+        :key="comp.id"
+        class="canvas-row"
+        :style="{ width: widthPct(comp.colspan) }"
+      >
+        <FieldCard
+          :schema="comp"
+          :selected="comp.id === selectedId"
+          @select="$emit('select', comp.id)"
+          @remove="$emit('remove', comp.id)"
+        />
       </div>
     </div>
   </div>
@@ -20,23 +30,43 @@ function onDrop(e: DragEvent) {
   const type = e.dataTransfer?.getData('componentType') as ComponentType
   if (type) window.dispatchEvent(new CustomEvent('palette-drop', { detail: { type } }))
 }
-function widthPct(c: number): string { if (c === 2) return '50%'; if (c === 3) return '33.3%'; return '100%' }
+function widthPct(c: number): string {
+  if (c === 2) return '50%'
+  if (c === 3) return '33.3%'
+  return '100%'
+}
 </script>
 
 <style scoped lang="scss">
-.canvas { min-height: 400px; }
+.canvas {
+  min-height: 400px;
+}
 
 .canvas-empty {
-  display: flex; align-items: center; justify-content: center; min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
 }
 
 .empty-box {
-  border: 2px dashed var(--color-border-hover); border-radius: var(--radius-lg);
-  padding: 32px 48px; text-align: center;
+  border: 2px dashed var(--color-border-hover);
+  border-radius: var(--radius-lg);
+  padding: 32px 48px;
+  text-align: center;
 
-  p { color: var(--color-text-muted); font-size: 14px; }
+  p {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
 }
 
-.canvas-list { display: flex; flex-wrap: wrap; gap: 8px; }
-.canvas-row { margin-bottom: 4px; }
+.canvas-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.canvas-row {
+  margin-bottom: 4px;
+}
 </style>

@@ -5,8 +5,16 @@ import type { FormSchema } from '@/types'
 const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/forms' },
   { path: '/forms', name: 'formList', component: () => import('@/views/formList/FormListView.vue') },
-  { path: '/formDesigner', name: 'formDesignerNew', component: () => import('@/views/formDesigner/FormDesignerView.vue') },
-  { path: '/formDesigner/:id', name: 'formDesignerEdit', component: () => import('@/views/formDesigner/FormDesignerView.vue') },
+  {
+    path: '/formDesigner',
+    name: 'formDesignerNew',
+    component: () => import('@/views/formDesigner/FormDesignerView.vue'),
+  },
+  {
+    path: '/formDesigner/:id',
+    name: 'formDesignerEdit',
+    component: () => import('@/views/formDesigner/FormDesignerView.vue'),
+  },
   { path: '/fill/:formId', name: 'formFill', component: () => import('@/views/formFill/FormFillView.vue') },
   { path: '/forms/:id/responses', name: 'formData', component: () => import('@/views/formData/FormDataView.vue') },
   { path: '/error', name: 'error', component: () => import('@/views/error/StatusError.vue') },

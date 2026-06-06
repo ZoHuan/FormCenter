@@ -16,7 +16,8 @@ export function useValidation(components: Ref<ComponentSchema[]>) {
 
   function scrollToFirst(errors: Record<string, string>) {
     const first = Object.keys(errors)[0]
-    if (first) document.querySelector(`[data-field="${first}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (first)
+      document.querySelector(`[data-field="${first}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   return { validateAll, scrollToFirst }

@@ -1,5 +1,12 @@
-<template><div class="state-container"><div class="spinner" /><p v-if="text" class="state-text">{{ text }}</p></div></template>
-<script setup lang="ts">defineProps<{ text?: string }>()</script>
+<template>
+  <div class="state-container">
+    <div class="spinner" />
+    <p v-if="text" class="state-text">{{ text }}</p>
+  </div>
+</template>
+<script setup lang="ts">
+defineProps<{ text?: string }>()
+</script>
 <style scoped lang="scss">
 .state-container {
   display: flex;
@@ -19,9 +26,14 @@
   animation: spin 1s linear infinite;
 }
 
-.state-text { font-size: 14px; color: var(--color-text-secondary); }
+.state-text {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

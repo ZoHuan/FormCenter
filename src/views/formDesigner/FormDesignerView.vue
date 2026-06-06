@@ -13,10 +13,20 @@
         <ComponentPalette @add="handleAddComponent" />
       </div>
       <div class="canvas-area">
-        <DesignerCanvas :components="store.components" :selectedId="store.selectedId" @select="store.selectComponent" @remove="handleRemoveComponent" @move="handleMoveComponent" />
+        <DesignerCanvas
+          :components="store.components"
+          :selectedId="store.selectedId"
+          @select="store.selectComponent"
+          @remove="handleRemoveComponent"
+          @move="handleMoveComponent"
+        />
       </div>
       <div class="panel-right">
-        <PropertyPanel v-if="store.selectedComponent" :component="store.selectedComponent" @update="(patch) => store.updateComponent(store.selectedComponent!.id, patch)" />
+        <PropertyPanel
+          v-if="store.selectedComponent"
+          :component="store.selectedComponent"
+          @update="(patch) => store.updateComponent(store.selectedComponent!.id, patch)"
+        />
         <div v-else class="no-select">点击画布中的组件进行编辑</div>
       </div>
     </div>
@@ -45,19 +55,34 @@ onMounted(() => {
   formTitle.value = store.schema?.title ?? ''
 })
 
-watch(() => store.schema?.title, (v) => { if (v) formTitle.value = v })
+watch(
+  () => store.schema?.title,
+  (v) => {
+    if (v) formTitle.value = v
+  },
+)
 
 function onTitleBlur() {
   if (store.schema) store.schema.title = formTitle.value
 }
 
-function handleAddComponent(type: ComponentType) { store.addComponent(type) }
-function handleRemoveComponent(id: string) { store.removeComponent(id) }
-function handleMoveComponent(from: number, to: number) { store.moveComponent(from, to) }
+function handleAddComponent(type: ComponentType) {
+  store.addComponent(type)
+}
+function handleRemoveComponent(id: string) {
+  store.removeComponent(id)
+}
+function handleMoveComponent(from: number, to: number) {
+  store.moveComponent(from, to)
+}
 
 async function handleBack() {
   if (store.isDirty) {
-    await ElMessageBox.confirm('有未保存的修改，是否离开？', '提示', { confirmButtonText: '不保存', cancelButtonText: '取消', type: 'warning' })
+    await ElMessageBox.confirm('有未保存的修改，是否离开？', '提示', {
+      confirmButtonText: '不保存',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
   }
   router.push('/forms')
 }
@@ -75,13 +100,58 @@ function handlePreview() {
 </script>
 
 <style scoped lang="scss">
-.designer-page { height: 100vh; display: flex; flex-direction: column; }
-.toolbar { height: 56px; display: flex; align-items: center; padding: 0 16px; gap: 16px; border-bottom: 1px solid var(--color-border); background: var(--color-card); }
-.title-input { border: none; font-size: 18px; font-weight: 600; flex: 1; outline: none; }
-.toolbar-right { display: flex; gap: 8px; }
-.designer-body { flex: 1; display: flex; overflow: hidden; }
-.panel-left { width: 260px; border-right: 1px solid var(--color-border); overflow-y: auto; background: var(--color-primary-bg); }
-.canvas-area { flex: 1; overflow-y: auto; background: var(--color-canvas); padding: 24px; }
-.panel-right { width: 300px; border-left: 1px solid var(--color-border); overflow-y: auto; background: var(--color-card); }
-.no-select { padding: 24px; text-align: center; color: var(--color-text-muted); font-size: 14px; }
+.designer-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.toolbar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-card);
+}
+.title-input {
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  flex: 1;
+  outline: none;
+}
+.toolbar-right {
+  display: flex;
+  gap: 8px;
+}
+.designer-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.panel-left {
+  width: 260px;
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  background: var(--color-primary-bg);
+}
+.canvas-area {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-canvas);
+  padding: 24px;
+}
+.panel-right {
+  width: 300px;
+  border-left: 1px solid var(--color-border);
+  overflow-y: auto;
+  background: var(--color-card);
+}
+.no-select {
+  padding: 24px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
 </style>

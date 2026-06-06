@@ -4,7 +4,20 @@ const patterns = {
   idCard: /^\d{17}[\dX]$/,
 }
 
-export function validate(value: unknown, rules: { required?: boolean; format?: string; min?: number; max?: number; maxLength?: number; minSize?: number; maxSize?: number; decimalPlaces?: number; customRegex?: string }): string | null {
+export function validate(
+  value: unknown,
+  rules: {
+    required?: boolean
+    format?: string
+    min?: number
+    max?: number
+    maxLength?: number
+    minSize?: number
+    maxSize?: number
+    decimalPlaces?: number
+    customRegex?: string
+  },
+): string | null {
   const val = typeof value === 'string' ? value.trim() : ''
 
   if (rules.required && !val) return '此项为必填项'

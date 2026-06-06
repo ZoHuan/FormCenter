@@ -1,6 +1,10 @@
 import * as XLSX from 'xlsx'
 
-export function exportToExcel(columns: { title: string; field: string }[], rows: Record<string, unknown>[], filename: string): void {
+export function exportToExcel(
+  columns: { title: string; field: string }[],
+  rows: Record<string, unknown>[],
+  filename: string,
+): void {
   const header = columns.map((c) => c.title)
   const data = rows.map((row) => columns.map((c) => row[c.field] ?? ''))
   const sheet = XLSX.utils.aoa_to_sheet([header, ...data])

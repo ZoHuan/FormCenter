@@ -48,10 +48,31 @@
                 <span v-if="comp.required" class="required">*</span>
               </label>
               <div class="field-input">
-                <el-input v-if="comp.type === 'input' || comp.type === 'textarea'" v-model="formData[comp.field]" :placeholder="comp.description" :type="comp.type === 'textarea' ? 'textarea' : 'text'" />
-                <el-input-number v-else-if="comp.type === 'numeric'" v-model="formData[comp.field]" :placeholder="comp.description" />
-                <el-select v-else-if="isSelectType(comp.type)" v-model="formData[comp.field]" :placeholder="comp.description">
-                  <el-option v-for="opt in (comp.props as Record<string, unknown>)?.options as Array<{label:string;value:string}> ?? []" :key="opt.value" :label="opt.label" :value="opt.value" />
+                <el-input
+                  v-if="comp.type === 'input' || comp.type === 'textarea'"
+                  v-model="formData[comp.field]"
+                  :placeholder="comp.description"
+                  :type="comp.type === 'textarea' ? 'textarea' : 'text'"
+                />
+                <el-input-number
+                  v-else-if="comp.type === 'numeric'"
+                  v-model="formData[comp.field]"
+                  :placeholder="comp.description"
+                />
+                <el-select
+                  v-else-if="isSelectType(comp.type)"
+                  v-model="formData[comp.field]"
+                  :placeholder="comp.description"
+                >
+                  <el-option
+                    v-for="opt in ((comp.props as Record<string, unknown>)?.options as Array<{
+                      label: string
+                      value: string
+                    }>) ?? []"
+                    :key="opt.value"
+                    :label="opt.label"
+                    :value="opt.value"
+                  />
                 </el-select>
                 <el-date-picker v-else-if="comp.type === 'date'" v-model="formData[comp.field]" type="date" />
                 <el-input v-else v-model="formData[comp.field]" :placeholder="comp.description" />
@@ -96,10 +117,19 @@ const draftTime = ref('')
 onMounted(() => {
   const formId = route.params.formId as string
   const form = listStore.getById(formId)
-  if (!form) { loadState.value = 'notfound'; return }
+  if (!form) {
+    loadState.value = 'notfound'
+    return
+  }
   schema.value = form
-  if (form.status === 'draft') { loadState.value = 'draft'; return }
-  if (form.status === 'closed') { loadState.value = 'closed'; return }
+  if (form.status === 'draft') {
+    loadState.value = 'draft'
+    return
+  }
+  if (form.status === 'closed') {
+    loadState.value = 'closed'
+    return
+  }
 
   const draft = subStore.loadDraft(formId)
   if (draft) {
@@ -111,7 +141,9 @@ onMounted(() => {
 })
 
 function initForm(form: FormSchema) {
-  form.components.forEach((c) => { if (c.field) formData[c.field] = c.defaultValue ?? '' })
+  form.components.forEach((c) => {
+    if (c.field) formData[c.field] = c.defaultValue ?? ''
+  })
   loadState.value = 'ready'
 }
 
@@ -127,14 +159,19 @@ function restoreDraft() {
   if (!form) return
   const draft = subStore.loadDraft(form.id)
   if (draft) Object.assign(formData, draft.data)
-  form.components.forEach((c) => { if (c.field && !(c.field in formData)) formData[c.field] = c.defaultValue ?? '' })
+  form.components.forEach((c) => {
+    if (c.field && !(c.field in formData)) formData[c.field] = c.defaultValue ?? ''
+  })
   loadState.value = 'ready'
 }
 
 function discardDraft() {
   showDraftDialog.value = false
   const form = schema.value
-  if (form) { subStore.clearDraft(form.id); initForm(form) }
+  if (form) {
+    subStore.clearDraft(form.id)
+    initForm(form)
+  }
 }
 
 function handleSaveDraft() {
@@ -148,21 +185,33 @@ async function handleSubmit() {
 
   let hasError = false
   for (const c of visibleComponents.value) {
-    const err = validate(formData[c.field], { required: c.required, ...c.props as Record<string, unknown> })
-    if (err) { fieldErrors[c.field] = err; hasError = true } else { delete fieldErrors[c.field] }
+    const err = validate(formData[c.field], { required: c.required, ...(c.props as Record<string, unknown>) })
+    if (err) {
+      fieldErrors[c.field] = err
+      hasError = true
+    } else {
+      delete fieldErrors[c.field]
+    }
   }
   if (hasError) {
     const first = visibleComponents.value.find((c) => fieldErrors[c.field])
-    if (first) document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (first)
+      document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     return
   }
 
-  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', { confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning' })
+  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
   submitting.value = true
   const ok = subStore.submit(schema.value.id, { ...formData })
   submitting.value = false
-  if (ok) { subStore.clearDraft(schema.value.id); loadState.value = 'submitted' }
-  else ElMessage.error('提交失败，请重试')
+  if (ok) {
+    subStore.clearDraft(schema.value.id)
+    loadState.value = 'submitted'
+  } else ElMessage.error('提交失败，请重试')
 }
 
 function resetForm() {
@@ -172,22 +221,102 @@ function resetForm() {
 </script>
 
 <style scoped lang="scss">
-.fill-page { min-height: 100vh; background: var(--color-page); display: flex; justify-content: center; padding: 24px 16px; }
-.fill-center { max-width: 720px; width: 100%; display: flex; align-items: center; justify-content: center; min-height: 60vh; }
-.fill-success { flex-direction: column; text-align: center; gap: 16px; }
-.success-icon { width: 72px; height: 72px; background: var(--color-success); color: var(--color-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto; }
-.success-actions { display: flex; gap: 12px; margin-top: 16px; }
-.draft-dialog { text-align: center; display: flex; flex-direction: column; gap: 12px; }
-.draft-time { color: var(--color-text-muted); font-size: 13px; }
-.fill-form { max-width: 720px; width: 100%; }
-.form-card { background: var(--color-card); border-radius: 12px; padding: 32px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
-.form-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
-.form-desc { color: var(--color-text-secondary); font-size: 14px; margin-bottom: 24px; }
-.fields { display: flex; flex-direction: column; gap: 20px; }
-.field-item { display: flex; flex-direction: column; gap: 4px; }
-.field-label { font-size: 13px; font-weight: 500; }
-.required { color: var(--color-error); }
-.field-input :deep(.el-input__wrapper), .field-input :deep(.el-select__wrapper) { border-radius: 8px; }
-.field-error { color: var(--color-error); font-size: 12px; }
-.form-actions { display: flex; gap: 12px; margin-top: 32px; justify-content: flex-end; }
+.fill-page {
+  min-height: 100vh;
+  background: var(--color-page);
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+}
+.fill-center {
+  max-width: 720px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+.fill-success {
+  flex-direction: column;
+  text-align: center;
+  gap: 16px;
+}
+.success-icon {
+  width: 72px;
+  height: 72px;
+  background: var(--color-success);
+  color: var(--color-card);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin: 0 auto;
+}
+.success-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.draft-dialog {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.draft-time {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+.fill-form {
+  max-width: 720px;
+  width: 100%;
+}
+.form-card {
+  background: var(--color-card);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.form-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.form-desc {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.field-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+.required {
+  color: var(--color-error);
+}
+.field-input :deep(.el-input__wrapper),
+.field-input :deep(.el-select__wrapper) {
+  border-radius: 8px;
+}
+.field-error {
+  color: var(--color-error);
+  font-size: 12px;
+}
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  justify-content: flex-end;
+}
 </style>
