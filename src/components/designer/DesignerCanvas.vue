@@ -68,5 +68,17 @@ function widthPct(c: number): string {
 }
 .canvas-row {
   margin-bottom: 4px;
+  animation: card-enter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 </style>
