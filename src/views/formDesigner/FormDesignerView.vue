@@ -34,10 +34,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useFormDesignerStore } from '@/stores/formDesigner'
+import { templates } from '@/utils/templates'
 import type { ComponentType } from '@/types'
 import ComponentPalette from '@/components/designer/ComponentPalette.vue'
 import DesignerCanvas from '@/components/designer/DesignerCanvas.vue'
@@ -50,9 +51,19 @@ const formTitle = ref('')
 
 onMounted(() => {
   const id = route.params.id as string
-  if (id) store.load(id)
-  else store.reset()
+  if (id) {
+    store.load(id)
+  } else {
+    store.reset()
+    const tpl = route.query.template as string
+    if (tpl) loadTemplate(tpl)
+  }
   formTitle.value = store.schema?.title ?? ''
+  window.addEventListener('palette-drop', onPaletteDrop as EventListener)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('palette-drop', onPaletteDrop as EventListener)
 })
 
 watch(
@@ -69,6 +80,22 @@ function onTitleBlur() {
 function handleAddComponent(type: ComponentType) {
   store.addComponent(type)
 }
+
+function onPaletteDrop(e: Event) {
+  const type = (e as CustomEvent).detail?.type as ComponentType
+  if (type) store.addComponent(type)
+}
+
+function loadTemplate(key: string) {
+  const tpl = templates[key]
+  if (tpl && store.schema) {
+    store.schema.title = tpl.title
+    store.schema.description = tpl.description
+    tpl.components.forEach((c) => store.addComponent(c.type as ComponentType))
+    formTitle.value = tpl.title
+  }
+}
+
 function handleRemoveComponent(id: string) {
   store.removeComponent(id)
 }
