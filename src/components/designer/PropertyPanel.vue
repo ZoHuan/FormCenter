@@ -68,6 +68,30 @@
         </div>
       </div>
     </div>
+    <div v-if="comp.type === 'table'" class="section">
+      <div class="section-header" @click="toggleSection('table')">
+        <span class="section-arrow" :class="{ open: openSections.table }">▸</span>表格列管理
+      </div>
+      <div v-show="openSections.table" class="section-body">
+        <div v-for="(col, i) in tableColumns" :key="i" class="table-col-item">
+          <div class="col-header">
+            <el-select v-model="col.type" size="small" @change="onColTypeChange(i)" style="width:90px">
+              <el-option v-for="t in colTypes" :key="t" :label="t" :value="t" />
+            </el-select>
+            <el-input v-model="col.title" size="small" placeholder="列标题" style="flex:1" @input="emitUpdate" />
+            <el-button link type="danger" size="small" @click="removeTableCol(i)">×</el-button>
+          </div>
+          <div class="col-body">
+            <div class="prop-row"><label>宽度</label><el-input-number v-model="col.width" :min="60" :max="600" size="small" @change="emitUpdate" /></div>
+            <div class="prop-row"><label>必填</label><el-switch v-model="col.required" size="small" @change="emitUpdate" /></div>
+          </div>
+        </div>
+        <el-button link type="primary" size="small" @click="addTableCol">+ 添加字段</el-button>
+        <div style="border-top:1px solid var(--color-border);margin:12px 0;padding-top:8px">
+          <div class="prop-row"><label>显示序号</label><el-switch v-model="tableShowIndex" size="small" @change="onTableShowIndexChange" /></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -82,7 +106,9 @@ watch(
   (val) => Object.assign(comp, val),
   { deep: true },
 )
-const openSections = reactive({ basic: true, options: false, validation: false })
+const openSections = reactive<Record<string, boolean>>({ basic: true, options: false, validation: false, table: true })
+
+const colTypes = ['input', 'textarea', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser', 'image']
 function toggleSection(key: string) {
   ;(openSections as Record<string, boolean>)[key] = !(openSections as Record<string, boolean>)[key]
 }
@@ -107,6 +133,37 @@ function addOption() {
 function removeOption(index: number) {
   const list = optionList.value.filter((_: unknown, i: number) => i !== index)
   ;(comp.props as Record<string, unknown>).options = list
+  emitUpdate()
+}
+
+const tableColumns = computed<Array<{ title: string; type: string; width?: number; required?: boolean }>>({
+  get: () => ((comp.props as Record<string, unknown>)?.columns as Array<{ title: string; type: string; width?: number; required?: boolean }>) ?? [],
+  set: () => {},
+})
+
+const tableShowIndex = computed({
+  get: () => (comp.props as Record<string, unknown>)?.showIndex as boolean ?? false,
+  set: () => {},
+})
+
+function addTableCol() {
+  const cols = [...tableColumns.value, { title: `列${tableColumns.value.length + 1}`, type: 'input', width: 120, required: false }]
+  ;(comp.props as Record<string, unknown>).columns = cols
+  emitUpdate()
+}
+
+function removeTableCol(index: number) {
+  const cols = tableColumns.value.filter((_: unknown, i: number) => i !== index)
+  ;(comp.props as Record<string, unknown>).columns = cols
+  emitUpdate()
+}
+
+function onColTypeChange(index: number) {
+  emitUpdate()
+}
+
+function onTableShowIndexChange(v: boolean) {
+  ;(comp.props as Record<string, unknown>).showIndex = v
   emitUpdate()
 }
 const maxLen = computed({
@@ -177,3 +234,16 @@ function onNumRangeChange() {
   }
 }
 </style>
+
+.table-col-item {
+  margin-bottom: 12px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-bg);
+
+  .col-header { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+  .col-body { padding-left: 4px; }
+}
+
+.option-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
