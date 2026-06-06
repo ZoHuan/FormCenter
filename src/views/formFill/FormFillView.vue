@@ -36,8 +36,17 @@
         </div>
       </div>
 
-      <div v-else class="fill-form">
-        <div class="form-card">
+      <div v-else class="fill-form" :class="{ 'fill-preview-pc': isPreview && previewMode === 'pc' }">
+        <div v-if="isPreview" class="preview-bar">
+          <el-button link @click="handleBackToDesigner">← 返回设计器</el-button>
+          <span class="preview-tag">预览模式</span>
+          <div class="preview-toggle">
+            <button :class="{ active: previewMode === 'mobile' }" @click="previewMode = 'mobile'">手机</button>
+            <button :class="{ active: previewMode === 'pc' }" @click="previewMode = 'pc'">PC</button>
+          </div>
+        </div>
+        <div class="form-card" :class="{ 'phone-frame': isPreview && previewMode === 'mobile' }">
+          <div v-if="isPreview && previewMode === 'mobile'" class="phone-notch" />
           <h1 class="form-title">{{ schema?.title }}</h1>
           <p v-if="schema?.description" class="form-desc">{{ schema.description }}</p>
 
@@ -82,8 +91,13 @@
           </div>
 
           <div class="form-actions">
-            <el-button @click="handleSaveDraft">暂存</el-button>
-            <el-button type="primary" size="large" :loading="submitting" @click="handleSubmit">提交</el-button>
+            <template v-if="!isPreview">
+              <el-button @click="handleSaveDraft">暂存</el-button>
+              <el-button type="primary" size="large" :loading="submitting" @click="handleSubmit">提交</el-button>
+            </template>
+            <el-tooltip v-else content="预览模式下无法提交" placement="top">
+              <el-button type="primary" size="large" disabled>提交</el-button>
+            </el-tooltip>
           </div>
         </div>
       </div>
@@ -103,8 +117,12 @@ import ErrorState from '@/components/common/ErrorState.vue'
 import type { FormSchema, ComponentSchema } from '@/types'
 
 const route = useRoute()
+const router = useRouter()
 const listStore = useFormListStore()
 const subStore = useFormSubmissionStore()
+
+const isPreview = computed(() => route.query.preview === '1')
+const previewMode = ref<'mobile' | 'pc'>('mobile')
 
 const schema = ref<FormSchema | null>(null)
 const formData = reactive<Record<string, unknown>>({})
@@ -214,6 +232,11 @@ async function handleSubmit() {
   } else ElMessage.error('提交失败，请重试')
 }
 
+function handleBackToDesigner() {
+  if (schema.value?.id) window.open(`/formDesigner/${schema.value.id}`, '_self')
+  else router.push('/forms')
+}
+
 function resetForm() {
   loadState.value = 'ready'
   if (schema.value) initForm(schema.value)
@@ -318,5 +341,76 @@ function resetForm() {
   gap: 12px;
   margin-top: 32px;
   justify-content: flex-end;
+}
+
+.preview-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: var(--color-primary-bg);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 16px;
+  gap: 12px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.preview-tag {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-canvas);
+  border-radius: 4px;
+  padding: 2px 10px;
+}
+
+.preview-toggle {
+  margin-left: auto;
+  display: flex;
+  background: var(--color-canvas);
+  border-radius: var(--radius-md);
+  padding: 2px;
+
+  button {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--color-text-muted);
+    transition: all 0.2s;
+
+    &.active {
+      background: var(--color-card);
+      color: var(--color-primary);
+      box-shadow: var(--shadow-xs);
+    }
+  }
+}
+
+.fill-preview-pc {
+  max-width: 720px;
+}
+
+.phone-frame {
+  max-width: 375px;
+  margin: 0 auto;
+  border: 7px solid #2c2c2e;
+  border-radius: 28px;
+  padding: 20px 16px;
+  min-height: 600px;
+  position: relative;
+}
+
+.phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 28px;
+  background: #2c2c2e;
+  border-radius: 0 0 14px 14px;
 }
 </style>
