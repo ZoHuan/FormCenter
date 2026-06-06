@@ -75,6 +75,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useFormListStore } from '@/stores/formList'
+import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { copyToClipboard } from '@/utils/clipboard'
 import { templates } from '@/utils/templates'
 import AppHeader from '@/components/common/AppHeader.vue'
@@ -89,11 +90,9 @@ const showTemplateDialog = ref(false)
 onMounted(() => store.init())
 
 function getSubmissionCount(formId: string): number {
-  try {
-    return JSON.parse(localStorage.getItem(`formcenter_submissions_${formId}`) ?? '[]').length
-  } catch {
-    return 0
-  }
+  const store = useFormSubmissionStore()
+  store.init(formId)
+  return store.submissions.length
 }
 function formatTime(ts: number): string {
   return new Date(ts).toLocaleString('zh-CN', {

@@ -58,10 +58,11 @@
               </label>
               <div class="field-input">
                 <el-input
-                  v-if="comp.type === 'input' || comp.type === 'textarea'"
+                  v-if="comp.type === 'input' || comp.type === 'textarea' || comp.type === 'serial-number'"
                   v-model="formData[comp.field]"
                   :placeholder="comp.description"
                   :type="comp.type === 'textarea' ? 'textarea' : 'text'"
+                  :disabled="comp.type === 'serial-number'"
                 />
                 <el-input-number
                   v-else-if="comp.type === 'numeric'"
@@ -83,7 +84,16 @@
                     :value="opt.value"
                   />
                 </el-select>
-                <el-date-picker v-else-if="comp.type === 'date'" v-model="formData[comp.field]" type="date" />
+                <el-rate v-else-if="comp.type === 'rate'" v-model="formData[comp.field]" />
+                <el-checkbox v-else-if="comp.type === 'commitment'" v-model="formData[comp.field]" :label="comp.description" />
+                <el-date-picker v-else-if="comp.type === 'date' || comp.type === 'date-range'" v-model="formData[comp.field]" :type="comp.type === 'date-range' ? 'daterange' : 'date'" />
+                <div v-else-if="comp.type === 'signature'" class="sig-pad">
+                  <canvas v-if="formData[comp.field]" class="sig-preview" />
+                  <el-button v-else size="small" @click="formData[comp.field] = ''">点击签名</el-button>
+                </div>
+                <div v-else-if="comp.type === 'QRCode'" class="qr-display">
+                  <el-input v-model="formData[comp.field]" placeholder="输入二维码内容" disabled />
+                </div>
                 <el-input v-else v-model="formData[comp.field]" :placeholder="comp.description" />
               </div>
               <p v-if="fieldErrors[comp.field]" class="field-error">{{ fieldErrors[comp.field] }}</p>
@@ -336,81 +346,21 @@ function resetForm() {
   color: var(--color-error);
   font-size: 12px;
 }
-.form-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 32px;
-  justify-content: flex-end;
-}
 
-.preview-bar {
-  height: 48px;
+.sig-pad {
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  background: var(--color-primary-bg);
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 16px;
-  gap: 12px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
 
-.preview-tag {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  background: var(--color-canvas);
-  border-radius: 4px;
-  padding: 2px 10px;
-}
-
-.preview-toggle {
-  margin-left: auto;
-  display: flex;
-  background: var(--color-canvas);
-  border-radius: var(--radius-md);
-  padding: 2px;
-
-  button {
-    padding: 4px 12px;
-    border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    background: transparent;
-    color: var(--color-text-muted);
-    transition: all 0.2s;
-
-    &.active {
-      background: var(--color-card);
-      color: var(--color-primary);
-      box-shadow: var(--shadow-xs);
-    }
+  .sig-preview {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    width: 200px;
+    height: 100px;
   }
 }
 
-.fill-preview-pc {
-  max-width: 720px;
-}
-
-.phone-frame {
-  max-width: 375px;
-  margin: 0 auto;
-  border: 7px solid #2c2c2e;
-  border-radius: 28px;
-  padding: 20px 16px;
-  min-height: 600px;
-  position: relative;
-}
-
-.phone-notch {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 28px;
-  background: #2c2c2e;
-  border-radius: 0 0 14px 14px;
+.qr-display {
+  display: flex;
+  align-items: center;
 }
 </style>
