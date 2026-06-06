@@ -68,6 +68,14 @@
         </div>
       </div>
     </div>
+    <div class="section">
+      <div class="section-header" @click="toggleSection('advanced')">
+        <span class="section-arrow" :class="{ open: openSections.advanced }">▸</span>高级
+      </div>
+      <div v-show="openSections.advanced" class="section-body">
+        <TriggerRuleEditor v-if="hasOptions" :component="comp" :all-components="allComponents" @update="(p) => emit('update', p)" />
+      </div>
+    </div>
     <div v-if="comp.type === 'table'" class="section">
       <div class="section-header" @click="toggleSection('table')">
         <span class="section-arrow" :class="{ open: openSections.table }">▸</span>表格列管理
@@ -98,7 +106,10 @@
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
 import type { ComponentSchema } from '@/types'
-const props = defineProps<{ component: ComponentSchema }>()
+import TriggerRuleEditor from './TriggerRuleEditor.vue'
+
+const props = defineProps<{ component: ComponentSchema; allComponents?: ComponentSchema[] }>()
+const allComponents = computed(() => props.allComponents ?? [])
 const emit = defineEmits<{ update: [patch: Partial<ComponentSchema>] }>()
 const comp = reactive({ ...props.component })
 watch(
@@ -106,7 +117,7 @@ watch(
   (val) => Object.assign(comp, val),
   { deep: true },
 )
-const openSections = reactive<Record<string, boolean>>({ basic: true, options: false, validation: false, table: true })
+const openSections = reactive<Record<string, boolean>>({ basic: true, options: false, validation: false, advanced: false, table: true })
 
 const colTypes = ['input', 'textarea', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser', 'image']
 function toggleSection(key: string) {

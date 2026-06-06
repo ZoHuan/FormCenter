@@ -25,6 +25,7 @@
         <PropertyPanel
           v-if="store.selectedComponent"
           :component="store.selectedComponent"
+          :all-components="store.components"
           @update="(patch) => store.updateComponent(store.selectedComponent!.id, patch)"
         />
         <div v-else class="no-select">点击画布中的组件进行编辑</div>
