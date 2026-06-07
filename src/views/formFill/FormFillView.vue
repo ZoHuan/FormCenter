@@ -119,12 +119,17 @@ onMounted(() => {
     return
   }
   schema.value = form
-  if (form.status === 'draft') {
+  if (form.status === 'draft' && !isPreview.value) {
     loadState.value = 'draft'
     return
   }
-  if (form.status === 'closed') {
+  if (form.status === 'closed' && !isPreview.value) {
     loadState.value = 'closed'
+    return
+  }
+
+  if (isPreview.value) {
+    initForm(form)
     return
   }
 
