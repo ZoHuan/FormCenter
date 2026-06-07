@@ -39,3 +39,8 @@
   --el-tag-text-color: var(--color-warning);
   --el-tag-border-color: transparent;
 }
+
+.el-button { transition: transform .1s ease, box-shadow .15s ease; }
+.el-button:active { transform: scale(0.97); }
+.el-input.is-error .el-input__wrapper { animation: input-shake .3s ease; }
+@keyframes input-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
