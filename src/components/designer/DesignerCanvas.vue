@@ -35,16 +35,7 @@ import FieldCard from './FieldCard.vue'
 const props = defineProps<{ components: ComponentSchema[]; selectedId: string | null }>()
 const emit = defineEmits<{ select: [id: string | null]; remove: [id: string]; move: [from: number, to: number] }>()
 
-const localComponents = computed({
-  get: () => props.components,
-  set: (val) => {
-    const fromIdx = props.components.findIndex((c) => c.id === val.find((v, i) => v.id !== props.components[i]?.id)?.id)
-    const toIdx = fromIdx >= 0 ? val.findIndex((v) => v.id === props.components[fromIdx]?.id) : -1
-    if (fromIdx >= 0 && toIdx >= 0 && fromIdx !== toIdx) {
-      emit('move', fromIdx, toIdx)
-    }
-  },
-})
+const localComponents = computed(() => [...props.components])
 
 function onSortChange(e: { moved?: { oldIndex: number; newIndex: number } }) {
   if (e.moved) emit('move', e.moved.oldIndex, e.moved.newIndex)
