@@ -13,7 +13,7 @@
       @change="onSortChange"
     >
       <template #item="{ element: comp }">
-        <div class="canvas-row" :style="{ width: widthPct(comp.colspan) }">
+        <div class="canvas-row" :style="{ flex: `0 0 ${widthPct(comp.colspan)}` }">
           <FieldCard
             :schema="comp"
             :selected="comp.id === selectedId"
