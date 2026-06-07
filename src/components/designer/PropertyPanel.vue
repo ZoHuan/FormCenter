@@ -33,6 +33,20 @@
               label="三列" /><el-option :value="4" label="长标题"
           /></el-select>
         </div>
+        <div v-if="!isSeparator" class="prop-row">
+          <label>APP排版</label
+          ><el-radio-group v-model="comp.appStyle" size="small" @change="emitUpdate"
+            ><el-radio :value="0">左右</el-radio><el-radio :value="1">上下</el-radio></el-radio-group
+          >
+        </div>
+        <div v-if="!isSeparator && !isTable && !isCrossTable" class="prop-row">
+          <label>默认值</label
+          ><el-input v-model="comp.defaultValue" size="small" placeholder="字段初始值" @input="emitUpdate" />
+        </div>
+        <div v-if="hasTooltip" class="prop-row">
+          <label>提示信息</label
+          ><el-input v-model="comp.tooltip" size="small" placeholder="填写提示（tooltip）" @input="emitUpdate" />
+        </div>
       </div>
     </div>
     <div v-if="hasOptions && !isDecorative" class="section">
@@ -65,6 +79,52 @@
         </div>
         <div v-if="isNumeric" class="prop-row">
           <label>最小值</label><el-input-number v-model="numMin" size="small" @change="onNumRangeChange" />
+        </div>
+        <div v-if="hasMax" class="prop-row">
+          <label>最大值</label><el-input-number v-model="numMax" size="small" @change="onNumMaxChange" />
+        </div>
+        <div v-if="hasRadix" class="prop-row">
+          <label>小数位数</label><el-input-number v-model="numRadix" :min="0" :max="10" size="small" @change="onNumRadixChange" />
+        </div>
+        <div v-if="hasUnit" class="prop-row">
+          <label>单位</label><el-input v-model="numUnit" size="small" placeholder="如：元、个" @input="onNumUnitChange" />
+        </div>
+        <div v-if="hasAutoWrap" class="prop-row">
+          <label>自动换行</label><el-switch v-model="autoWrap" size="small" @change="onAutoWrapChange" />
+        </div>
+        <div v-if="hasRareChars" class="prop-row">
+          <label>允许生僻字</label><el-switch v-model="allowRare" size="small" @change="onRareChange" />
+        </div>
+        <div v-if="hasDateType" class="prop-row">
+          <label>日期类型</label>
+          <el-select v-model="dateType" size="small" @change="onDateTypeChange">
+            <el-option value="year" label="年" />
+            <el-option value="month" label="月" />
+            <el-option value="date" label="日" />
+            <el-option value="datetime" label="日期时间" />
+            <el-option value="timeperiod" label="时间段" />
+          </el-select>
+        </div>
+        <div v-if="hasImageSize" class="prop-row">
+          <label>最大上传数</label><el-input-number v-model="maxCount" :min="1" size="small" @change="onMaxCountChange" />
+        </div>
+        <div v-if="hasImageSize" class="prop-row">
+          <label>文件大小上限</label><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span style="font-size:12px;color:#9C9790;margin-left:4px">KB</span>
+        </div>
+        <div v-if="hasImageSize" class="prop-row">
+          <label>文件类型</label><el-input v-model="fileTypes" size="small" placeholder=".jpg;.png" @input="onFileTypesChange" />
+        </div>
+        <div v-if="hasHideWhenEmpty" class="prop-row">
+          <label>无值时隐藏</label><el-switch v-model="hideWhenEmpty" size="small" @change="onHideWhenEmptyChange" />
+        </div>
+        <div v-if="hasEnableSearch" class="prop-row">
+          <label>树形检索</label><el-switch v-model="enableSearch" size="small" @change="onEnableSearchChange" />
+        </div>
+        <div v-if="hasEnableSingle" class="prop-row">
+          <label>树形单选</label><el-switch v-model="enableSingle" size="small" @change="onEnableSingleChange" />
+        </div>
+        <div v-if="hasManualInput" class="prop-row">
+          <label>支持手动输入</label><el-switch v-model="manualInput" size="small" @change="onManualInputChange" />
         </div>
       </div>
     </div>
@@ -144,6 +204,21 @@ const hasOptions = computed(() => ['chooser', 'multi-chooser', 'selection', 'cas
 const hasTextLimit = computed(() => ['input', 'textarea'].includes(comp.type))
 const isNumeric = computed(() => comp.type === 'numeric')
 const isDecorative = computed(() => ['title', 'subtitle', 'group-title', 'separator', 'point-out'].includes(comp.type))
+const isSeparator = computed(() => comp.type === 'separator')
+const isTable = computed(() => comp.type === 'table')
+const isCrossTable = computed(() => comp.type === 'cross-table')
+const hasTooltip = computed(() => ['input', 'textarea', 'numeric', 'chooser', 'multi-chooser', 'selection', 'image', 'date', 'commitment'].includes(comp.type))
+const hasMax = computed(() => isNumeric.value)
+const hasRadix = computed(() => isNumeric.value)
+const hasUnit = computed(() => isNumeric.value)
+const hasAutoWrap = computed(() => comp.type === 'textarea')
+const hasRareChars = computed(() => comp.type === 'textarea')
+const hasDateType = computed(() => ['date', 'date-range'].includes(comp.type))
+const hasImageSize = computed(() => ['image', 'singleImage'].includes(comp.type))
+const hasHideWhenEmpty = computed(() => comp.type === 'point-out')
+const hasEnableSearch = computed(() => comp.type === 'tree')
+const hasEnableSingle = computed(() => comp.type === 'tree')
+const hasManualInput = computed(() => comp.type === 'map-location')
 
 const optionList = computed<{ label: string; value: string }[]>({
   get: () => ((comp.props as Record<string, unknown>)?.options as Array<{ label: string; value: string }>) ?? [],
@@ -197,14 +272,40 @@ const maxLen = computed({
   set: () => {},
 })
 const numMin = computed({ get: () => ((comp.props as Record<string, unknown>)?.min as number) ?? 0, set: () => {} })
-function onMaxLenChange(v: number | undefined) {
-  ;(comp.props as Record<string, unknown>).maxLength = v ?? 0
+const numMax = computed({ get: () => ((comp.props as Record<string, unknown>)?.max as number) ?? 0, set: () => {} })
+const numRadix = computed({ get: () => ((comp.props as Record<string, unknown>)?.decimalPlaces as number) ?? 0, set: () => {} })
+const numUnit = computed({ get: () => ((comp.props as Record<string, unknown>)?.unit as string) ?? '', set: () => {} })
+const autoWrap = computed({ get: () => ((comp.props as Record<string, unknown>)?.autoSize as boolean) ?? false, set: () => {} })
+const allowRare = computed({ get: () => ((comp.props as Record<string, unknown>)?.allowRareChars as boolean) ?? false, set: () => {} })
+const dateType = computed({ get: () => ((comp.props as Record<string, unknown>)?.dateType as string) ?? 'date', set: () => {} })
+const maxCount = computed({ get: () => ((comp.props as Record<string, unknown>)?.maxCount as number) ?? 3, set: () => {} })
+const maxSize = computed({ get: () => ((comp.props as Record<string, unknown>)?.maxSize as number) ?? 0, set: () => {} })
+const fileTypes = computed({ get: () => ((comp.props as Record<string, unknown>)?.fileTypes as string) ?? '', set: () => {} })
+const hideWhenEmpty = computed({ get: () => ((comp.props as Record<string, unknown>)?.hideWhenEmpty as boolean) ?? false, set: () => {} })
+const enableSearch = computed({ get: () => ((comp.props as Record<string, unknown>)?.enableSearch as boolean) ?? false, set: () => {} })
+const enableSingle = computed({ get: () => ((comp.props as Record<string, unknown>)?.enableSingle as boolean) ?? false, set: () => {} })
+const manualInput = computed({ get: () => ((comp.props as Record<string, unknown>)?.allowManualInput as boolean) ?? false, set: () => {} })
+
+function setProp(key: string, val: unknown) {
+  ;(comp.props as Record<string, unknown>)[key] = val
   emitUpdate()
 }
-function onNumRangeChange() {
-  ;(comp.props as Record<string, unknown>).min = numMin.value
-  emitUpdate()
-}
+
+function onMaxLenChange(v: number | undefined) { setProp('maxLength', v ?? 0) }
+function onNumRangeChange() { setProp('min', numMin.value) }
+function onNumMaxChange(v: number | undefined) { setProp('max', v ?? 0) }
+function onNumRadixChange(v: number | undefined) { setProp('decimalPlaces', v ?? 0) }
+function onNumUnitChange(v: string) { setProp('unit', v) }
+function onAutoWrapChange(v: boolean) { setProp('autoSize', v) }
+function onRareChange(v: boolean) { setProp('allowRareChars', v) }
+function onDateTypeChange(v: string) { setProp('dateType', v) }
+function onMaxCountChange(v: number | undefined) { setProp('maxCount', v ?? 3) }
+function onMaxSizeChange(v: number | undefined) { setProp('maxSize', v ?? 0) }
+function onFileTypesChange(v: string) { setProp('fileTypes', v) }
+function onHideWhenEmptyChange(v: boolean) { setProp('hideWhenEmpty', v) }
+function onEnableSearchChange(v: boolean) { setProp('enableSearch', v) }
+function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
+function onManualInputChange(v: boolean) { setProp('allowManualInput', v) }
 </script>
 
 <style scoped lang="scss">
