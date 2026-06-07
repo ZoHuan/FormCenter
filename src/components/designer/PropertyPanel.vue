@@ -79,6 +79,7 @@
         <RelationEditor v-if="comp.type === 'relation'" :component="comp" @update="(p) => emit('update', p)" />
         <SignatureEditor v-if="comp.type === 'signature'" :component="comp" @update="(p) => emit('update', p)" />
         <QRCodeEditor v-if="comp.type === 'QRCode'" :component="comp" @update="(p) => emit('update', p)" />
+        <DecorationEditor v-if="isDecorative" :component="comp" @update="(p) => emit('update', p)" />
       </div>
     </div>
     <div v-if="comp.type === 'table' || comp.type === 'cross-table'" class="section">
@@ -117,6 +118,7 @@ import CalcEditor from './CalcEditor.vue'
 import RelationEditor from './RelationEditor.vue'
 import SignatureEditor from './SignatureEditor.vue'
 import QRCodeEditor from './QRCodeEditor.vue'
+import DecorationEditor from './DecorationEditor.vue'
 
 const calcTypes = ['input', 'numeric', 'date', 'textarea']
 
