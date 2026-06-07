@@ -113,16 +113,22 @@ const typeLabel = computed(() => {
 
 .drag-handle {
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: 14px;
   cursor: grab;
-  width: 16px;
-  text-align: center;
+  width: 24px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
+
 .card-label {
   font-size: 13px;
   font-weight: 500;
   color: var(--color-text);
 }
+
 .required-star {
   color: var(--color-error);
   font-size: 11px;
@@ -144,11 +150,14 @@ const typeLabel = computed(() => {
   color: var(--color-text-muted);
   font-size: 16px;
   cursor: pointer;
-  padding: 0 4px;
-  line-height: 1;
-  &:hover {
-    color: var(--color-error);
-  }
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &:hover { color: var(--color-error); }
 }
 
 .card-preview {
