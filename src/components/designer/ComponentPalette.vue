@@ -61,10 +61,7 @@ const labels: Record<string, string> = {
   relation: '关联查询',
   commitment: '承诺说明',
   region: '行政区划',
-  'map-location': '地图定位',
-  'user-tree': '用户选择',
-  'org-tree': '组织选择',
-  'signature-name': '签名人',
+  'tree-structure': '树结构',
   QRCode: '二维码',
 }
 function typeLabel(t: string) {

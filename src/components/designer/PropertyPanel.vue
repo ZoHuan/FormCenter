@@ -218,13 +218,12 @@ const hasRareChars = computed(() => comp.type === 'textarea')
 const hasDateType = computed(() => ['date', 'date-range'].includes(comp.type))
 const hasImageSize = computed(() => ['image', 'singleImage'].includes(comp.type))
 const hasHideWhenEmpty = computed(() => comp.type === 'point-out')
-const hasEnableSearch = computed(() => comp.type === 'tree')
-const hasEnableSingle = computed(() => comp.type === 'tree')
-const hasManualInput = computed(() => comp.type === 'map-location')
+const hasEnableSearch = computed(() => comp.type === 'tree' || comp.type === 'tree-structure')
+const hasEnableSingle = computed(() => comp.type === 'tree' || comp.type === 'tree-structure')
 const hasValidation = computed(() =>
   hasTextLimit.value || isNumeric.value || hasAutoWrap.value || hasRareChars.value ||
   hasDateType.value || hasImageSize.value || hasHideWhenEmpty.value ||
-  hasEnableSearch.value || hasEnableSingle.value || hasManualInput.value
+  hasEnableSearch.value || hasEnableSingle.value
 )
 const hasAdvanced = computed(() =>
   hasOptions.value || calcTypes.includes(comp.type) || comp.type === 'rate' ||

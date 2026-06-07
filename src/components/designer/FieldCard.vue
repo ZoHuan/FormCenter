@@ -28,7 +28,7 @@ defineEmits<{ select: []; remove: []; copy: [] }>()
 
 const isTextLike = computed(() => ['input', 'textarea', 'numeric', 'serial-number'].includes(props.schema.type))
 const isSelectLike = computed(() =>
-  ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'region', 'map-location', 'user-tree', 'org-tree'].includes(props.schema.type),
+  ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'region', 'tree-structure'].includes(props.schema.type),
 )
 const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type))
 </script>

@@ -171,7 +171,7 @@ const layoutRows = computed(() => {
 })
 
 function isSelectType(t: string) {
-  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'user-tree', 'org-tree', 'region'].includes(t)
+  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'tree-structure', 'region'].includes(t)
 }
 
 function restoreDraft() {
