@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="form-card" :class="{ 'phone-frame': isPreview && previewMode === 'mobile' }">
-          <div v-if="isPreview && previewMode === 'mobile'" class="phone-notch" />
+          <div v-if="isPreview && previewMode === 'mobile'" class="phone-notch"></div>
           <h1 class="form-title">{{ schema?.title }}</h1>
           <p v-if="schema?.description" class="form-desc">{{ schema.description }}</p>
 
@@ -352,4 +352,75 @@ function handleBackToDesigner() {
   display: flex;
   align-items: center;
 }
-</style>
+
+.preview-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: var(--color-primary-bg);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 16px;
+  gap: 12px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.preview-tag {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-canvas);
+  border-radius: 4px;
+  padding: 2px 10px;
+  margin-left: 12px;
+}
+
+.preview-toggle {
+  margin-left: auto;
+  display: flex;
+  background: var(--color-canvas);
+  border-radius: var(--radius-md);
+  padding: 2px;
+  gap: 2px;
+
+  button {
+    padding: 4px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--color-text-muted);
+    transition: all .2s;
+
+    &.active {
+      background: var(--color-card);
+      color: var(--color-primary);
+      box-shadow: var(--shadow-xs);
+    }
+  }
+}
+
+.fill-preview-pc {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.phone-frame {
+  max-width: 375px;
+  margin: 0 auto;
+  border: 7px solid #1A1814;
+  border-radius: 28px;
+  padding: 24px 16px;
+  min-height: 600px;
+  position: relative;
+  background: var(--color-card);
+}
+
+.phone-notch {
+  width: 120px;
+  height: 28px;
+  background: #1A1814;
+  border-radius: 0 0 14px 14px;
+  margin: -24px auto 16px;
+}
