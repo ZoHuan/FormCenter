@@ -19,6 +19,7 @@
             :selected="comp.id === selectedId"
             @select="$emit('select', comp.id)"
             @remove="$emit('remove', comp.id)"
+            @copy="$emit('copy', comp.id)"
           />
         </div>
       </template>

@@ -61,6 +61,21 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
     isDirty.value = true
   }
 
+  function duplicateComponent(id: string) {
+    const source = components.value.find((c) => c.id === id)
+    if (!source) return
+    const newComp: ComponentSchema = {
+      ...JSON.parse(JSON.stringify(source)),
+      id: nanoid(),
+      field: source.field + '_copy',
+      label: source.label + '(副本)',
+    }
+    const idx = components.value.findIndex((c) => c.id === id)
+    components.value.splice(idx + 1, 0, newComp)
+    selectedId.value = newComp.id
+    isDirty.value = true
+  }
+
   function updateComponent(id: string, patch: Partial<ComponentSchema>) {
     const idx = components.value.findIndex((c) => c.id === id)
     if (idx === -1) return

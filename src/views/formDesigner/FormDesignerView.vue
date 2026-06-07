@@ -20,6 +20,7 @@
           @select="store.selectComponent"
           @remove="handleRemoveComponent"
           @move="handleMoveComponent"
+          @copy="handleCopyComponent"
         />
       </div>
       <div class="panel-right">
@@ -97,10 +98,15 @@ function loadTemplate(key: string) {
     formTitle.value = tpl.title
   }
 }
-
 function handleRemoveComponent(id: string) {
   store.removeComponent(id)
 }
+
+function handleCopyComponent(id: string) {
+  store.duplicateComponent(id)
+  ElMessage.success('已复制')
+}
+
 function handleMoveComponent(from: number, to: number) {
   store.moveComponent(from, to)
 }
