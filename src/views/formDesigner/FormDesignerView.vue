@@ -4,18 +4,7 @@
       <el-button link @click="handleBack">← 返回</el-button>
       <input v-model="formTitle" class="title-input" placeholder="请输入表单标题" @blur="onTitleBlur" />
       <div class="toolbar-right">
-        <el-dropdown trigger="click" style="margin-right:8px">
-          <el-button>更多 ▾</el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="toggleStatus('draft')" v-if="store.schema?.status !== 'draft'">切换为草稿</el-dropdown-item>
-              <el-dropdown-item @click="toggleStatus('open')" v-if="store.schema?.status !== 'open'">切换为收集中</el-dropdown-item>
-              <el-dropdown-item @click="toggleStatus('closed')" v-if="store.schema?.status !== 'closed'">切换为已关闭</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-        <el-button @click="handlePreview">预览</el-button>
-        <el-button type="primary" @click="handleSave">保存</el-button>
+        <el-button type="primary" @click="handleSave">保存草稿</el-button>
       </div>
     </div>
     <div class="designer-body">
