@@ -77,6 +77,8 @@
         <CalcEditor v-if="calcTypes.includes(comp.type)" :component="comp" @update="(p) => emit('update', p)" />
         <RateEditor v-if="comp.type === 'rate'" :component="comp" @update="(p) => emit('update', p)" />
         <RelationEditor v-if="comp.type === 'relation'" :component="comp" @update="(p) => emit('update', p)" />
+        <SignatureEditor v-if="comp.type === 'signature'" :component="comp" @update="(p) => emit('update', p)" />
+        <QRCodeEditor v-if="comp.type === 'QRCode'" :component="comp" @update="(p) => emit('update', p)" />
       </div>
     </div>
     <div v-if="comp.type === 'table' || comp.type === 'cross-table'" class="section">
@@ -113,6 +115,8 @@ import TriggerRuleEditor from './TriggerRuleEditor.vue'
 import RateEditor from './RateEditor.vue'
 import CalcEditor from './CalcEditor.vue'
 import RelationEditor from './RelationEditor.vue'
+import SignatureEditor from './SignatureEditor.vue'
+import QRCodeEditor from './QRCodeEditor.vue'
 
 const calcTypes = ['input', 'numeric', 'date', 'textarea']
 
