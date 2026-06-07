@@ -1,7 +1,6 @@
 <template>
   <div class="field-card" :class="{ selected }" @click.stop="$emit('select')">
-    <div class="card-header" :class="{ 'drag-handle': selected }">
-      <span v-if="!selected" class="drag-icon">⠿</span>
+    <div class="card-header">
       <span class="card-label">{{ schema.label }}</span>
       <span v-if="schema.required" class="required-star">*</span>
       <button class="btn-copy" @click.stop="$emit('copy')" title="复制组件">复制</button>
