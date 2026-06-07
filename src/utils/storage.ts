@@ -19,7 +19,12 @@ export function getItem<T>(key: string): T | null {
 export function setItem<T>(key: string, value: T): boolean {
   try {
     const json = JSON.stringify(value)
-    if (getTotalSize() + json.length * 2 > QUOTA_WARN) console.warn('Storage near quota')
+    const size = getTotalSize() + json.length * 2
+    if (size > QUOTA_WARN) {
+      const pct = Math.round((size / (5 * 1024 * 1024)) * 100)
+      console.warn(`Storage 已使用 ${pct}%，建议清理旧数据`)
+      window.dispatchEvent(new CustomEvent('storage-quota', { detail: { size, pct } }))
+    }
     localStorage.setItem(PREFIX + key, json); return true
   } catch { return false }
 }
