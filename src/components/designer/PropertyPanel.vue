@@ -12,20 +12,20 @@
         <div class="prop-row">
           <label>字段名</label><el-input v-model="comp.field" size="small" @input="emitUpdate" />
         </div>
-        <div class="prop-row">
+        <div v-if="!isSeparator" class="prop-row">
           <label>描述</label
           ><el-input v-model="comp.description" size="small" placeholder="占位提示" @input="emitUpdate" />
         </div>
-        <div class="prop-row">
+        <div v-if="!isSeparator && !isDecorative" class="prop-row">
           <label>必填</label><el-switch v-model="comp.required" size="small" @change="emitUpdate" />
         </div>
-        <div class="prop-row">
+        <div v-if="!isSeparator" class="prop-row">
           <label>隐藏</label><el-switch v-model="comp.hidden" size="small" @change="emitUpdate" />
         </div>
-        <div class="prop-row">
+        <div v-if="!isSeparator && !isDecorative" class="prop-row">
           <label>可编辑</label><el-switch v-model="comp.editable" size="small" @change="emitUpdate" />
         </div>
-        <div class="prop-row">
+        <div v-if="hasColspan" class="prop-row">
           <label>排列</label
           ><el-select v-model="comp.colspan" size="small" @change="emitUpdate"
             ><el-option :value="1" label="单列" /><el-option :value="2" label="双列" /><el-option
@@ -33,13 +33,13 @@
               label="三列" /><el-option :value="4" label="长标题"
           /></el-select>
         </div>
-        <div v-if="!isSeparator" class="prop-row">
+        <div v-if="hasAppStyle" class="prop-row">
           <label>APP排版</label
           ><el-radio-group v-model="comp.appStyle" size="small" @change="emitUpdate"
             ><el-radio :value="0">左右</el-radio><el-radio :value="1">上下</el-radio></el-radio-group
           >
         </div>
-        <div v-if="!isSeparator && !isTable && !isCrossTable" class="prop-row">
+        <div v-if="!isSeparator && !isDecorative && !isTable && !isCrossTable" class="prop-row">
           <label>默认值</label
           ><el-input v-model="comp.defaultValue" size="small" placeholder="字段初始值" @input="emitUpdate" />
         </div>
@@ -207,7 +207,9 @@ const isDecorative = computed(() => ['title', 'subtitle', 'group-title', 'separa
 const isSeparator = computed(() => comp.type === 'separator')
 const isTable = computed(() => comp.type === 'table')
 const isCrossTable = computed(() => comp.type === 'cross-table')
-const hasTooltip = computed(() => ['input', 'textarea', 'numeric', 'chooser', 'multi-chooser', 'selection', 'image', 'date', 'commitment'].includes(comp.type))
+const hasTooltip = computed(() => ['input', 'textarea', 'numeric', 'chooser', 'multi-chooser', 'selection', 'image', 'singleImage', 'commitment'].includes(comp.type))
+const hasColspan = computed(() => !['title', 'subtitle', 'group-title', 'point-out', 'separator', 'signature', 'relation', 'region', 'QRCode', 'table', 'cross-table'].includes(comp.type))
+const hasAppStyle = computed(() => !['separator', 'table', 'cross-table', 'QRCode'].includes(comp.type))
 const hasMax = computed(() => isNumeric.value)
 const hasRadix = computed(() => isNumeric.value)
 const hasUnit = computed(() => isNumeric.value)
