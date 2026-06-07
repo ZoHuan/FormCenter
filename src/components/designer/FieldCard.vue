@@ -4,8 +4,8 @@
       <span class="drag-handle">⠿</span>
       <span class="card-label">{{ schema.label }}</span>
       <span v-if="schema.required" class="required-star">*</span>
-      <span class="type-tag">{{ typeLabel }}</span>
-      <button class="btn-delete" @click.stop="$emit('remove')">×</button>
+      <button class="btn-copy" @click.stop="$emit('copy')" title="复制组件">复制</button>
+      <button class="btn-delete" @click.stop="$emit('remove')" title="删除组件">✕</button>
     </div>
     <div class="card-preview">
       <span v-if="isTextLike" class="preview-input">{{ schema.description || '请输入' }}</span>
@@ -25,59 +25,13 @@ import { computed } from 'vue'
 import type { ComponentSchema } from '@/types'
 
 const props = defineProps<{ schema: ComponentSchema; selected: boolean }>()
-defineEmits<{ select: []; remove: [] }>()
+defineEmits<{ select: []; remove: []; copy: [] }>()
 
 const isTextLike = computed(() => ['input', 'textarea', 'numeric', 'serial-number'].includes(props.schema.type))
 const isSelectLike = computed(() =>
-  [
-    'chooser',
-    'multi-chooser',
-    'selection',
-    'cascader',
-    'tree',
-    'region',
-    'map-location',
-    'user-tree',
-    'org-tree',
-  ].includes(props.schema.type),
+  ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'region', 'map-location', 'user-tree', 'org-tree'].includes(props.schema.type),
 )
 const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type))
-
-const typeLabel = computed(() => {
-  const m: Record<string, string> = {
-    input: '入',
-    textarea: '多',
-    numeric: '#',
-    'serial-number': 'NO',
-    chooser: '○',
-    'multi-chooser': '☐',
-    selection: '▾',
-    cascader: '└→',
-    tree: '🌳',
-    date: '日',
-    'date-range': '日↔',
-    image: '📎',
-    singleImage: '🖼',
-    signature: '✍',
-    rate: '★',
-    table: '表',
-    'cross-table': '交',
-    relation: '链',
-    commitment: '☑',
-    region: '地',
-    'map-location': '📍',
-    'user-tree': '👤',
-    'org-tree': '🏢',
-    'signature-name': '签',
-    QRCode: '码',
-    title: 'T',
-    subtitle: 't',
-    'group-title': 'G',
-    separator: '—',
-    'point-out': 'ⓘ',
-  }
-  return m[props.schema.type] ?? props.schema.type
-})
 </script>
 
 <style scoped lang="scss">
@@ -86,9 +40,7 @@ const typeLabel = computed(() => {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 
   &:hover {
     border-color: var(--color-border-hover);
@@ -102,13 +54,13 @@ const typeLabel = computed(() => {
 }
 
 .card-header {
-  height: 32px;
+  height: 36px;
   display: flex;
   align-items: center;
   padding: 0 8px;
   background: var(--color-primary-bg);
   border-bottom: 1px solid var(--color-canvas);
-  gap: 4px;
+  gap: 8px;
 }
 
 .drag-handle {
@@ -116,7 +68,7 @@ const typeLabel = computed(() => {
   font-size: 14px;
   cursor: grab;
   width: 24px;
-  height: 32px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -127,37 +79,50 @@ const typeLabel = computed(() => {
   font-size: 13px;
   font-weight: 500;
   color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .required-star {
   color: var(--color-error);
   font-size: 11px;
   margin-left: 2px;
+  flex-shrink: 0;
 }
 
-.type-tag {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--color-text-muted);
-  background: var(--color-canvas);
-  border-radius: 3px;
-  padding: 1px 6px;
+.btn-copy {
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: background 0.15s;
+
+  &:hover { background: var(--color-primary-bg); }
 }
 
 .btn-delete {
   border: none;
-  background: none;
+  background: transparent;
   color: var(--color-text-muted);
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
 
-  &:hover { color: var(--color-error); }
+  &:hover { color: var(--color-error); background: rgba(181,74,58,0.08); }
 }
 
 .card-preview {
