@@ -47,6 +47,7 @@
               <el-button link type="primary" @click="handleEdit(row.id)">编辑</el-button>
               <el-button v-if="row.status === 'draft'" link type="primary" @click="handlePublish(row)">发布</el-button>
               <el-button v-if="row.status === 'open'" link type="danger" @click="handleClose(row)">关闭</el-button>
+              <el-button v-if="row.status === 'closed'" link type="primary" @click="handleReopen(row)">重新开启</el-button>
               <el-button v-if="row.status === 'open'" link type="primary" @click="handleFill(row.id)">填写</el-button>
               <el-button v-if="row.status === 'open'" link type="primary" @click="handleCopyLink(row.id)">复制链接</el-button>
               <el-button link type="primary" @click="handleData(row.id)">数据</el-button>
@@ -153,6 +154,11 @@ function handlePublish(row: FormSchema) {
 function handleClose(row: FormSchema) {
   store.updateStatus(row.id, 'closed')
   ElMessage.success('已停止收集')
+}
+
+function handleReopen(row: FormSchema) {
+  store.updateStatus(row.id, 'open')
+  ElMessage.success('已重新开启收集')
 }
 </script>
 
