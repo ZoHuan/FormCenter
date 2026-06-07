@@ -40,15 +40,21 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  cursor: grab;
+  transition: border-color 0.15s, box-shadow 0.15s, outline 0.15s;
 
   &:hover {
     border-color: var(--color-border-hover);
     box-shadow: var(--shadow-xs);
   }
 
+  &:active {
+    cursor: grabbing;
+  }
+
   &.selected {
-    border: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: -1px;
     box-shadow: var(--shadow-focus);
   }
 }
