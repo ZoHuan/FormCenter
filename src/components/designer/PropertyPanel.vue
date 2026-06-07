@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!isDecorative" class="section">
+    <div v-if="hasValidation" class="section">
       <div class="section-header" @click="toggleSection('validation')">
         <span class="section-arrow" :class="{ open: openSections.validation }">▸</span>校验
       </div>
@@ -128,7 +128,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!isDecorative" class="section">
+    <div v-if="hasAdvanced" class="section">
       <div class="section-header" @click="toggleSection('advanced')">
         <span class="section-arrow" :class="{ open: openSections.advanced }">▸</span>高级
       </div>
@@ -180,7 +180,7 @@ import SignatureEditor from './SignatureEditor.vue'
 import QRCodeEditor from './QRCodeEditor.vue'
 import DecorationEditor from './DecorationEditor.vue'
 
-const calcTypes = ['input', 'numeric', 'date', 'textarea']
+const calcTypes = ['numeric', 'date']
 
 const props = defineProps<{ component: ComponentSchema; allComponents?: ComponentSchema[] }>()
 const allComponents = computed(() => props.allComponents ?? [])
@@ -219,6 +219,15 @@ const hasHideWhenEmpty = computed(() => comp.type === 'point-out')
 const hasEnableSearch = computed(() => comp.type === 'tree')
 const hasEnableSingle = computed(() => comp.type === 'tree')
 const hasManualInput = computed(() => comp.type === 'map-location')
+const hasValidation = computed(() =>
+  hasTextLimit.value || isNumeric.value || hasAutoWrap.value || hasRareChars.value ||
+  hasDateType.value || hasImageSize.value || hasHideWhenEmpty.value ||
+  hasEnableSearch.value || hasEnableSingle.value || hasManualInput.value
+)
+const hasAdvanced = computed(() =>
+  hasOptions.value || calcTypes.includes(comp.type) || comp.type === 'rate' ||
+  comp.type === 'relation' || comp.type === 'signature' || comp.type === 'QRCode' || isDecorative.value
+)
 
 const optionList = computed<{ label: string; value: string }[]>({
   get: () => ((comp.props as Record<string, unknown>)?.options as Array<{ label: string; value: string }>) ?? [],
