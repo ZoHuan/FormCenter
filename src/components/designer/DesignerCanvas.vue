@@ -13,7 +13,7 @@
       @change="onSortChange"
     >
       <template #item="{ element: comp }">
-        <div class="canvas-row" :style="{ flex: `0 0 ${widthPct(comp.colspan)}` }">
+        <div class="canvas-row" :style="{ gridColumn: gridSpan(comp.colspan) }">
           <FieldCard
             :schema="comp"
             :selected="comp.id === selectedId"
@@ -46,10 +46,11 @@ function onDrop(e: DragEvent) {
   const type = e.dataTransfer?.getData('componentType') as ComponentType
   if (type) window.dispatchEvent(new CustomEvent('palette-drop', { detail: { type } }))
 }
-function widthPct(c: number): string {
-  if (c === 2) return '50%'
-  if (c === 3) return '33.3%'
-  return '100%'
+function gridSpan(colspan: number): string {
+  if (colspan === 1) return 'span 12'
+  if (colspan === 2) return 'span 6'
+  if (colspan === 3) return 'span 4'
+  return 'span 12'
 }
 </script>
 
@@ -78,13 +79,15 @@ function widthPct(c: number): string {
 }
 
 .canvas-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
   gap: 8px;
+  align-items: start;
 }
 .canvas-row {
   margin-bottom: 4px;
   animation: card-enter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+  min-width: 0;
 }
 
 .ghost {
