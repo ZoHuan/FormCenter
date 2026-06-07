@@ -1,4 +1,4 @@
-// 30 种组件类型标识
+// 26 种组件类型标识
 export type ComponentType =
   // 装饰
   | 'title'
@@ -33,11 +33,8 @@ export type ComponentType =
   | 'commitment'
   // 位置
   | 'region'
-  | 'map-location'
-  // 用户/组织
-  | 'user-tree'
-  | 'org-tree'
-  | 'signature-name'
+  // 树结构
+  | 'tree-structure'
   // 其他
   | 'QRCode'
 

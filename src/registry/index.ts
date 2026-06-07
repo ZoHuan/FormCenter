@@ -130,14 +130,8 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
       return { ...base, type: 'commitment', label: '承诺说明', description: '本人确认以上信息属实' }
     case 'region':
       return { ...base, type: 'region', label: '行政区划', description: '请选择地区' }
-    case 'map-location':
-      return { ...base, type: 'map-location', label: '地图定位', description: '请选择位置' }
-    case 'user-tree':
-      return { ...base, type: 'user-tree', label: '用户选择', description: '请选择用户' }
-    case 'org-tree':
-      return { ...base, type: 'org-tree', label: '组织选择', description: '请选择组织' }
-    case 'signature-name':
-      return { ...base, type: 'signature-name', label: '签名人' }
+    case 'tree-structure':
+      return { ...base, type: 'tree-structure', label: '树结构', description: '请选择' }
     case 'QRCode':
       return { ...base, type: 'QRCode', label: '二维码', editable: false, props: { content: '' } }
     default:
@@ -153,7 +147,7 @@ export const COMPONENT_MENU = [
   { category: '文件', items: ['image', 'singleImage', 'signature'] as ComponentType[] },
   { category: '评分', items: ['rate'] as ComponentType[] },
   { category: '高级', items: ['table', 'cross-table', 'relation', 'commitment'] as ComponentType[] },
-  { category: '位置', items: ['region', 'map-location'] as ComponentType[] },
-  { category: '用户', items: ['user-tree', 'org-tree', 'signature-name'] as ComponentType[] },
+  { category: '位置', items: ['region'] as ComponentType[] },
+  { category: '树结构', items: ['tree-structure'] as ComponentType[] },
   { category: '其他', items: ['QRCode'] as ComponentType[] },
 ]

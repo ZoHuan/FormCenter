@@ -12,9 +12,7 @@
     <RelationRenderer v-else-if="comp.type === 'relation'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
     <CommitmentRenderer v-else-if="comp.type === 'commitment'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
     <RegionRenderer v-else-if="comp.type === 'region'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
-    <MapLocationRenderer v-else-if="comp.type === 'map-location'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
-    <TreeRenderer v-else-if="comp.type === 'user-tree' || comp.type === 'org-tree' || comp.type === 'tree'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
-    <SignatureNameRenderer v-else-if="comp.type === 'signature-name'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
+    <TreeRenderer v-else-if="comp.type === 'tree-structure' || comp.type === 'tree'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
     <QRCodeRenderer v-else-if="comp.type === 'QRCode'" :comp="comp" :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" />
     <el-input v-else :model-value="modelValue" @update:model-value="(v) => $emit('update:modelValue', v)" :placeholder="comp.description" />
   </div>
@@ -34,9 +32,7 @@ import CrossTableRenderer from './CrossTableRenderer.vue'
 import RelationRenderer from './RelationRenderer.vue'
 import CommitmentRenderer from './CommitmentRenderer.vue'
 import RegionRenderer from './RegionRenderer.vue'
-import MapLocationRenderer from './MapLocationRenderer.vue'
 import TreeRenderer from './TreeRenderer.vue'
-import SignatureNameRenderer from './SignatureNameRenderer.vue'
 import QRCodeRenderer from './QRCodeRenderer.vue'
 
 defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
