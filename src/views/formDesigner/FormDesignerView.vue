@@ -131,7 +131,7 @@ function toggleStatus(status: 'draft' | 'open' | 'closed') {
 
 function handleSaveDraft() {
   if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
-  if (store.schema) store.schema.status = 'draft'
+  if (store.schema && store.schema.status !== 'open') store.schema.status = 'draft'
   const id = store.save()
   ElMessage.success('草稿已保存')
   if (route.path === '/formDesigner') router.replace(`/formDesigner/${id}`)

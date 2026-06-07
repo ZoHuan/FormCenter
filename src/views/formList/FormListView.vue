@@ -45,10 +45,10 @@
           <el-table-column label="操作" min-width="240" align="center">
             <template #default="{ row }">
               <el-button link type="primary" @click="handleEdit(row.id)">编辑</el-button>
+              <el-button v-if="row.status === 'draft'" link type="primary" @click="handlePublish(row)">发布</el-button>
+              <el-button v-if="row.status === 'open'" link type="danger" @click="handleClose(row)">关闭</el-button>
               <el-button v-if="row.status === 'open'" link type="primary" @click="handleFill(row.id)">填写</el-button>
-              <el-button v-if="row.status === 'open'" link type="primary" @click="handleCopyLink(row.id)"
-                >复制链接</el-button
-              >
+              <el-button v-if="row.status === 'open'" link type="primary" @click="handleCopyLink(row.id)">复制链接</el-button>
               <el-button link type="primary" @click="handleData(row.id)">数据</el-button>
               <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
             </template>
@@ -142,6 +142,17 @@ async function handleDelete(row: FormSchema) {
 function handleTemplate(key: string) {
   showTemplateDialog.value = false
   router.push({ path: '/formDesigner', query: { template: key } })
+}
+
+function handlePublish(row: FormSchema) {
+  if ((row.components ?? []).length === 0) return ElMessage.warning('请先添加组件')
+  store.updateStatus(row.id, 'open')
+  ElMessage.success('已发布，可通过链接收集数据')
+}
+
+function handleClose(row: FormSchema) {
+  store.updateStatus(row.id, 'closed')
+  ElMessage.success('已停止收集')
 }
 </script>
 
