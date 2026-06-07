@@ -37,11 +37,11 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
 <style scoped lang="scss">
 .field-card {
   background: var(--color-card);
-  border: 1px solid var(--color-border);
+  border: 2px solid transparent;
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: grab;
-  transition: border-color 0.15s, box-shadow 0.15s, outline 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 
   &:hover {
     border-color: var(--color-border-hover);
@@ -53,8 +53,7 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   }
 
   &.selected {
-    outline: 2px solid var(--color-primary);
-    outline-offset: -1px;
+    border-color: var(--color-primary);
     box-shadow: var(--shadow-focus);
   }
 }
