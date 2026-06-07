@@ -4,7 +4,9 @@
       <el-button link @click="handleBack">← 返回</el-button>
       <input v-model="formTitle" class="title-input" placeholder="请输入表单标题" @blur="onTitleBlur" />
       <div class="toolbar-right">
-        <el-button type="primary" @click="handleSave">保存草稿</el-button>
+        <el-button @click="handlePreview">预览</el-button>
+        <el-button plain @click="handleSaveDraft">保存草稿</el-button>
+        <el-button type="primary" @click="handlePublish">发布</el-button>
       </div>
     </div>
     <div class="designer-body">
@@ -125,6 +127,23 @@ function toggleStatus(status: 'draft' | 'open' | 'closed') {
   if (status === 'open' && store.components.length === 0) return ElMessage.warning('请先添加组件')
   if (store.schema) { store.schema.status = status; store.save() }
   ElMessage.success(status === 'open' ? '已发布，可通过链接收集数据' : status === 'closed' ? '已停止收集' : '已切换为草稿')
+}
+
+function handleSaveDraft() {
+  if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
+  if (store.schema) store.schema.status = 'draft'
+  const id = store.save()
+  ElMessage.success('草稿已保存')
+  if (route.path === '/formDesigner') router.replace(`/formDesigner/${id}`)
+}
+
+function handlePublish() {
+  if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
+  if (store.components.length === 0) return ElMessage.warning('请先添加组件')
+  if (store.schema) store.schema.status = 'open'
+  const id = store.save()
+  ElMessage.success('已发布，可通过链接收集数据')
+  if (route.path === '/formDesigner') router.replace(`/formDesigner/${id}`)
 }
 
 function handlePreview() {
