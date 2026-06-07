@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div v-if="hasOptions" class="section">
+    <div v-if="hasOptions && !isDecorative" class="section">
       <div class="section-header" @click="toggleSection('options')">
         <span class="section-arrow" :class="{ open: openSections.options }">▸</span>选项
       </div>
@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="section">
+    <div v-if="!isDecorative" class="section">
       <div class="section-header" @click="toggleSection('validation')">
         <span class="section-arrow" :class="{ open: openSections.validation }">▸</span>校验
       </div>
@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div class="section">
+    <div v-if="!isDecorative" class="section">
       <div class="section-header" @click="toggleSection('advanced')">
         <span class="section-arrow" :class="{ open: openSections.advanced }">▸</span>高级
       </div>
@@ -141,6 +141,7 @@ function emitUpdate() {
 const hasOptions = computed(() => ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree'].includes(comp.type))
 const hasTextLimit = computed(() => ['input', 'textarea'].includes(comp.type))
 const isNumeric = computed(() => comp.type === 'numeric')
+const isDecorative = computed(() => ['title', 'subtitle', 'group-title', 'separator', 'point-out'].includes(comp.type))
 
 const optionList = computed<{ label: string; value: string }[]>({
   get: () => ((comp.props as Record<string, unknown>)?.options as Array<{ label: string; value: string }>) ?? [],
