@@ -112,6 +112,7 @@ const showDraftDialog = ref(false)
 const draftTime = ref('')
 
 onMounted(() => {
+  listStore.init()
   const formId = route.params.formId as string
   const form = listStore.getById(formId)
   if (!form) {
@@ -424,3 +425,4 @@ function handleBackToDesigner() {
   border-radius: 0 0 14px 14px;
   margin: -24px auto 16px;
 }
+</style>
