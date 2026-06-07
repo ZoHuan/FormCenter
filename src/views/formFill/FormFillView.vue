@@ -51,15 +51,17 @@
           <p v-if="schema?.description" class="form-desc">{{ schema.description }}</p>
 
           <div class="fields">
-            <div v-for="comp in visibleComponents" :key="comp.id" class="field-item">
-              <label class="field-label">
-                {{ comp.label }}
-                <span v-if="comp.required" class="required">*</span>
-              </label>
-              <div class="field-input">
-                <FieldRenderer :comp="comp" :model-value="formData[comp.field]" @update:model-value="(v) => (formData[comp.field] = v)" />
+            <div v-for="(row, ri) in layoutRows" :key="ri" class="field-row">
+              <div v-for="comp in row" :key="comp.id" class="field-item" :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }">
+                <label class="field-label" :class="{ stacked: comp.colspan === 4 }">
+                  {{ comp.label }}
+                  <span v-if="comp.required" class="required">*</span>
+                </label>
+                <div class="field-input">
+                  <FieldRenderer :comp="comp" :model-value="formData[comp.field]" @update:model-value="(v) => (formData[comp.field] = v)" />
+                </div>
+                <p v-if="fieldErrors[comp.field]" class="field-error">{{ fieldErrors[comp.field] }}</p>
               </div>
-              <p v-if="fieldErrors[comp.field]" class="field-error">{{ fieldErrors[comp.field] }}</p>
             </div>
           </div>
 
@@ -142,6 +144,25 @@ function initForm(form: FormSchema) {
 }
 
 const visibleComponents = computed(() => schema.value?.components.filter((c) => !c.hidden) ?? [])
+
+const widthMap: Record<number, number> = { 1: 100, 2: 50, 3: 33.33, 4: 100 }
+const layoutRows = computed(() => {
+  const rows: ComponentSchema[][] = []
+  let currentRow: ComponentSchema[] = []
+  let rowUsed = 0
+  for (const comp of visibleComponents.value) {
+    const w = widthMap[comp.colspan] || 100
+    if (rowUsed + w > 100.01 && currentRow.length > 0) {
+      rows.push(currentRow)
+      currentRow = []
+      rowUsed = 0
+    }
+    currentRow.push(comp)
+    rowUsed += w
+  }
+  if (currentRow.length > 0) rows.push(currentRow)
+  return rows
+})
 
 function isSelectType(t: string) {
   return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'user-tree', 'org-tree', 'region'].includes(t)
@@ -280,14 +301,23 @@ function handleBackToDesigner() {
   flex-direction: column;
   gap: 20px;
 }
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
 .field-item {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 .field-label {
   font-size: 13px;
   font-weight: 500;
+}
+.field-label.stacked {
+  margin-bottom: 4px;
 }
 .required {
   color: var(--color-error);
