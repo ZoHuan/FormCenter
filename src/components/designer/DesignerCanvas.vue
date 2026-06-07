@@ -8,7 +8,6 @@
       :list="localComponents"
       item-key="id"
       class="canvas-list"
-      handle=".drag-handle"
       ghost-class="ghost"
       :animation="300"
       @change="onSortChange"
