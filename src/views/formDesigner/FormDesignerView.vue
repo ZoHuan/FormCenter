@@ -8,9 +8,9 @@
           <el-button>更多 ▾</el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="toggleStatus('draft')" v-if="schema?.status !== 'draft'">切换为草稿</el-dropdown-item>
-              <el-dropdown-item @click="toggleStatus('open')" v-if="schema?.status !== 'open'">切换为收集中</el-dropdown-item>
-              <el-dropdown-item @click="toggleStatus('closed')" v-if="schema?.status !== 'closed'">切换为已关闭</el-dropdown-item>
+              <el-dropdown-item @click="toggleStatus('draft')" v-if="store.schema?.status !== 'draft'">切换为草稿</el-dropdown-item>
+              <el-dropdown-item @click="toggleStatus('open')" v-if="store.schema?.status !== 'open'">切换为收集中</el-dropdown-item>
+              <el-dropdown-item @click="toggleStatus('closed')" v-if="store.schema?.status !== 'closed'">切换为已关闭</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

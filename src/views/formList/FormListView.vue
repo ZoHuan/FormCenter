@@ -91,9 +91,10 @@ const showTemplateDialog = ref(false)
 onMounted(() => store.init())
 
 function getSubmissionCount(formId: string): number {
-  const store = useFormSubmissionStore()
-  store.init(formId)
-  return store.submissions.length
+  try {
+    const data = localStorage.getItem('formcenter_submissions_' + formId)
+    return data ? JSON.parse(data).length : 0
+  } catch { return 0 }
 }
 function formatTime(ts: number): string {
   return new Date(ts).toLocaleString('zh-CN', {
@@ -128,13 +129,15 @@ function handleData(id: string) {
   router.push(`/forms/${id}/responses`)
 }
 async function handleDelete(row: FormSchema) {
-  await ElMessageBox.confirm(
-    `删除后将清除「${row.title}」的表单定义、所有提交数据和草稿。此操作不可恢复。`,
-    '确认删除',
-    { confirmButtonText: '确认删除', cancelButtonText: '取消', type: 'warning' },
-  )
-  store.remove(row.id)
-  ElMessage.success('已删除')
+  try {
+    await ElMessageBox.confirm(
+      `删除后将清除「${row.title}」的表单定义、所有提交数据和草稿。此操作不可恢复。`,
+      '确认删除',
+      { confirmButtonText: '确认删除', cancelButtonText: '取消', type: 'warning' },
+    )
+    store.remove(row.id)
+    ElMessage.success('已删除')
+  } catch {}
 }
 function handleTemplate(key: string) {
   showTemplateDialog.value = false
