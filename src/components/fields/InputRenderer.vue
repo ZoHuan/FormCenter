@@ -28,10 +28,10 @@
       />
     </template>
 
-    <!-- 编号（只读） -->
+    <!-- 编号（自动生成只读） -->
     <template v-else-if="comp.type === 'serial-number'">
       <el-input
-        :model-value="modelValue as string"
+        :model-value="(modelValue as string) || autoSn"
         placeholder="自动生成"
         disabled
       />
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { InfoFilled } from '@element-plus/icons-vue'
 import type { ComponentSchema } from '@/types'
 
@@ -67,6 +67,19 @@ const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
 const emit = defineEmits<{ 'update:modelValue': [value: unknown] }>()
 
 const formatError = ref('')
+
+// 编号自动生成（基于时间戳）
+const autoSn = computed(() => {
+  const now = Date.now()
+  return `SN${now.toString(36).toUpperCase()}`
+})
+
+// 编号组件自动填充
+onMounted(() => {
+  if (props.comp.type === 'serial-number' && !props.modelValue) {
+    emit('update:modelValue', autoSn.value)
+  }
+})
 
 // 获取 props 配置
 const compProps = computed(() => (props.comp.props as Record<string, unknown>) || {})

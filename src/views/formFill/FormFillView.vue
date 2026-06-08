@@ -244,6 +244,7 @@ function restoreDraft() {
     if (c.field && !(c.field in formData)) formData[c.field] = c.defaultValue ?? ''
   })
   loadState.value = 'ready'
+  startAutoSave(() => ({ ...formData }))
 }
 
 function discardDraft() {
