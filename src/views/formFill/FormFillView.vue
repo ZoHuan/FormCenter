@@ -152,6 +152,7 @@ onMounted(() => {
 
   const draft = subStore.loadDraft(formId)
   if (draft && draft.savedAt && Object.keys(draft.data || {}).length > 0) {
+    loadState.value = 'ready'
     showDraftDialog.value = true
     draftTime.value = new Date(draft.savedAt).toLocaleString('zh-CN')
   } else {
