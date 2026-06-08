@@ -78,7 +78,9 @@ const columns = computed(() => {
 })
 
 const pagedData = computed(() =>
-  subStore.submissions.slice((page.value - 1) * pageSize.value, page.value * pageSize.value),
+  subStore.submissions
+    .slice((page.value - 1) * pageSize.value, page.value * pageSize.value)
+    .map((s) => ({ ...s.data, submittedAt: s.submittedAt })),
 )
 
 onMounted(() => {

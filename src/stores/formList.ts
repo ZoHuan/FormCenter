@@ -21,6 +21,17 @@ export const useFormListStore = defineStore('formList', () => {
     error.value = null
     try {
       forms.value = getItem<FormSchema[]>('schemas') ?? []
+      const decorTypes = ['title', 'subtitle', 'group-title', 'separator', 'point-out']
+      let hasFix = false
+      forms.value.forEach((f) => {
+        f.components?.forEach((c) => {
+          if (!c.field && !decorTypes.includes(c.type)) {
+            c.field = `${c.type}_${c.id.slice(0, 8)}`
+            hasFix = true
+          }
+        })
+      })
+      if (hasFix) save()
     } catch (e) {
       error.value = '加载失败'
       forms.value = []
