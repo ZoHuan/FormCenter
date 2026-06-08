@@ -84,6 +84,7 @@ const pagedData = computed(() =>
 )
 
 onMounted(() => {
+  listStore.init()
   subStore.init(formId)
   submissions.value = subStore.submissions
   loading.value = false
