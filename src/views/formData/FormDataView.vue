@@ -7,25 +7,26 @@
         <h2>{{ schema?.title }} — 提交数据</h2>
         <el-button type="primary" @click="handleExport">导出 Excel</el-button>
       </div>
-      <LoadingState v-if="loading" /><EmptyState v-else-if="submissions.length === 0" text="暂无提交数据" /><el-table
-        v-else
-        :data="pagedData"
-        stripe
-        ><el-table-column prop="submittedAt" label="提交时间" width="180"
-          ><template #default="{ row }">{{ formatTime(row.submittedAt) }}</template></el-table-column
-        ><el-table-column
-          v-for="col in columns"
-          :key="col.field"
-          :prop="col.field"
-          :label="col.title"
-          min-width="120" /></el-table
-      ><el-pagination
-        v-if="submissions.length > pageSize"
-        v-model:current-page="page"
-        :page-size="pageSize"
-        :total="submissions.length"
-        layout="prev,pager,next"
-      />
+      <LoadingState v-if="subStore.loading" />
+      <EmptyState v-else-if="subStore.submissions.length === 0" text="暂无提交数据" />
+      <template v-else>
+        <el-table :data="pagedData" stripe
+          ><el-table-column prop="submittedAt" label="提交时间" width="180"
+            ><template #default="{ row }">{{ formatTime(row.submittedAt) }}</template></el-table-column
+          ><el-table-column
+            v-for="col in columns"
+            :key="col.field"
+            :prop="col.field"
+            :label="col.title"
+            min-width="120" /></el-table
+        ><el-pagination
+          v-if="subStore.submissions.length > pageSize"
+          v-model:current-page="page"
+          :page-size="pageSize"
+          :total="subStore.submissions.length"
+          layout="prev,pager,next"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -39,15 +40,12 @@ import { exportToExcel } from '@/utils/excel'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
-import type { Submission } from '@/types'
 
 const route = useRoute()
 const listStore = useFormListStore()
 const subStore = useFormSubmissionStore()
 const formId = route.params.id as string
 const schema = computed(() => listStore.getById(formId))
-const submissions = ref<Submission[]>([])
-const loading = ref(true)
 const page = ref(1)
 const pageSize = ref(10)
 
@@ -80,21 +78,19 @@ const columns = computed(() => {
 })
 
 const pagedData = computed(() =>
-  submissions.value.slice((page.value - 1) * pageSize.value, page.value * pageSize.value),
+  subStore.submissions.slice((page.value - 1) * pageSize.value, page.value * pageSize.value),
 )
 
 onMounted(() => {
   listStore.init()
   subStore.init(formId)
-  submissions.value = subStore.submissions
-  loading.value = false
 })
 
 function handleExport() {
-  if (submissions.value.length === 0) return ElMessage.warning('没有可导出数据')
+  if (subStore.submissions.length === 0) return ElMessage.warning('没有可导出数据')
   exportToExcel(
     columns.value,
-    submissions.value.map((s) => ({ ...s.data, submittedAt: s.submittedAt })),
+    subStore.submissions.map((s) => ({ ...s.data, submittedAt: s.submittedAt })),
     schema.value?.title ?? 'export',
   )
   ElMessage.success('导出成功')
