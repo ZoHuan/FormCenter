@@ -101,6 +101,7 @@ import { validate } from '@/utils/validators'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import FieldRenderer from '@/components/fields/FieldRenderer.vue'
+import { DECOR_TYPES } from '@/registry'
 import type { FormSchema, ComponentSchema } from '@/types'
 
 const route = useRoute()
@@ -162,7 +163,7 @@ onMounted(() => {
 
 function initForm(form: FormSchema) {
   // 为没有 field 的组件自动生成 field（修复旧数据）
-  const decorTypes = ['title', 'subtitle', 'group-title', 'separator', 'point-out']
+  const decorTypes = DECOR_TYPES
   form.components.forEach((c) => {
     if (!c.field && !decorTypes.includes(c.type)) {
       c.field = `${c.type}_${c.id.slice(0, 8)}`
@@ -201,7 +202,7 @@ function isSelectType(t: string) {
 }
 
 function isDecorType(t: string) {
-  return ['title', 'subtitle', 'group-title', 'separator', 'point-out'].includes(t)
+  return (DECOR_TYPES as string[]).includes(t)
 }
 
 function hasOwnTitle(t: string) {

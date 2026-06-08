@@ -153,3 +153,6 @@ export const COMPONENT_MENU = [
   { category: '树结构', items: ['tree-structure'] as ComponentType[] },
   { category: '其他', items: ['QRCode'] as ComponentType[] },
 ]
+
+/** 装饰类组件类型（无需显示标题、无数据交互） */
+export const DECOR_TYPES: ComponentType[] = ['title', 'subtitle', 'group-title', 'separator', 'point-out']

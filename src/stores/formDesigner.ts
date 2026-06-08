@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { ComponentSchema, ComponentType, FormSchema } from '@/types'
 import { getItem, setItem } from '@/utils/storage'
-import { createDefaultComponent } from '@/registry'
+import { createDefaultComponent, DECOR_TYPES } from '@/registry'
 import { nanoid } from 'nanoid'
 
 export const useFormDesignerStore = defineStore('formDesigner', () => {
@@ -19,10 +19,8 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
     const forms = getItem<FormSchema[]>('schemas') ?? []
     const found = forms.find((f) => f.id === id)
     if (found) {
-      // 修复旧数据：给没有 field 的组件自动生成 field
-      const decorTypes = ['title', 'subtitle', 'group-title', 'separator', 'point-out']
       found.components.forEach((c) => {
-        if (!c.field && !decorTypes.includes(c.type)) {
+        if (!c.field && !DECOR_TYPES.includes(c.type as ComponentType)) {
           c.field = `${c.type}_${c.id.slice(0, 8)}`
         }
       })

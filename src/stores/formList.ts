@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { FormSchema } from '@/types'
 import { getItem, setItem, removeItem } from '@/utils/storage'
 import { nanoid } from 'nanoid'
+import { DECOR_TYPES } from '@/registry'
 
 export const useFormListStore = defineStore('formList', () => {
   const forms = ref<FormSchema[]>([])
@@ -21,11 +22,10 @@ export const useFormListStore = defineStore('formList', () => {
     error.value = null
     try {
       forms.value = getItem<FormSchema[]>('schemas') ?? []
-      const decorTypes = ['title', 'subtitle', 'group-title', 'separator', 'point-out']
       let hasFix = false
       forms.value.forEach((f) => {
         f.components?.forEach((c) => {
-          if (!c.field && !decorTypes.includes(c.type)) {
+          if (!c.field && !DECOR_TYPES.includes(c.type as any)) {
             c.field = `${c.type}_${c.id.slice(0, 8)}`
             hasFix = true
           }

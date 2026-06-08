@@ -38,7 +38,8 @@ import QRCodeRenderer from './QRCodeRenderer.vue'
 defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
 defineEmits<{ 'update:modelValue': [value: unknown] }>()
 
-const decorTypes = ['title', 'subtitle', 'group-title', 'separator', 'point-out']
+import { DECOR_TYPES } from '@/registry'
+const decorTypes = DECOR_TYPES
 const inputTypes = ['input', 'textarea', 'numeric', 'serial-number']
 const selectTypes = ['chooser', 'multi-chooser', 'selection', 'cascader']
 const dateTypes = ['date', 'date-range']
