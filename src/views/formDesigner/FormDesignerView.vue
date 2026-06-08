@@ -153,6 +153,7 @@ function handlePublish() {
 }
 
 function handlePreview() {
+  if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
   const id = store.schema?.id || store.save()
   if (id) window.open(`/fill/${id}?preview=1`)
 }
