@@ -2,7 +2,15 @@
   <div class="designer-page">
     <div class="toolbar">
       <el-button link @click="handleBack">← 返回</el-button>
-      <input v-model="formTitle" class="title-input" placeholder="请输入表单标题" @blur="onTitleBlur" />
+      <div class="title-area">
+        <input v-model="formTitle" class="title-input" placeholder="请输入表单标题" @blur="onTitleBlur" />
+        <input
+          v-model="formDesc"
+          class="desc-input"
+          placeholder="添加描述（选填）"
+          @blur="onDescBlur"
+        />
+      </div>
       <div class="toolbar-right">
         <el-button @click="handlePreview">预览</el-button>
         <el-button plain @click="handleSaveDraft">保存草稿</el-button>
@@ -51,6 +59,7 @@ const route = useRoute()
 const router = useRouter()
 const store = useFormDesignerStore()
 const formTitle = ref('')
+const formDesc = ref('')
 
 onMounted(() => {
   const id = route.params.id as string
@@ -62,6 +71,7 @@ onMounted(() => {
     if (tpl) loadTemplate(tpl)
   }
   formTitle.value = store.schema?.title ?? ''
+  formDesc.value = store.schema?.description ?? ''
   window.addEventListener('palette-drop', onPaletteDrop as EventListener)
   window.addEventListener('keydown', onKeydown)
 })
@@ -78,8 +88,19 @@ watch(
   },
 )
 
+watch(
+  () => store.schema?.description,
+  (v) => {
+    if (v) formDesc.value = v
+  },
+)
+
 function onTitleBlur() {
   if (store.schema) store.schema.title = formTitle.value
+}
+
+function onDescBlur() {
+  if (store.schema) store.schema.description = formDesc.value || ''
 }
 
 function handleAddComponent(type: ComponentType) {
@@ -112,6 +133,7 @@ function loadTemplate(key: string) {
     store.schema.description = tpl.description
     tpl.components.forEach((c) => store.addComponent(c.type as ComponentType))
     formTitle.value = tpl.title
+    formDesc.value = tpl.description || ''
   }
 }
 async function handleRemoveComponent(id: string) {
@@ -189,14 +211,20 @@ function handlePreview() {
   flex-direction: column;
 }
 .toolbar {
-  height: 56px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 8px 16px;
   gap: 16px;
   background: var(--color-card);
   box-shadow: 0 1px 0 var(--color-border);
   z-index: 10;
+  min-height: 56px;
+}
+.title-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 .title-input {
   border: none;
@@ -204,16 +232,24 @@ function handlePreview() {
   font-size: 18px;
   font-weight: 600;
   color: var(--color-text);
-  flex: 1;
+  width: 100%;
   outline: none;
 
   &::placeholder {
     color: var(--color-text-muted);
     font-weight: 400;
   }
+}
+.desc-input {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  width: 100%;
+  outline: none;
 
-  &:focus::placeholder {
-    opacity: 0.5;
+  &::placeholder {
+    color: var(--color-text-muted);
   }
 }
 .toolbar-right {
