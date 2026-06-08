@@ -83,6 +83,12 @@ html {
   background: var(--color-text-muted);
 }
 
+/* ── Skeleton shimmer ── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 /* ── Dialog ── */
 .el-overlay {
   backdrop-filter: blur(2px);

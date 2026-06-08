@@ -7,7 +7,14 @@
         <h2>{{ schema?.title }} — 提交数据</h2>
         <el-button type="primary" @click="handleExport">导出 Excel</el-button>
       </div>
-      <LoadingState v-if="subStore.loading" />
+      <div v-if="subStore.loading" class="skeleton-table">
+        <div class="sk-row">
+          <div class="sk-cell" v-for="i in 4" :key="i" />
+        </div>
+        <div class="sk-row" v-for="i in 5" :key="i">
+          <div class="sk-cell" v-for="j in 4" :key="j" :style="{ width: 60 + Math.random() * 30 + '%' }" />
+        </div>
+      </div>
       <EmptyState v-else-if="subStore.submissions.length === 0" text="暂无提交数据" />
       <template v-else>
         <el-table :data="pagedData" stripe
@@ -121,5 +128,39 @@ function formatTime(ts: number) {
   font-size: 20px;
   font-weight: 600;
   flex: 1;
+}
+
+.skeleton-table {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.sk-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-canvas);
+  padding: 0 12px;
+
+  &:last-child { border-bottom: none; }
+}
+
+.sk-cell {
+  height: 14px;
+  margin: 17px 0;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-canvas) 0%,
+    var(--color-page) 40%,
+    var(--color-canvas) 80%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  flex: 1;
+  min-width: 80px;
+
+  &:not(:last-child) { margin-right: 12px; }
 }
 </style>

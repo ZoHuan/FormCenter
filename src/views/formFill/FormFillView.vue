@@ -77,6 +77,9 @@
           </div>
 
           <div class="form-actions">
+            <Transition name="fade">
+              <p v-if="autoSaveHint" class="auto-save-hint">已自动保存</p>
+            </Transition>
             <template v-if="!isPreview">
               <el-button @click="handleSaveDraft">暂存</el-button>
               <el-button type="primary" size="large" :loading="submitting" @click="handleSubmit">提交</el-button>
@@ -109,9 +112,14 @@ const router = useRouter()
 const listStore = useFormListStore()
 const subStore = useFormSubmissionStore()
 const formId = route.params.formId as string
+const autoSaveHint = ref(false)
 let autoSaveTimer: ReturnType<typeof setInterval> | null = null
 function startAutoSave(getData: () => Record<string, unknown>) {
-  autoSaveTimer = setInterval(() => { subStore.saveDraft(formId, getData()) }, 60000)
+  autoSaveTimer = setInterval(() => {
+    subStore.saveDraft(formId, getData())
+    autoSaveHint.value = true
+    setTimeout(() => { autoSaveHint.value = false }, 2000)
+  }, 60000)
 }
 function stopAutoSave() {
   if (autoSaveTimer) { clearInterval(autoSaveTimer); autoSaveTimer = null }
@@ -457,10 +465,25 @@ function handleBackToDesigner() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin-top: 32px;
   padding-top: 24px;
   border-top: 1px solid var(--color-canvas);
+}
+
+.auto-save-hint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .sig-pad {

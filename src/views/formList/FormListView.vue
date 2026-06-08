@@ -13,7 +13,12 @@
         <el-input v-model="store.keyword" placeholder="搜索表单名称..." clearable size="large" />
       </div>
 
-      <LoadingState v-if="store.loading" text="加载中..." />
+      <div v-if="store.loading" class="skeleton-list">
+        <div v-for="i in 3" :key="i" class="skeleton-card">
+          <div class="sk-line sk-title" />
+          <div class="sk-line sk-meta" />
+        </div>
+      </div>
       <EmptyState
         v-else-if="store.filteredForms.length === 0 && !store.keyword"
         text="还没有表单"
@@ -274,6 +279,47 @@ function handleReopen(row: FormSchema) {
   text-align: center;
   color: var(--color-text-muted);
   padding: 40px 0;
+}
+
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-card {
+  height: 76px;
+  padding: 16px 20px;
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.sk-line {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-canvas) 0%,
+    var(--color-page) 40%,
+    var(--color-canvas) 80%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.sk-title {
+  width: 40%;
+  margin-bottom: 10px;
+}
+
+.sk-meta {
+  width: 65%;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 .template-grid {
   display: grid;
