@@ -56,7 +56,10 @@
                 v-for="comp in row" 
                 :key="comp.id" 
                 class="field-item" 
-                :class="{ 'app-style-vertical': comp.appStyle === 1 }"
+                :class="{ 
+                  'app-style-horizontal': comp.appStyle === 0,
+                  'app-style-vertical': comp.appStyle === 1 
+                }"
                 :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }"
               >
                 <label class="field-label" :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }">
@@ -323,6 +326,26 @@ function handleBackToDesigner() {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+
+  // APP排版：左右排列模式（桌面端默认）
+  &.app-style-horizontal {
+    @media (min-width: 721px) {
+      flex-direction: row;
+      align-items: flex-start;
+      
+      .field-label {
+        width: 120px;
+        flex-shrink: 0;
+        text-align: right;
+        padding-right: 12px;
+        line-height: 32px;
+      }
+      
+      .field-input {
+        flex: 1;
+      }
+    }
+  }
 
   // APP排版：上下排列模式
   &.app-style-vertical {
