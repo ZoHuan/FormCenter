@@ -51,7 +51,7 @@
             <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
           </div>
         </div>
-        <p v-if="store.filteredForms.length === 0 && store.keyword" class="no-result">没有匹配的表单</p>
+        <p v-if="store.filteredForms.length === 0 && store.keyword" class="no-result">没有找到「{{ store.keyword }}」相关的表单</p>
       </div>
     </div>
 

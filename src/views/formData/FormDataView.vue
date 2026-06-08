@@ -5,7 +5,7 @@
       <div class="data-header">
         <el-button link @click="$router.push('/forms')">← 返回</el-button>
         <h2>{{ schema?.title }} — 提交数据</h2>
-        <el-button type="primary" @click="handleExport">导出 Excel</el-button>
+        <el-button type="primary" size="large" @click="handleExport">导出 Excel</el-button>
       </div>
       <div v-if="subStore.loading" class="skeleton-table">
         <div class="sk-row">
