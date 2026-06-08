@@ -72,16 +72,21 @@ function typeLabel(t: string) {
 <style scoped lang="scss">
 .palette {
   padding: 12px 8px;
+  background: #FAFAF8;
+  height: 100%;
+  overflow-y: auto;
 }
 .palette-title {
   font-size: 13px;
   font-weight: 600;
   padding: 4px 8px 12px;
+  color: var(--color-text);
 }
 
 .group-title {
   font-size: 11px;
   font-weight: 500;
+  letter-spacing: 0.5px;
   color: var(--color-text-secondary);
   padding: 6px 8px;
   cursor: pointer;
@@ -90,6 +95,7 @@ function typeLabel(t: string) {
   align-items: center;
   gap: 4px;
   transition: background 0.15s;
+  text-transform: uppercase;
 
   &:hover {
     background: var(--color-canvas);
@@ -108,18 +114,25 @@ function typeLabel(t: string) {
 }
 
 .palette-item {
-  height: 40px;
+  height: 38px;
   display: flex;
   align-items: center;
   padding: 0 12px;
   font-size: 13px;
+  color: var(--color-text);
   cursor: grab;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   margin: 2px 0;
-  transition: background 0.15s;
+  transition: all 0.15s ease-out;
 
   &:hover {
     background: var(--color-primary-bg);
+    transform: translateX(2px);
+  }
+
+  &:active {
+    cursor: grabbing;
+    opacity: 0.4;
   }
 }
 </style>
