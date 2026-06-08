@@ -92,17 +92,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, computed, onMounted, onUnmounted, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { validate } from '@/utils/validators'
+import { DECOR_TYPES } from '@/registry'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import FieldRenderer from '@/components/fields/FieldRenderer.vue'
-import { DECOR_TYPES } from '@/registry'
-import type { FormSchema, ComponentSchema } from '@/types'
+import type { FormSchema, ComponentSchema, TriggerRule } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -194,6 +194,33 @@ const layoutRows = computed(() => {
   if (currentRow.length > 0) rows.push(currentRow)
   return rows
 })
+
+// 触发规则：监听表单数据变化，自动显隐/必填/可编辑目标组件
+watch(formData, () => {
+  if (!schema.value) return
+  const comps = schema.value.components
+  for (const comp of comps) {
+    if (!comp.triggerRules?.length) continue
+    const value = formData[comp.field]
+    for (const rule of comp.triggerRules) {
+      const match = String(rule.sourceValue) === String(value)
+      applyTriggerRule(comps, rule, match)
+    }
+  }
+}, { deep: true })
+
+function applyTriggerRule(comps: ComponentSchema[], rule: TriggerRule, match: boolean) {
+  const target = comps.find((c) => c.field === rule.targetField)
+  if (!target) return
+  switch (rule.action) {
+    case 'show': target.hidden = !match; break
+    case 'hide': target.hidden = match; break
+    case 'require': target.required = match; break
+    case 'optional': target.required = !match; break
+    case 'enable': target.editable = match; break
+    case 'disable': target.editable = !match; break
+  }
+}
 
 function isSelectType(t: string) {
   return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'tree-structure', 'region'].includes(t)

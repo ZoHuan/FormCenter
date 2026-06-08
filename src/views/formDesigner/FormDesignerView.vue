@@ -63,10 +63,12 @@ onMounted(() => {
   }
   formTitle.value = store.schema?.title ?? ''
   window.addEventListener('palette-drop', onPaletteDrop as EventListener)
+  window.addEventListener('keydown', onKeydown)
 })
 
 onUnmounted(() => {
   window.removeEventListener('palette-drop', onPaletteDrop as EventListener)
+  window.removeEventListener('keydown', onKeydown)
 })
 
 watch(
@@ -87,6 +89,20 @@ function handleAddComponent(type: ComponentType) {
 function onPaletteDrop(e: Event) {
   const type = (e as CustomEvent).detail?.type as ComponentType
   if (type) store.addComponent(type)
+}
+
+function onKeydown(e: KeyboardEvent) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault()
+    handleSaveDraft()
+  }
+  if (e.key === 'Delete' && store.selectedId) {
+    e.preventDefault()
+    handleRemoveComponent(store.selectedId)
+  }
+  if (e.key === 'Escape' && store.selectedId) {
+    store.selectComponent(null)
+  }
 }
 
 function loadTemplate(key: string) {
