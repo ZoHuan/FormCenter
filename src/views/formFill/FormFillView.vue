@@ -155,11 +155,12 @@ onMounted(() => {
 })
 
 function initForm(form: FormSchema) {
-  // 只在 formData 为空时初始化，避免覆盖已填写的数据
-  const hasData = Object.keys(formData).length > 0
-  if (!hasData) {
-    form.components.forEach((c) => { if (c.field) formData[c.field] = c.defaultValue ?? '' })
-  }
+  // 初始化 formData，为每个字段设置默认值
+  form.components.forEach((c) => {
+    if (c.field && !(c.field in formData)) {
+      formData[c.field] = c.defaultValue ?? ''
+    }
+  })
   loadState.value = 'ready'
   startAutoSave(() => ({ ...formData }))
 }
