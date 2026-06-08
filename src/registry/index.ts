@@ -14,7 +14,9 @@ const defaultComponent: ComponentSchema = {
 }
 
 export function createDefaultComponent(type: ComponentType): ComponentSchema {
-  const base = { ...defaultComponent, id: nanoid(), type }
+  const id = nanoid()
+  const field = `${type}_${id.slice(0, 8)}`
+  const base = { ...defaultComponent, id, type, field }
 
   switch (type) {
     case 'title':
