@@ -98,8 +98,15 @@ function loadTemplate(key: string) {
     formTitle.value = tpl.title
   }
 }
-function handleRemoveComponent(id: string) {
-  store.removeComponent(id)
+async function handleRemoveComponent(id: string) {
+  try {
+    await ElMessageBox.confirm('确认删除该组件？此操作不可恢复。', '确认删除', {
+      confirmButtonText: '确认删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    store.removeComponent(id)
+  } catch {}
 }
 
 function handleCopyComponent(id: string) {

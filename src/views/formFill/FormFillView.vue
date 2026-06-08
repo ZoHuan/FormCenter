@@ -21,7 +21,7 @@
       <h2>感谢填写</h2>
       <p>你的回复已成功提交</p>
       <div class="success-actions">
-        <el-button @click="window.close()">关闭页面</el-button>
+        <el-button @click="router.push('/forms')">返回首页</el-button>
         <el-button type="primary" @click="resetForm">再次填写</el-button>
       </div>
     </div>
@@ -146,7 +146,7 @@ onMounted(() => {
   }
 
   const draft = subStore.loadDraft(formId)
-  if (draft) {
+  if (draft && draft.savedAt && Object.keys(draft.data || {}).length > 0) {
     showDraftDialog.value = true
     draftTime.value = new Date(draft.savedAt).toLocaleString('zh-CN')
   } else {
@@ -155,7 +155,6 @@ onMounted(() => {
 })
 
 function initForm(form: FormSchema) {
-  // 初始化 formData，为每个字段设置默认值
   form.components.forEach((c) => {
     if (c.field && !(c.field in formData)) {
       formData[c.field] = c.defaultValue ?? ''

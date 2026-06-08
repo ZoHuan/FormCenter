@@ -3,7 +3,14 @@ import { useFormSubmissionStore } from '@/stores/formSubmission'
 
 export function useDraft(formId: string) {
   const store = useFormSubmissionStore()
-  const hasDraft = ref(!!store.loadDraft(formId))
+  const hasDraft = ref(false)
+
+  try {
+    hasDraft.value = !!store.loadDraft(formId)
+  } catch (e) {
+    console.error('useDraft error:', e)
+  }
+
   let timer: ReturnType<typeof setInterval> | null = null
 
   function startAutoSave(getData: () => Record<string, unknown>) {
