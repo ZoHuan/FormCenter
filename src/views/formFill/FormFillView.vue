@@ -351,7 +351,7 @@ function handleBackToDesigner() {
   background: var(--color-card);
   border-radius: 12px;
   padding: 32px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
 }
 .form-title {
   font-size: 24px;
@@ -366,7 +366,7 @@ function handleBackToDesigner() {
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 .field-row {
   display: flex;
@@ -376,7 +376,7 @@ function handleBackToDesigner() {
 .field-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   min-width: 0;
 
   // APP排版：左右排列模式（桌面端默认）
@@ -388,11 +388,12 @@ function handleBackToDesigner() {
         align-items: flex-start;
         
         .field-label {
-          width: 120px;
+          width: 80px;
           flex-shrink: 0;
           text-align: right;
           padding-right: 12px;
-          line-height: 32px;
+          line-height: 1.4;
+          margin-top: 12px;
         }
         
         .field-input {
@@ -404,9 +405,9 @@ function handleBackToDesigner() {
 
   // APP排版：上下排列模式
   &.app-style-vertical {
-    .field-label {
-      margin-bottom: 4px;
-    }
+      .field-label {
+        margin-bottom: 8px;
+      }
   }
 
   // 移动端适配
@@ -414,17 +415,17 @@ function handleBackToDesigner() {
     flex: 0 0 100% !important; // 移动端强制满宽
     
     // 移动端所有组件标签都在上方
-    .field-label {
-      margin-bottom: 4px;
-    }
+      .field-label {
+        margin-bottom: 8px;
+      }
   }
 }
 .field-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 .field-label.stacked {
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 .required {
   color: var(--color-error);
