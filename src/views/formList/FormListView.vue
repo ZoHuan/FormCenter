@@ -283,13 +283,14 @@ function handleReopen(row: FormSchema) {
 .template-card {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 24px 20px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s ease-out;
 }
 .template-card:hover {
   border-color: var(--color-primary);
   box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 .tpl-name {
   font-size: 16px;

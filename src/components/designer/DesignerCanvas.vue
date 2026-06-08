@@ -63,18 +63,23 @@ function gridSpan(colspan: number): string {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
+  min-height: 350px;
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  box-shadow: var(--shadow-xs);
 }
 
 .empty-box {
-  border: 2px dashed var(--color-border-hover);
+  border: 2px dashed var(--color-primary-light);
   border-radius: var(--radius-lg);
-  padding: 32px 48px;
+  padding: 40px 56px;
   text-align: center;
+  transition: border-color 0.2s;
 
   p {
     color: var(--color-text-muted);
     font-size: 14px;
+    line-height: 1.5;
   }
 }
 

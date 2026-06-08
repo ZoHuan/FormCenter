@@ -316,11 +316,15 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 <style scoped lang="scss">
 .prop-panel {
   padding: 16px;
+  background: var(--color-card);
+  height: 100%;
+  overflow-y: auto;
 }
 .prop-title {
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 16px;
+  color: var(--color-text);
 }
 
 .section {
@@ -330,13 +334,19 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 .section-header {
   font-size: 13px;
   font-weight: 500;
-  padding: 8px 0;
+  padding: 10px 0;
   cursor: pointer;
   user-select: none;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   border-bottom: 1px solid var(--color-canvas);
+  color: var(--color-text);
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--color-primary);
+  }
 }
 
 .section-arrow {
@@ -347,19 +357,22 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 }
 .section-arrow.open {
   transform: rotate(90deg);
+  color: var(--color-primary);
 }
 .section-body {
-  padding: 8px 0;
+  padding: 10px 0;
 }
 
 .prop-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  gap: 8px;
 
   label {
     font-size: 12px;
+    font-weight: 500;
     color: var(--color-text-secondary);
     width: 60px;
     flex-shrink: 0;

@@ -30,10 +30,16 @@ defineEmits(['action'])
   background: transparent;
   color: var(--color-primary);
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.15s ease-out;
 
   &:hover {
     background: var(--color-primary-bg);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 }
 </style>

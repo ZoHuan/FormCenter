@@ -29,17 +29,23 @@ defineEmits(['action'])
 }
 
 .action-btn {
-  margin-top: 12px;
-  padding: 8px 20px;
+  margin-top: 16px;
+  padding: 8px 24px;
   border-radius: var(--radius-md);
   border: none;
   background: var(--color-primary);
   color: var(--color-card);
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.15s ease-out;
 
   &:hover {
     background: var(--color-primary-hover);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 }
 </style>
