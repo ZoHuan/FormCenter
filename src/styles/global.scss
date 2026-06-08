@@ -95,3 +95,18 @@ html {
   from { opacity: 0; transform: scale(0.96); }
   to   { opacity: 1; transform: scale(1); }
 }
+
+/* ── Switch ── */
+.el-switch {
+  --el-switch-on-color: var(--color-primary);
+  --el-switch-off-color: var(--color-border-hover);
+}
+.el-switch__core {
+  border-radius: 10px;
+  height: 20px;
+  min-width: 36px;
+}
+.el-switch__core .el-switch__action {
+  width: 16px;
+  height: 16px;
+}
