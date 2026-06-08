@@ -123,9 +123,6 @@
         <div v-if="hasEnableSingle" class="prop-row">
           <label>树形单选</label><el-switch v-model="enableSingle" size="small" @change="onEnableSingleChange" />
         </div>
-        <div v-if="hasManualInput" class="prop-row">
-          <label>支持手动输入</label><el-switch v-model="manualInput" size="small" @change="onManualInputChange" />
-        </div>
       </div>
     </div>
     <div v-if="hasAdvanced" class="section">
@@ -294,7 +291,6 @@ const fileTypes = computed({ get: () => ((comp.props as Record<string, unknown>)
 const hideWhenEmpty = computed({ get: () => ((comp.props as Record<string, unknown>)?.hideWhenEmpty as boolean) ?? false, set: () => {} })
 const enableSearch = computed({ get: () => ((comp.props as Record<string, unknown>)?.enableSearch as boolean) ?? false, set: () => {} })
 const enableSingle = computed({ get: () => ((comp.props as Record<string, unknown>)?.enableSingle as boolean) ?? false, set: () => {} })
-const manualInput = computed({ get: () => ((comp.props as Record<string, unknown>)?.allowManualInput as boolean) ?? false, set: () => {} })
 
 function setProp(key: string, val: unknown) {
   ;(comp.props as Record<string, unknown>)[key] = val
@@ -315,7 +311,6 @@ function onFileTypesChange(v: string) { setProp('fileTypes', v) }
 function onHideWhenEmptyChange(v: boolean) { setProp('hideWhenEmpty', v) }
 function onEnableSearchChange(v: boolean) { setProp('enableSearch', v) }
 function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
-function onManualInputChange(v: boolean) { setProp('allowManualInput', v) }
 </script>
 
 <style scoped lang="scss">

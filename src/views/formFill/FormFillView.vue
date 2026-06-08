@@ -97,7 +97,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
-import { useDraft } from '@/composables/useDraft'
 import { validate } from '@/utils/validators'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
@@ -109,7 +108,13 @@ const router = useRouter()
 const listStore = useFormListStore()
 const subStore = useFormSubmissionStore()
 const formId = route.params.formId as string
-const { startAutoSave, stopAutoSave, save: saveDraft, clear: clearDraft, hasDraft } = useDraft(formId)
+let autoSaveTimer: ReturnType<typeof setInterval> | null = null
+function startAutoSave(getData: () => Record<string, unknown>) {
+  autoSaveTimer = setInterval(() => { subStore.saveDraft(formId, getData()) }, 60000)
+}
+function stopAutoSave() {
+  if (autoSaveTimer) { clearInterval(autoSaveTimer); autoSaveTimer = null }
+}
 
 const isPreview = computed(() => route.query.preview === '1')
 const previewMode = ref<'mobile' | 'pc'>('mobile')
@@ -155,7 +160,12 @@ onMounted(() => {
 })
 
 function initForm(form: FormSchema) {
+  // 为没有 field 的组件自动生成 field（修复旧数据）
+  const decorTypes = ['title', 'subtitle', 'group-title', 'separator', 'point-out']
   form.components.forEach((c) => {
+    if (!c.field && !decorTypes.includes(c.type)) {
+      c.field = `${c.type}_${c.id.slice(0, 8)}`
+    }
     if (c.field && !(c.field in formData)) {
       formData[c.field] = c.defaultValue ?? ''
     }
@@ -218,9 +228,9 @@ function discardDraft() {
   }
 }
 
-function handleSaveDraft() {
+  function handleSaveDraft() {
   if (!schema.value) return
-  saveDraft({ ...formData })
+  subStore.saveDraft(formId, { ...formData })
   ElMessage.success('已暂存')
 }
 
@@ -240,7 +250,7 @@ async function handleSubmit() {
   submitting.value = true
   const ok = subStore.submit(schema.value.id, { ...formData })
   submitting.value = false
-  if (ok) { clearDraft(); stopAutoSave(); loadState.value = 'submitted' }
+  if (ok) { subStore.clearDraft(formId); stopAutoSave(); loadState.value = 'submitted' }
   else ElMessage.error('提交失败，请重试')
 }
 

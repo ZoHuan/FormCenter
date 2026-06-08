@@ -19,6 +19,13 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
     const forms = getItem<FormSchema[]>('schemas') ?? []
     const found = forms.find((f) => f.id === id)
     if (found) {
+      // 修复旧数据：给没有 field 的组件自动生成 field
+      const decorTypes = ['title', 'subtitle', 'group-title', 'separator', 'point-out']
+      found.components.forEach((c) => {
+        if (!c.field && !decorTypes.includes(c.type)) {
+          c.field = `${c.type}_${c.id.slice(0, 8)}`
+        }
+      })
       schema.value = found
       components.value = [...found.components]
       selectedId.value = null
