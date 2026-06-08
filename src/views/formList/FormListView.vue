@@ -21,40 +21,31 @@
         action-text="新建表单"
         @action="handleCreate"
       />
-      <div v-else class="table-wrap">
-        <el-table :data="store.filteredForms" stripe>
-          <el-table-column prop="title" label="表单名称" min-width="200">
-            <template #default="{ row }"
-              ><span class="form-name" @click="handleEdit(row.id)">{{ row.title || '未命名表单' }}</span></template
-            >
-          </el-table-column>
-          <el-table-column label="字段数" width="80" align="center">
-            <template #default="{ row }">{{ row.components?.length ?? 0 }}</template>
-          </el-table-column>
-          <el-table-column label="回复数" width="80" align="center">
-            <template #default="{ row }">{{ getSubmissionCount(row.id) }}</template>
-          </el-table-column>
-          <el-table-column prop="updatedAt" label="更新时间" width="160">
-            <template #default="{ row }">{{ formatTime(row.updatedAt) }}</template>
-          </el-table-column>
-          <el-table-column label="状态" width="100" align="center">
-            <template #default="{ row }">
-              <el-tag :type="statusType(row.status)" size="small">{{ statusLabel(row.status) }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" min-width="240" align="center">
-            <template #default="{ row }">
-              <el-button link type="primary" @click="handleEdit(row.id)">编辑</el-button>
-              <el-button v-if="row.status === 'draft'" link type="primary" @click="handlePublish(row)">发布</el-button>
-              <el-button v-if="row.status === 'open'" link type="danger" @click="handleClose(row)">关闭</el-button>
-              <el-button v-if="row.status === 'closed'" link type="primary" @click="handleReopen(row)">重新开启</el-button>
-              <el-button v-if="row.status === 'open'" link type="primary" @click="handleFill(row.id)">填写</el-button>
-              <el-button v-if="row.status === 'open'" link type="primary" @click="handleCopyLink(row.id)">复制链接</el-button>
-              <el-button link type="primary" @click="handleData(row.id)">数据</el-button>
-              <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+      <div v-else class="form-cards">
+        <div v-for="row in store.filteredForms" :key="row.id" class="form-card" :data-status="row.status" @click="handleEdit(row.id)">
+          <div class="fc-left">
+            <div class="fc-title">{{ row.title || '未命名表单' }}</div>
+            <div class="fc-meta">
+              <span>{{ row.components?.length ?? 0 }} 个字段</span>
+              <span class="dot">·</span>
+              <span>{{ statusLabel(row.status) }}</span>
+              <span class="dot">·</span>
+              <span>{{ getSubmissionCount(row.id) }} 条回复</span>
+              <span class="dot">·</span>
+              <span>{{ formatTime(row.updatedAt) }}</span>
+            </div>
+          </div>
+          <div class="fc-actions" @click.stop>
+            <el-button link type="primary" @click="handleEdit(row.id)">编辑</el-button>
+            <el-button v-if="row.status === 'draft'" link type="primary" @click="handlePublish(row)">发布</el-button>
+            <el-button v-if="row.status === 'open'" link type="danger" @click="handleClose(row)">关闭</el-button>
+            <el-button v-if="row.status === 'closed'" link type="primary" @click="handleReopen(row)">重新开启</el-button>
+            <el-button v-if="row.status === 'open'" link type="primary" @click="handleFill(row.id)">填写</el-button>
+            <el-button v-if="row.status === 'open'" link type="primary" @click="handleCopyLink(row.id)">复制链接</el-button>
+            <el-button link type="primary" @click="handleData(row.id)">数据</el-button>
+            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+          </div>
+        </div>
         <p v-if="store.filteredForms.length === 0 && store.keyword" class="no-result">没有匹配的表单</p>
       </div>
     </div>
@@ -201,6 +192,83 @@ function handleReopen(row: FormSchema) {
 }
 .form-name:hover {
   color: var(--color-primary-hover);
+}
+
+.form-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  border-left: 4px solid transparent;
+
+  &:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-border-hover);
+    transform: translateY(-1px);
+  }
+
+  // Status border colors
+  .status-open &,
+  &[data-status='open'] {
+    border-left-color: var(--color-success);
+  }
+  .status-draft &,
+  &[data-status='draft'] {
+    border-left-color: var(--color-border-hover);
+  }
+}
+
+.fc-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.fc-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 6px;
+}
+
+.fc-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+
+  .dot {
+    color: var(--color-text-muted);
+    margin: 0 2px;
+  }
+}
+
+.fc-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  .form-card:hover & {
+    opacity: 1;
+  }
 }
 .no-result {
   text-align: center;
