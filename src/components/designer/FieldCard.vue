@@ -62,7 +62,7 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   display: flex;
   align-items: center;
   padding: 0 8px;
-  background: #FAFAF8;
+  background: var(--color-page);
   border-bottom: 1px solid var(--color-canvas);
   gap: 8px;
 }

@@ -116,7 +116,7 @@ html {
   --el-table-border-color: var(--color-canvas);
   --el-table-header-bg-color: var(--color-card);
   --el-table-header-text-color: var(--color-text);
-  --el-table-row-hover-bg-color: #FAFAF8;
+  --el-table-row-hover-bg-color: var(--color-page);
 }
 .el-table th.el-table__cell {
   height: 40px;

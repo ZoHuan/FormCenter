@@ -72,7 +72,7 @@ function typeLabel(t: string) {
 <style scoped lang="scss">
 .palette {
   padding: 12px 8px;
-  background: #FAFAF8;
+  background: var(--color-page);
   height: 100%;
   overflow-y: auto;
 }
