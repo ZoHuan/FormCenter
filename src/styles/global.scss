@@ -153,3 +153,19 @@ html {
 .el-pager li:not(.is-active):hover {
   color: var(--color-primary);
 }
+
+/* ── Toast/Message ── */
+.el-message {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: none;
+}
+.el-message--success {
+  --el-message-bg-color: var(--color-success-bg);
+}
+.el-message--error {
+  --el-message-bg-color: var(--color-error-bg);
+}
+.el-message--warning {
+  --el-message-bg-color: var(--color-warning-bg);
+}
