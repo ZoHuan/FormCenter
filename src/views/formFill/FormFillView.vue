@@ -59,11 +59,12 @@
                 :class="{ 
                   'app-style-horizontal': comp.appStyle === 0,
                   'app-style-vertical': comp.appStyle === 1,
-                  'is-decor': isDecorType(comp.type)
+                  'is-decor': isDecorType(comp.type),
+                  'has-own-title': hasOwnTitle(comp.type)
                 }"
                 :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }"
               >
-                <label v-if="!isDecorType(comp.type)" class="field-label" :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }">
+                <label v-if="!isDecorType(comp.type) && !hasOwnTitle(comp.type)" class="field-label" :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }">
                   {{ comp.label }}
                   <span v-if="comp.required" class="required">*</span>
                 </label>
@@ -186,6 +187,10 @@ function isSelectType(t: string) {
 
 function isDecorType(t: string) {
   return ['title', 'subtitle', 'group-title', 'separator', 'point-out'].includes(t)
+}
+
+function hasOwnTitle(t: string) {
+  return ['table'].includes(t)
 }
 
 function restoreDraft() {
