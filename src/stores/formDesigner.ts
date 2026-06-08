@@ -19,11 +19,14 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
     const forms = getItem<FormSchema[]>('schemas') ?? []
     const found = forms.find((f) => f.id === id)
     if (found) {
+      let hasFix = false
       found.components.forEach((c) => {
         if (!c.field && !DECOR_TYPES.includes(c.type as ComponentType)) {
           c.field = `${c.type}_${c.id.slice(0, 8)}`
+          hasFix = true
         }
       })
+      if (hasFix) setItem('schemas', forms)
       schema.value = found
       components.value = [...found.components]
       selectedId.value = null
@@ -56,13 +59,16 @@ export const useFormDesignerStore = defineStore('formDesigner', () => {
   }
 
   function removeComponent(id: string) {
+    const target = components.value.find((c) => c.id === id)
     components.value = components.value.filter((c) => c.id !== id)
     if (selectedId.value === id) selectedId.value = null
-    components.value.forEach((c) => {
-      if (c.triggerRules) {
-        c.triggerRules = c.triggerRules.filter((r) => r.targetField !== id)
-      }
-    })
+    if (target?.field) {
+      components.value.forEach((c) => {
+        if (c.triggerRules) {
+          c.triggerRules = c.triggerRules.filter((r) => r.targetField !== target!.field)
+        }
+      })
+    }
     isDirty.value = true
   }
 
