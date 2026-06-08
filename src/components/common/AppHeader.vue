@@ -18,13 +18,13 @@ const visible = computed(() => !route.path.startsWith('/formDesigner') && !route
 .app-header {
   height: 56px;
   background: var(--color-card);
-  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   padding: 0 24px;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 1px 0 var(--color-border);
 
   .header-left {
     display: flex;

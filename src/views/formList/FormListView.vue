@@ -187,8 +187,13 @@ function handleReopen(row: FormSchema) {
   gap: 12px;
 }
 .search-bar {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   max-width: 360px;
+
+  :deep(.el-input__wrapper) {
+    border-radius: var(--radius-full);
+    box-shadow: inset 0 0 0 1px var(--color-border);
+  }
 }
 .form-name {
   color: var(--color-primary);
