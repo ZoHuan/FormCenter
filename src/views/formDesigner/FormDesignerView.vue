@@ -194,15 +194,27 @@ function handlePreview() {
   align-items: center;
   padding: 0 16px;
   gap: 16px;
-  border-bottom: 1px solid var(--color-border);
   background: var(--color-card);
+  box-shadow: 0 1px 0 var(--color-border);
+  z-index: 10;
 }
 .title-input {
   border: none;
+  background: transparent;
   font-size: 18px;
   font-weight: 600;
+  color: var(--color-text);
   flex: 1;
   outline: none;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  &:focus::placeholder {
+    opacity: 0.5;
+  }
 }
 .toolbar-right {
   display: flex;
@@ -215,9 +227,8 @@ function handlePreview() {
 }
 .panel-left {
   width: 260px;
-  border-right: 1px solid var(--color-border);
   overflow-y: auto;
-  background: var(--color-primary-bg);
+  background: var(--color-page);
 }
 .canvas-area {
   flex: 1;
@@ -227,9 +238,9 @@ function handlePreview() {
 }
 .panel-right {
   width: 300px;
-  border-left: 1px solid var(--color-border);
   overflow-y: auto;
   background: var(--color-card);
+  box-shadow: -1px 0 0 var(--color-border);
 }
 .no-select {
   padding: 24px;
