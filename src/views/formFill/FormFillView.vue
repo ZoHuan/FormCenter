@@ -162,10 +162,8 @@ onMounted(() => {
 })
 
 function initForm(form: FormSchema) {
-  // 为没有 field 的组件自动生成 field（修复旧数据）
-  const decorTypes = DECOR_TYPES
   form.components.forEach((c) => {
-    if (!c.field && !decorTypes.includes(c.type)) {
+    if (!c.field && !(DECOR_TYPES as string[]).includes(c.type)) {
       c.field = `${c.type}_${c.id.slice(0, 8)}`
     }
     if (c.field && !(c.field in formData)) {

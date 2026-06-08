@@ -26,7 +26,11 @@ export const useFormSubmissionStore = defineStore('formSubmission', () => {
       data,
       submittedAt: Date.now(),
     }
-    const all = getItem<Submission[]>(`submissions_${formId}`) ?? []
+    const raw = getItem<Submission[]>(`submissions_${formId}`)
+    const all = raw ?? []
+    if (!raw && localStorage.getItem(`formcenter_submissions_${formId}`)) {
+      console.warn('[submit] 已有提交数据损坏，将覆盖，formId:', formId)
+    }
     all.push(submission)
     if (!setItem(`submissions_${formId}`, all)) return false
     submissions.value = all
