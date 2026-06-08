@@ -327,6 +327,7 @@ function handleBackToDesigner() {
   justify-content: center;
   font-size: 36px;
   margin: 0 auto;
+  box-shadow: 0 4px 16px rgba(91, 123, 74, 0.2);
 }
 .success-actions {
   display: flex;
@@ -337,11 +338,24 @@ function handleBackToDesigner() {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  padding: 8px 0;
+
+  .dialog-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
 }
 .draft-time {
   color: var(--color-text-muted);
   font-size: 13px;
+}
+.draft-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
 }
 .fill-form {
   max-width: 720px;
@@ -437,6 +451,16 @@ function handleBackToDesigner() {
 .field-error {
   color: var(--color-error);
   font-size: 12px;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-canvas);
 }
 
 .sig-pad {
