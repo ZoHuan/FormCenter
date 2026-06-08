@@ -58,11 +58,12 @@
                 class="field-item" 
                 :class="{ 
                   'app-style-horizontal': comp.appStyle === 0,
-                  'app-style-vertical': comp.appStyle === 1 
+                  'app-style-vertical': comp.appStyle === 1,
+                  'is-decor': isDecorType(comp.type)
                 }"
                 :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }"
               >
-                <label class="field-label" :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }">
+                <label v-if="!isDecorType(comp.type)" class="field-label" :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }">
                   {{ comp.label }}
                   <span v-if="comp.required" class="required">*</span>
                 </label>
@@ -181,6 +182,10 @@ const layoutRows = computed(() => {
 
 function isSelectType(t: string) {
   return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'tree-structure', 'region'].includes(t)
+}
+
+function isDecorType(t: string) {
+  return ['title', 'subtitle', 'group-title', 'separator', 'point-out'].includes(t)
 }
 
 function restoreDraft() {
@@ -330,19 +335,22 @@ function handleBackToDesigner() {
   // APP排版：左右排列模式（桌面端默认）
   &.app-style-horizontal {
     @media (min-width: 721px) {
-      flex-direction: row;
-      align-items: flex-start;
-      
-      .field-label {
-        width: 120px;
-        flex-shrink: 0;
-        text-align: right;
-        padding-right: 12px;
-        line-height: 32px;
-      }
-      
-      .field-input {
-        flex: 1;
+      // 装饰类组件不参与左右排列
+      &:not(.is-decor) {
+        flex-direction: row;
+        align-items: flex-start;
+        
+        .field-label {
+          width: 120px;
+          flex-shrink: 0;
+          text-align: right;
+          padding-right: 12px;
+          line-height: 32px;
+        }
+        
+        .field-input {
+          flex: 1;
+        }
       }
     }
   }
