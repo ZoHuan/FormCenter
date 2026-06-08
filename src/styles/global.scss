@@ -52,5 +52,33 @@
 
 .el-button { transition: transform .1s ease, box-shadow .15s ease; }
 .el-button:active { transform: scale(0.97); }
+.el-button { border-radius: var(--radius-sm); }
+.el-button--large { border-radius: var(--radius-md); height: 40px; }
 .el-input.is-error .el-input__wrapper { animation: input-shake .3s ease; }
 @keyframes input-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+/* ── Global refinements ── */
+::selection {
+  background: var(--color-primary-bg);
+  color: var(--color-text);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-hover);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
