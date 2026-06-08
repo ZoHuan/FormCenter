@@ -94,6 +94,16 @@ html {
   backdrop-filter: blur(2px);
   background: rgba(28, 25, 23, 0.3) !important;
 }
+
+@media (prefers-color-scheme: dark) {
+  .el-overlay {
+    background: rgba(0, 0, 0, 0.5) !important;
+  }
+}
+[data-theme='dark'] .el-overlay {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
 .el-dialog {
   animation: dialog-in 0.3s cubic-bezier(0.3, 0, 0.2, 1);
 }
@@ -154,7 +164,7 @@ html {
 }
 .el-pager li.is-active {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-card);
 }
 .el-pager li:not(.is-active):hover {
   color: var(--color-primary);
