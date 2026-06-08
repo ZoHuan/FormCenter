@@ -34,7 +34,7 @@ defineEmits(['action'])
   border-radius: var(--radius-md);
   border: none;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-card);
   font-size: 14px;
   cursor: pointer;
 

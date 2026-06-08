@@ -511,7 +511,7 @@ function handleBackToDesigner() {
 .phone-frame {
   max-width: 375px;
   margin: 0 auto;
-  border: 7px solid #1A1814;
+  border: 7px solid var(--color-text);
   border-radius: 28px;
   padding: 24px 16px;
   min-height: 600px;
@@ -522,7 +522,7 @@ function handleBackToDesigner() {
 .phone-notch {
   width: 120px;
   height: 28px;
-  background: #1A1814;
+  background: var(--color-text);
   border-radius: 0 0 14px 14px;
   margin: -24px auto 16px;
 }

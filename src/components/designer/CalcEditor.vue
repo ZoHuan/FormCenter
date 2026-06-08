@@ -74,5 +74,5 @@ function saveRules(list: Array<{ id: string; description: string; expression: st
 .rule-expr { font-size: 12px; color: var(--color-text-muted); font-family: JetBrains Mono, monospace; margin-top: 2px; }
 .rule-btns { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; }
 .dialog-row { margin-bottom: 16px; label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; } }
-.dialog-hint { font-size: 12px; color: var(--color-text-muted); margin-top: -8px; code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; } }
+.dialog-hint { font-size: 12px; color: var(--color-text-muted); margin-top: -8px; code { background: var(--color-code-bg); padding: 1px 4px; border-radius: 3px; } }
 </style>

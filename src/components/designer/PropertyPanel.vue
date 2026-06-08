@@ -109,7 +109,7 @@
           <label>最大上传数</label><el-input-number v-model="maxCount" :min="1" size="small" @change="onMaxCountChange" />
         </div>
         <div v-if="hasImageSize" class="prop-row">
-          <label>文件大小上限</label><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span style="font-size:12px;color:#9C9790;margin-left:4px">KB</span>
+          <label>文件大小上限</label><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span style="font-size:12px;color:var(--color-text-muted);margin-left:4px">KB</span>
         </div>
         <div v-if="hasImageSize" class="prop-row">
           <label>文件类型</label><el-input v-model="fileTypes" size="small" placeholder=".jpg;.png" @input="onFileTypesChange" />

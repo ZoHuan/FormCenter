@@ -17,7 +17,7 @@ const visible = computed(() => !route.path.startsWith('/formDesigner') && !route
 <style scoped lang="scss">
 .app-header {
   height: 56px;
-  background: #fff;
+  background: var(--color-card);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
