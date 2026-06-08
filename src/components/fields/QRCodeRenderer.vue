@@ -5,14 +5,31 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { ComponentSchema } from '@/types'
 import QRCode from 'qrcode'
+
 const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
 defineEmits<{ 'update:modelValue': [value: unknown] }>()
+
 const qrUrl = ref('')
-watch(() => (props.comp.props as Record<string, unknown>)?.content, async (val) => {
-  if (val) qrUrl.value = await QRCode.toDataURL(val as string, { width: 200, margin: 2 })
+
+const content = computed(() => {
+  const p = props.comp.props as Record<string, unknown>
+  return (p?.content as string) || ''
+})
+
+watch(content, async (val) => {
+  if (val) {
+    try {
+      qrUrl.value = await QRCode.toDataURL(val, { width: 200, margin: 2 })
+    } catch (e) {
+      console.error('QRCode generation failed:', e)
+      qrUrl.value = ''
+    }
+  } else {
+    qrUrl.value = ''
+  }
 }, { immediate: true })
 </script>
 <style scoped>
