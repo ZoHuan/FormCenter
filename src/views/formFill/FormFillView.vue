@@ -52,8 +52,14 @@
 
           <div class="fields">
             <div v-for="(row, ri) in layoutRows" :key="ri" class="field-row">
-              <div v-for="comp in row" :key="comp.id" class="field-item" :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }">
-                <label class="field-label" :class="{ stacked: comp.colspan === 4 }">
+              <div 
+                v-for="comp in row" 
+                :key="comp.id" 
+                class="field-item" 
+                :class="{ 'app-style-vertical': comp.appStyle === 1 }"
+                :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }"
+              >
+                <label class="field-label" :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }">
                   {{ comp.label }}
                   <span v-if="comp.required" class="required">*</span>
                 </label>
@@ -317,6 +323,23 @@ function handleBackToDesigner() {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+
+  // APP排版：上下排列模式
+  &.app-style-vertical {
+    .field-label {
+      margin-bottom: 4px;
+    }
+  }
+
+  // 移动端适配
+  @media (max-width: 720px) {
+    flex: 0 0 100% !important; // 移动端强制满宽
+    
+    // 移动端所有组件标签都在上方
+    .field-label {
+      margin-bottom: 4px;
+    }
+  }
 }
 .field-label {
   font-size: 13px;
