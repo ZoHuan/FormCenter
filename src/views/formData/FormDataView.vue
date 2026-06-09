@@ -15,7 +15,7 @@
           <div class="sk-cell" v-for="j in 4" :key="j" :style="{ width: 60 + Math.random() * 30 + '%' }" />
         </div>
       </div>
-      <EmptyState v-else-if="subStore.submissions.length === 0" text="暂无提交数据" />
+      <EmptyState v-else-if="subStore.submissions.length === 0" text="暂无提交数据" desc="分享表单链接，数据会出现在这里" />
       <template v-else>
         <div class="table-card">
           <el-table :data="pagedData" stripe
