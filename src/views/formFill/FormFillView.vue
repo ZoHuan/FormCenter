@@ -454,9 +454,47 @@ function handleBackToDesigner() {
 }
 .field-input :deep(.el-input__wrapper),
 .field-input :deep(.el-select__wrapper) {
-  border-radius: 8px;
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 0 var(--color-border);
+  background: transparent;
+  padding: 0;
+  height: 48px;
+  transition: box-shadow 0.2s ease-out;
+
+  &:hover {
+    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+  }
 }
-.field-error {
+.field-input :deep(.el-input.is-focus .el-input__wrapper),
+.field-input :deep(.el-select.is-focus .el-select__wrapper) {
+  box-shadow: inset 0 -2px 0 0 var(--color-primary);
+}
+.field-input :deep(.el-input.is-error .el-input__wrapper) {
+  box-shadow: inset 0 -2px 0 0 var(--color-error);
+}
+
+@media (min-width: 768px) {
+  .field-input :deep(.el-input__wrapper),
+  .field-input :deep(.el-select__wrapper) {
+    height: 40px;
+  }
+}
+.field-input :deep(.el-textarea__inner) {
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 0 var(--color-border);
+  background: transparent;
+  min-height: 80px;
+  padding: 8px 0;
+  resize: vertical;
+  transition: box-shadow 0.2s ease-out;
+
+  &:hover {
+    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+  }
+  &:focus {
+    box-shadow: inset 0 -2px 0 0 var(--color-primary);
+  }
+}
   color: var(--color-error);
   font-size: 12px;
 }
