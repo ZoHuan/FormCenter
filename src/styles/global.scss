@@ -1,3 +1,23 @@
+/* ── Element Plus 完整变量映射 ── */
+:root {
+  --el-color-success: var(--color-success);
+  --el-color-warning: var(--color-warning);
+  --el-color-danger: var(--color-error);
+  --el-color-error: var(--color-error);
+  --el-color-info: var(--color-info);
+  --el-text-color-primary: var(--color-text);
+  --el-text-color-regular: var(--color-text);
+  --el-text-color-secondary: var(--color-text-secondary);
+  --el-text-color-placeholder: var(--color-text-muted);
+  --el-border-color: var(--color-border);
+  --el-border-color-hover: var(--color-border-hover);
+  --el-fill-color: var(--color-canvas);
+  --el-fill-color-blank: var(--color-card);
+  --el-fill-color-light: var(--color-page);
+  --el-border-radius-base: var(--radius-sm);
+  --el-border-radius-round: var(--radius-full);
+}
+
 @use './tokens';
 
 .el-button--primary {

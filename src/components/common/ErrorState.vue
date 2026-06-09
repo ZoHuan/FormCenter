@@ -1,12 +1,16 @@
 <template>
   <div class="state-container">
+    <component :is="icon" class="state-icon" :size="48" stroke-width="2" />
     <p class="error-title">{{ text }}</p>
+    <p v-if="desc" class="error-desc">{{ desc }}</p>
     <button v-if="actionText" class="retry-btn" @click="$emit('action')">{{ actionText }}</button>
   </div>
 </template>
 <script setup lang="ts">
-defineProps<{ text?: string; actionText?: string }>()
+import { AlertTriangle } from 'lucide-vue-next'
+defineProps<{ text?: string; desc?: string; actionText?: string }>()
 defineEmits(['action'])
+const icon = AlertTriangle
 </script>
 <style scoped lang="scss">
 .state-container {

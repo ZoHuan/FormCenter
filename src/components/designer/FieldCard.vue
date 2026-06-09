@@ -1,10 +1,15 @@
 <template>
   <div class="field-card" :class="{ selected }" @click.stop="$emit('select')">
     <div class="card-header">
+      <component :is="typeIcon" class="card-type-icon" :size="14" />
       <span class="card-label">{{ schema.label }}</span>
       <span v-if="schema.required" class="required-star">*</span>
-      <button class="btn-copy" @click.stop="$emit('copy')" title="复制组件">复制</button>
-      <button class="btn-delete" @click.stop="$emit('remove')" title="删除组件">✕</button>
+      <button class="btn-copy" @click.stop="$emit('copy')" title="复制组件">
+        <Copy :size="14" />
+      </button>
+      <button class="btn-delete" @click.stop="$emit('remove')" title="删除组件">
+        <X :size="14" />
+      </button>
     </div>
     <div class="card-preview">
       <span v-if="isTextLike" class="preview-input">{{ schema.description || '请输入' }}</span>
@@ -21,10 +26,34 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { Copy, X } from 'lucide-vue-next'
+import {
+  Type, Layers, Minus, Info,
+  TextCursorInput, AlignLeft, Hash, ListOrdered,
+  CircleDot, CheckSquare, ChevronDown, ArrowRightLeft, FolderTree,
+  Calendar, CalendarRange,
+  Paperclip, Image, PenLine,
+  Star, Table2, Link2, CheckCheck,
+  MapPin, Users, Building2, UserCheck, QrCode,
+} from 'lucide-vue-next'
 import type { ComponentSchema } from '@/types'
 
 const props = defineProps<{ schema: ComponentSchema; selected: boolean }>()
 defineEmits<{ select: []; remove: []; copy: [] }>()
+
+const iconMap: Record<string, any> = {
+  title: Type, subtitle: Type, 'group-title': Layers, separator: Minus, 'point-out': Info,
+  input: TextCursorInput, textarea: AlignLeft, numeric: Hash, 'serial-number': ListOrdered,
+  chooser: CircleDot, 'multi-chooser': CheckSquare, selection: ChevronDown,
+  cascader: ArrowRightLeft, tree: FolderTree,
+  date: Calendar, 'date-range': CalendarRange,
+  image: Paperclip, singleImage: Image, signature: PenLine,
+  rate: Star, table: Table2, 'cross-table': Table2, relation: Link2, commitment: CheckCheck,
+  region: MapPin, 'map-location': MapPin,
+  'user-tree': Users, 'org-tree': Building2, 'signature-name': UserCheck,
+  QRCode: QrCode,
+}
+const typeIcon = computed(() => iconMap[props.schema.type] ?? Type)
 
 const isTextLike = computed(() => ['input', 'textarea', 'numeric', 'serial-number'].includes(props.schema.type))
 const isSelectLike = computed(() =>

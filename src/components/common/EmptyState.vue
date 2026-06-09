@@ -1,13 +1,16 @@
 <template>
   <div class="state-container">
+    <component :is="icon" class="state-icon" :size="48" stroke-width="2" />
     <p class="state-title">{{ text }}</p>
     <p v-if="desc" class="state-desc">{{ desc }}</p>
     <button v-if="actionText" class="action-btn" @click="$emit('action')">{{ actionText }}</button>
   </div>
 </template>
 <script setup lang="ts">
-defineProps<{ text?: string; desc?: string; actionText?: string }>()
+import { FileText } from 'lucide-vue-next'
+defineProps<{ text?: string; desc?: string; actionText?: string; icon?: any }>()
 defineEmits(['action'])
+const icon = FileText
 </script>
 <style scoped lang="scss">
 .state-container {
