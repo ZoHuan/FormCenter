@@ -3,7 +3,7 @@
     <AppHeader />
     <div class="list-content">
       <div class="list-toolbar">
-        <h1 class="page-title">表单管理</h1>
+        <h1 class="page-title">我的表单</h1>
         <div class="toolbar-actions">
           <el-button type="primary" @click="handleCreate">新建表单</el-button>
           <el-button @click="showTemplateDialog = true">从模板创建</el-button>
@@ -31,9 +31,9 @@
           <div class="fc-left">
             <div class="fc-title">{{ row.title || '未命名表单' }}</div>
             <div class="fc-meta">
+              <span v-if="row.status === 'open'" class="status-tag status-open">收集中</span>
+              <span v-if="row.status === 'draft'" class="status-tag status-draft">草稿</span>
               <span>{{ row.components?.length ?? 0 }} 个字段</span>
-              <span class="dot">·</span>
-              <span>{{ statusLabel(row.status) }}</span>
               <span class="dot">·</span>
               <span>{{ getSubmissionCount(row.id) }} 条回复</span>
               <span class="dot">·</span>
@@ -200,9 +200,13 @@ function handleReopen(row: FormSchema) {
 }
 
 .form-cards {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 8px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .form-card {

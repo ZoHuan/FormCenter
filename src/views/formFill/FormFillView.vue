@@ -513,7 +513,7 @@ function handleBackToDesigner() {
     max-width: 320px;
     height: 48px;
     font-size: 15px;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
   }
 }
 

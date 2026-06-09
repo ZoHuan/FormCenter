@@ -83,6 +83,10 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   &.selected {
     border: 2px solid var(--color-primary);
     box-shadow: var(--shadow-focus);
+
+    .card-header {
+      background: var(--color-primary-bg);
+    }
   }
 }
 
