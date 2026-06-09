@@ -142,9 +142,9 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
 }
 
 export const COMPONENT_MENU = [
-  { category: '基础字段', items: ['input', 'textarea', 'numeric', 'serial-number', 'chooser', 'multi-chooser', 'selection', 'date', 'date-range', 'cascader', 'tree', 'tree-structure', 'rate'] as ComponentType[] },
+  { category: '基础字段', items: ['input', 'textarea', 'numeric', 'serial-number', 'chooser', 'multi-chooser', 'selection', 'date', 'date-range', 'cascader', 'tree', 'rate'] as ComponentType[] },
   { category: '展示布局', items: ['title', 'subtitle', 'group-title', 'separator', 'point-out'] as ComponentType[] },
-  { category: '高级组件', items: ['table', 'cross-table', 'image', 'singleImage', 'signature', 'relation', 'commitment', 'region', 'QRCode'] as ComponentType[] },
+  { category: '高级组件', items: ['table', 'cross-table', 'tree-structure', 'image', 'singleImage', 'signature', 'relation', 'commitment', 'region', 'QRCode'] as ComponentType[] },
 ]
 
 /** 装饰类组件类型（无需显示标题、无数据交互） */
