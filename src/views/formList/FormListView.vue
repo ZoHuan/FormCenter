@@ -270,6 +270,23 @@ function handleReopen(row: FormSchema) {
   }
 }
 
+.fc-status {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  line-height: 1.6;
+
+  &-open {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+  }
+  &-draft {
+    background: var(--color-canvas);
+    color: var(--color-text-muted);
+  }
+}
+
 .fc-actions {
   display: flex;
   align-items: center;
