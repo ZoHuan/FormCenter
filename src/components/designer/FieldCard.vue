@@ -88,6 +88,22 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
       background: var(--color-primary-bg);
     }
   }
+
+  &.is-error {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(181, 74, 58, 0.08);
+  }
+
+  &.is-dragging {
+    opacity: 0.5;
+    border-style: dashed;
+    border-color: var(--color-primary-light);
+  }
+
+  &.is-drop-target {
+    background: var(--color-primary-bg);
+    border-color: var(--color-primary);
+  }
 }
 
 .card-header {

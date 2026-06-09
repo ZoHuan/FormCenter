@@ -15,8 +15,8 @@
 
       <div v-if="store.loading" class="skeleton-list">
         <div v-for="i in 3" :key="i" class="skeleton-card">
-          <div class="sk-line sk-title" />
-          <div class="sk-line sk-meta" />
+          <div class="sk-line sk-title" :style="{ width: 35 + Math.floor(Math.random() * 25) + '%' }" />
+          <div class="sk-line sk-meta" :style="{ width: 55 + Math.floor(Math.random() * 25) + '%' }" />
         </div>
       </div>
       <EmptyState
