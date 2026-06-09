@@ -38,7 +38,12 @@
           :all-components="store.components"
           @update="(patch) => store.updateComponent(store.selectedComponent!.id, patch)"
         />
-        <div v-else class="no-select">点击画布中的组件进行编辑</div>
+        <div v-else class="no-select">
+          <div class="no-select-icon">
+            <MousePointer2 :size="24" />
+          </div>
+          <p>选择画布中的组件开始配置</p>
+        </div>
       </div>
     </div>
   </div>
@@ -51,6 +56,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useFormDesignerStore } from '@/stores/formDesigner'
 import { templates } from '@/utils/templates'
 import { nanoid } from 'nanoid'
+import { MousePointer2 } from 'lucide-vue-next'
 import type { ComponentType } from '@/types'
 import ComponentPalette from '@/components/designer/ComponentPalette.vue'
 import DesignerCanvas from '@/components/designer/DesignerCanvas.vue'
@@ -275,7 +281,10 @@ function handlePreview() {
   flex: 1;
   overflow-y: auto;
   background: var(--color-canvas);
-  padding: 24px;
+  background-image:
+    radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+  background-size: 20px 20px;
+  padding: 32px;
 }
 .panel-right {
   width: 300px;
@@ -284,9 +293,17 @@ function handlePreview() {
   box-shadow: -1px 0 0 var(--color-border);
 }
 .no-select {
-  padding: 24px;
+  padding: 48px 24px;
   text-align: center;
   color: var(--color-text-muted);
   font-size: 14px;
+
+  .no-select-icon {
+    color: var(--color-border-hover);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
+  }
+  p { margin: 0; line-height: 1.5; }
 }
 </style>
