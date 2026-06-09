@@ -16,6 +16,20 @@ defineEmits(['action'])
   align-items: center;
   padding: 64px 0;
   gap: 8px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image:
+      linear-gradient(var(--color-primary) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-primary) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: 20px 20px;
+    pointer-events: none;
+  }
 }
 
 .state-title {
