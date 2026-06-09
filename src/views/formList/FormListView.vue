@@ -42,20 +42,31 @@
             </div>
           </div>
           <div class="fc-actions" @click.stop>
-            <el-button link type="primary" @click="handleEdit(row.id)">编辑</el-button>
-            <el-button v-if="row.status === 'open'" link class="fc-copy" @click="handleCopyLink(row.id)" title="复制链接">
-              <Copy :size="15" />
-            </el-button>
+            <!-- 草稿: 编辑 + 发布 -->
+            <template v-if="row.status === 'draft'">
+              <el-button size="small" @click="handleEdit(row.id)"><Pencil :size="14" />编辑</el-button>
+              <el-button size="small" type="primary" plain @click="handlePublish(row)"><Send :size="14" />发布</el-button>
+            </template>
+            <!-- 收集中: 复制链接 + 数据 -->
+            <template v-else-if="row.status === 'open'">
+              <el-button size="small" type="primary" @click="handleCopyLink(row.id)"><Copy :size="14" />复制链接</el-button>
+              <el-button size="small" @click="handleData(row.id)"><Table2 :size="14" />数据</el-button>
+            </template>
+            <!-- 已关闭: 数据 + 重新开启 -->
+            <template v-else>
+              <el-button size="small" @click="handleData(row.id)"><Table2 :size="14" />数据</el-button>
+              <el-button size="small" type="primary" plain @click="handleReopen(row)"><RotateCcw :size="14" />重新开启</el-button>
+            </template>
+            <!-- 更多操作 -->
             <el-dropdown trigger="click" @command="(cmd: string) => handleCardAction(cmd, row)">
-              <el-button link class="fc-more"><MoreHorizontal :size="16" /></el-button>
+              <el-button size="small" class="fc-more"><MoreHorizontal :size="16" /></el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-if="row.status === 'draft'" command="publish">发布</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === 'open'" command="close">关闭收集</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === 'closed'" command="reopen">重新开启</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'open' || row.status === 'closed'" command="edit">编辑</el-dropdown-item>
                   <el-dropdown-item v-if="row.status === 'open'" command="fill">填写</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === 'open'" command="copyLink">复制链接</el-dropdown-item>
-                  <el-dropdown-item command="data">查看数据</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'open'" command="close">关闭收集</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'draft'" command="edit">编辑</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'draft' || row.status === 'closed'" command="data">查看数据</el-dropdown-item>
                   <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -87,7 +98,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { copyToClipboard } from '@/utils/clipboard'
 import { templates } from '@/utils/templates'
-import { Copy, MoreHorizontal } from 'lucide-vue-next'
+import { Copy, MoreHorizontal, Pencil, Send, Table2, RotateCcw, Trash2 } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
@@ -122,6 +133,7 @@ function handleEdit(id: string) {
 }
 function handleCardAction(cmd: string, row: FormSchema) {
   switch (cmd) {
+    case 'edit': handleEdit(row.id); break
     case 'publish': handlePublish(row); break
     case 'close': handleClose(row); break
     case 'reopen': handleReopen(row); break
@@ -349,22 +361,16 @@ function handleReopen(row: FormSchema) {
 .fc-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.2s ease-out;
-  overflow-x: auto;
-  max-width: 320px;
 
-  .form-card:hover & {
-    opacity: 1;
+  .el-button {
+    gap: 4px;
   }
-}
-.fc-copy {
-  color: var(--color-text-muted) !important;
-  transition: color 0.15s, transform 0.2s;
-  &:hover { color: var(--color-primary) !important; }
-  &:active { transform: scale(1.2); }
+  .fc-more {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
 }
 
 /* ── 3. 空状态升级 ── */
