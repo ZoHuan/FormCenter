@@ -108,11 +108,10 @@ function gridSpan(colspan: number): string {
 .canvas-list {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 8px;
+  gap: 12px;
   align-items: start;
 }
 .canvas-row {
-  margin-bottom: 4px;
   animation: card-enter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2);
   min-width: 0;
 }

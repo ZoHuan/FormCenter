@@ -63,13 +63,14 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
   overflow: hidden;
   cursor: grab;
   transition: all 0.25s cubic-bezier(0.3, 0, 0.2, 1);
 
   &:hover {
-    border-color: var(--color-border-hover);
-    box-shadow: var(--shadow-sm);
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(45, 106, 79, 0.1);
     transform: translateY(-1px);
 
     .btn-copy, .btn-delete { opacity: 1; }
@@ -123,7 +124,8 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
 
 .preview-input, .preview-select, .preview-table, .preview-sign {
   color: var(--color-text-muted); font-size: 13px;
-  background: var(--color-page); padding: 6px 10px;
-  border-radius: 4px; width: 100%;
+  background: var(--color-page); padding: 8px 12px;
+  border-radius: 5px; width: 100%; height: 36px;
+  display: flex; align-items: center;
 }
 </style>
