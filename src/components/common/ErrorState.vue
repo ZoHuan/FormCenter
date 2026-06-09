@@ -21,12 +21,20 @@ const icon = AlertTriangle
   gap: 16px;
 }
 
+.state-icon {
+  color: var(--color-warning);
+  margin-bottom: 8px;
+}
 .error-title {
   font-size: 16px;
   font-weight: 600;
   color: var(--color-text);
 }
-
+.error-desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-top: -4px;
+}
 .retry-btn {
   padding: 8px 20px;
   border-radius: var(--radius-md);

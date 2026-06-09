@@ -128,6 +128,11 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   flex-shrink: 0;
 }
 
+.card-type-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  margin-right: 2px;
+}
 .card-label {
   font-size: 13px;
   font-weight: 500;

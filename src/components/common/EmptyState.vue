@@ -35,6 +35,10 @@ const icon = FileText
   }
 }
 
+.state-icon {
+  color: var(--color-border-hover);
+  margin-bottom: 4px;
+}
 .state-title {
   font-size: 16px;
   color: var(--color-text-secondary);
