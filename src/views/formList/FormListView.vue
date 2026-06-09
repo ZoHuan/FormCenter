@@ -7,7 +7,7 @@
         <span class="form-count" v-if="store.filteredForms.length">共 {{ store.filteredForms.length }} 个</span>
         <div class="toolbar-actions">
           <el-button type="primary" @click="handleCreate">新建表单</el-button>
-          <el-button @click="showTemplateDialog = true">从模板创建</el-button>
+          <el-button plain @click="showTemplateDialog = true">从模板创建</el-button>
         </div>
       </div>
       <div class="search-bar">
@@ -67,7 +67,9 @@
           <!-- 收集中：全宽主按钮 -->
           <div v-if="row.status === 'open'" class="fc-primary-action">
             <el-button type="primary" @click.stop="handleCopyLink(row.id)">
-              <Copy :size="15" /> 复制链接
+              <Copy v-if="copiedId !== row.id" :size="15" />
+              <CheckCircle v-else :size="15" />
+              {{ copiedId === row.id ? '已复制' : '复制链接' }}
             </el-button>
           </div>
         </div>
@@ -91,12 +93,11 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
 import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { copyToClipboard } from '@/utils/clipboard'
 import { templates } from '@/utils/templates'
-import { Copy, MoreHorizontal, Pencil, Send, Table2, RotateCcw, Trash2 } from 'lucide-vue-next'
+import { Copy, CheckCircle, MoreHorizontal, Pencil, Send, Table2, RotateCcw, Trash2 } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
@@ -105,6 +106,7 @@ import type { FormSchema } from '@/types'
 const router = useRouter()
 const store = useFormListStore()
 const showTemplateDialog = ref(false)
+const copiedId = ref<string | null>(null)
 
 onMounted(() => store.init())
 
@@ -146,6 +148,10 @@ function handleFill(id: string) {
 }
 async function handleCopyLink(id: string) {
   const ok = await copyToClipboard(`${window.location.origin}/fill/${id}`)
+  if (ok) {
+    copiedId.value = id
+    setTimeout(() => { copiedId.value = null }, 2000)
+  }
   ElMessage[ok ? 'success' : 'error'](ok ? '链接已复制' : '复制失败')
 }
 function handleData(id: string) {
