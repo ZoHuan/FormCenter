@@ -42,13 +42,20 @@
           </div>
           <div class="fc-actions" @click.stop>
             <el-button link type="primary" @click="handleEdit(row.id)">编辑</el-button>
-            <el-button v-if="row.status === 'draft'" link type="primary" @click="handlePublish(row)">发布</el-button>
-            <el-button v-if="row.status === 'open'" link type="danger" @click="handleClose(row)">关闭</el-button>
-            <el-button v-if="row.status === 'closed'" link type="primary" @click="handleReopen(row)">重新开启</el-button>
-            <el-button v-if="row.status === 'open'" link type="primary" @click="handleFill(row.id)">填写</el-button>
-            <el-button v-if="row.status === 'open'" link type="primary" @click="handleCopyLink(row.id)">复制链接</el-button>
-            <el-button link type="primary" @click="handleData(row.id)">数据</el-button>
-            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-dropdown trigger="click" @command="(cmd: string) => handleCardAction(cmd, row)">
+              <el-button link class="fc-more"><MoreHorizontal :size="16" /></el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-if="row.status === 'draft'" command="publish">发布</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'open'" command="close">关闭收集</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'closed'" command="reopen">重新开启</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'open'" command="fill">填写</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === 'open'" command="copyLink">复制链接</el-dropdown-item>
+                  <el-dropdown-item command="data">查看数据</el-dropdown-item>
+                  <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </div>
         </div>
         <p v-if="store.filteredForms.length === 0 && store.keyword" class="no-result">没有找到「{{ store.keyword }}」相关的表单</p>
@@ -76,6 +83,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { copyToClipboard } from '@/utils/clipboard'
 import { templates } from '@/utils/templates'
+import { MoreHorizontal } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
@@ -114,6 +122,17 @@ function handleCreate() {
 }
 function handleEdit(id: string) {
   router.push(`/formDesigner/${id}`)
+}
+function handleCardAction(cmd: string, row: FormSchema) {
+  switch (cmd) {
+    case 'publish': handlePublish(row); break
+    case 'close': handleClose(row); break
+    case 'reopen': handleReopen(row); break
+    case 'fill': handleFill(row.id); break
+    case 'copyLink': handleCopyLink(row.id); break
+    case 'data': handleData(row.id); break
+    case 'delete': handleDelete(row); break
+  }
 }
 function handleFill(id: string) {
   window.open(`/fill/${id}`)
