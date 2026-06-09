@@ -5,7 +5,7 @@
       <div class="data-header">
         <el-button link @click="$router.push('/forms')">← 返回</el-button>
         <h2>{{ schema?.title }} — 提交数据</h2>
-        <el-button type="primary" size="large" @click="handleExport">导出 Excel</el-button>
+        <el-button type="primary" size="large" @click="handleExport"><Download :size="16" />导出 Excel</el-button>
       </div>
       <div v-if="subStore.loading" class="skeleton-table">
         <div class="sk-row">
@@ -47,6 +47,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { exportToExcel } from '@/utils/excel'
 import { copyToClipboard } from '@/utils/clipboard'
+import { Download } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
