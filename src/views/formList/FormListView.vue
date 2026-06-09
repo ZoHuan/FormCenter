@@ -185,7 +185,10 @@ function handleReopen(row: FormSchema) {
 </script>
 
 <style scoped lang="scss">
-.list-page { min-height: 100vh; background: var(--color-page); }
+.list-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--color-page) 0%, #F5F3F0 100%);
+}
 .list-content { max-width: 780px; margin: 0 auto; padding: 48px 24px 64px; }
 
 /* ── 品牌装饰条 ── */
@@ -203,9 +206,16 @@ function handleReopen(row: FormSchema) {
 .form-count { font-size: 14px; color: var(--color-text-muted); font-weight: 400; }
 .toolbar-actions { display: flex; gap: 12px; }
 
-/* ── 搜索 ── */
+/* ── 搜索：focus 绿底发光 ── */
 .search-bar { margin-bottom: 32px; max-width: 400px;
-  :deep(.el-input__wrapper) { border-radius: var(--radius-full); box-shadow: inset 0 0 0 1px var(--color-border); }
+  :deep(.el-input__wrapper) {
+    border-radius: var(--radius-full); box-shadow: inset 0 0 0 1px var(--color-border);
+    transition: box-shadow 0.25s ease-out, background 0.25s;
+  }
+  :deep(.el-input.is-focus .el-input__wrapper) {
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.08), inset 0 0 0 1px var(--color-primary);
+    background: var(--color-card);
+  }
 }
 
 /* ── 卡片容器：单列 ── */
@@ -220,13 +230,18 @@ function handleReopen(row: FormSchema) {
   overflow: hidden;
   animation: card-enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
   border-left: 4px solid transparent;
+  transition: all 0.25s ease-out;
 
-  &:hover { box-shadow: var(--shadow-sm); border-color: var(--color-border-hover); }
+  &:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-border-hover);
+  }
 
   /* ── 状态差异 ── */
   &[data-status='open'] {
     border-left-color: var(--color-primary);
     background: var(--color-primary-bg);
+    &:hover { box-shadow: 0 4px 16px rgba(45,106,79,0.10); }
   }
   &[data-status='closed'] {
     border-left-color: var(--color-border-hover);
@@ -241,7 +256,6 @@ function handleReopen(row: FormSchema) {
   padding: 20px 24px 16px;
   cursor: pointer;
   transition: background 0.15s;
-  &:hover { background: rgba(0,0,0,0.01); }
 }
 
 .fc-header {
@@ -256,7 +270,7 @@ function handleReopen(row: FormSchema) {
 
 .fc-actions {
   display: flex; align-items: center; gap: 6px; flex-shrink: 0;
-  .el-button { gap: 4px; }
+  .el-button { gap: 4px; transition: transform 0.1s ease-out; }
   .el-button:active { transform: scale(0.97); }
   .fc-more { border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
   .fc-more:active { transform: scale(0.97); }
@@ -270,9 +284,14 @@ function handleReopen(row: FormSchema) {
 
 .fc-status {
   font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: var(--radius-full); line-height: 1.6;
-  &-open { background: var(--color-success-bg); color: var(--color-success); }
+  &-open { background: var(--color-success-bg); color: var(--color-success); animation: status-breathe 3s ease-in-out infinite; }
   &-draft { background: var(--color-canvas); color: var(--color-text-muted); }
   &-closed { background: var(--color-canvas); color: var(--color-text-muted); }
+}
+
+@keyframes status-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.82; }
 }
 
 /* ── 主操作按钮（全宽） ── */
@@ -281,6 +300,7 @@ function handleReopen(row: FormSchema) {
   .el-button {
     width: 100%; height: 42px; font-size: 15px; font-weight: 500;
     border-radius: var(--radius-md); gap: 6px;
+    transition: transform 0.1s ease-out;
     &:active { transform: scale(0.98); }
   }
 }
