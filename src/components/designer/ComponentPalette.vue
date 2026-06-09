@@ -17,7 +17,7 @@
           @dragstart="onDragStart($event, type)"
           @click="$emit('add', type)"
         >
-          <component :is="typeIcon(type)" class="item-icon" :size="15" />
+          <component :is="typeIcon(type)" class="item-icon" :size="16" />
           <span class="item-label">{{ typeLabel(type) }}</span>
           <GripVertical :size="10" class="item-grip" />
         </div>
@@ -84,47 +84,59 @@ function typeLabel(t: string) { return labels[t] ?? t }
 
 <style scoped lang="scss">
 .palette { padding: 0; background: var(--color-page); height: 100%; overflow-y: auto; }
+
 .palette-title {
-  font-size: 14px; font-weight: 600; padding: 16px 16px 12px;
+  font-size: 14px; font-weight: 600; padding: 16px 16px 14px;
   color: var(--color-text);
   border-bottom: 1px solid var(--color-border);
   position: sticky; top: 0; background: var(--color-page); z-index: 3;
 }
 
-.group { border-bottom: 1px solid var(--color-canvas); }
-.group-title {
-  font-size: 13px; font-weight: 600; color: var(--color-text);
-  padding: 10px 16px; cursor: pointer; user-select: none;
-  display: flex; align-items: center; gap: 6px;
-  transition: background 0.15s;
-  &:hover { background: var(--color-canvas); }
+.group {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-canvas);
 }
-.arrow-icon { color: var(--color-text-muted); transition: transform 0.2s ease; flex-shrink: 0; &.open { transform: rotate(90deg); } }
+
+.group-title {
+  font-size: 12px; font-weight: 600; color: var(--color-text-secondary);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 6px 16px; cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.15s;
+  &:hover { color: var(--color-primary); }
+}
+
+.arrow-icon { color: var(--color-text-muted); flex-shrink: 0; transition: transform 0.2s ease; &.open { transform: rotate(90deg); color: var(--color-primary); } }
 .cat-icon { color: var(--color-text-muted); flex-shrink: 0; }
 .group-label { flex: 1; }
 .group-count {
-  font-size: 11px; font-weight: 500; color: var(--color-text-muted);
-  background: var(--color-canvas); border-radius: 10px; padding: 1px 8px; min-width: 20px; text-align: center;
+  font-size: 10px; font-weight: 600; color: var(--color-text-muted);
+  background: var(--color-canvas); border-radius: 8px; padding: 2px 6px; min-width: 18px; text-align: center;
 }
 
-.group-items { padding: 4px 12px 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.group-items {
+  padding: 2px 8px 6px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+}
 
 .palette-item {
-  height: 36px; display: flex; align-items: center;
-  padding: 0 8px 0 10px; gap: 6px; font-size: 13px;
+  height: 42px; display: flex; align-items: center;
+  padding: 0 10px; gap: 8px; font-size: 13px; font-weight: 500;
   color: var(--color-text); cursor: grab;
   border-radius: var(--radius-sm);
-  transition: all 0.15s ease-out;
+  transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
 
-  .item-icon { color: var(--color-text-muted); flex-shrink: 0; transition: color 0.15s; }
+  .item-icon { color: var(--color-text-muted); flex-shrink: 0; transition: all 0.2s ease; }
   .item-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .item-grip { color: var(--color-border-hover); opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }
+  .item-grip { color: var(--color-border-hover); opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
 
   &:hover {
-    background: var(--color-primary-bg); transform: translateX(2px);
-    .item-icon { color: var(--color-primary); }
+    background: var(--color-primary-bg); transform: translateX(3px);
+    box-shadow: 0 1px 4px rgba(45, 106, 79, 0.08);
+    .item-icon { color: var(--color-primary); transform: scale(1.1); }
     .item-grip { opacity: 1; }
   }
-  &:active { cursor: grabbing; opacity: 0.5; transform: none; }
+
+  &:active { cursor: grabbing; opacity: 0.6; transform: scale(0.97); }
 }
 </style>
