@@ -88,6 +88,13 @@ html {
   scroll-behavior: smooth;
 }
 
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; color: var(--color-primary-hover); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -239,4 +246,22 @@ html {
   --van-background: var(--color-page);
   --van-background-2: var(--color-card);
   --van-border-color: var(--color-border);
+}
+
+/* ── Additional Keyframes ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce-in {
+  0%   { transform: scale(0.8); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
