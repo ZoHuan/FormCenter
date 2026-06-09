@@ -1,14 +1,14 @@
 <template>
   <div class="palette">
     <div class="palette-title">组件库</div>
-    <div v-for="group in COMPONENT_MENU" :key="group.category" class="group">
+    <div v-for="group in COMPONENT_MENU" :key="group.category" class="group" :data-category="group.category">
       <div class="group-title" @click="toggle(group.category)">
         <ChevronRight :size="12" class="arrow-icon" :class="{ open: openGroups.has(group.category) }" />
         <component :is="catIcon(group.category)" class="cat-icon" :size="14" />
         <span class="group-label">{{ group.category }}</span>
         <span class="group-count">{{ group.items.length }}</span>
       </div>
-      <div v-show="openGroups.has(group.category)" class="group-items">
+      <div class="group-items" :class="{ collapsed: !openGroups.has(group.category) }">
         <div
           v-for="type in group.items"
           :key="type"
@@ -95,6 +95,10 @@ function typeLabel(t: string) { return labels[t] ?? t }
 .group {
   padding: 8px 0;
   border-bottom: 1px solid var(--color-canvas);
+  border-left: 3px solid transparent;
+  &[data-category='基础字段'] { border-left-color: var(--color-primary); }
+  &[data-category='展示布局'] { border-left-color: var(--color-border-hover); }
+  &[data-category='高级组件'] { border-left-color: var(--color-warning); }
 }
 
 .group-title {
@@ -103,6 +107,7 @@ function typeLabel(t: string) { return labels[t] ?? t }
   padding: 6px 16px; cursor: pointer; user-select: none;
   display: flex; align-items: center; gap: 6px;
   transition: color 0.15s;
+  position: sticky; top: 49px; background: var(--color-page); z-index: 2;
   &:hover { color: var(--color-primary); }
 }
 
@@ -117,6 +122,9 @@ function typeLabel(t: string) { return labels[t] ?? t }
 .group-items {
   padding: 2px 8px 6px;
   display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  max-height: 800px; overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.3, 0, 0.2, 1), padding 0.3s ease;
+  &.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
 }
 
 .palette-item {
