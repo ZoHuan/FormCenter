@@ -386,7 +386,7 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 
   label {
     font-size: 13px; font-weight: 500; color: var(--color-text-secondary);
-    width: 64px; flex-shrink: 0; line-height: 1.4;
+    width: 72px; flex-shrink: 0; line-height: 1.4; white-space: nowrap;
   }
 
   :deep(.el-input__wrapper) {
