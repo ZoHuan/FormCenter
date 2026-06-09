@@ -5,7 +5,7 @@
       <div class="section-header" @click="toggleSection('basic')">
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.basic }" />基础
       </div>
-      <div v-show="openSections.basic" class="section-body">
+      <div class="section-body" :class="{ collapsed: !openSections.basic }">
         <div class="prop-row">
           <label>标签</label><el-input v-model="comp.label" size="small" @input="emitUpdate" />
         </div>
@@ -53,7 +53,7 @@
       <div class="section-header" @click="toggleSection('options')">
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.options }" />选项
       </div>
-      <div v-show="openSections.options" class="section-body">
+      <div :class="{ collapsed: !openSections.options }" class="section-body">
         <div v-for="(opt, i) in optionList" :key="i" class="option-row">
           <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
           <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
@@ -72,7 +72,7 @@
       <div class="section-header" @click="toggleSection('validation')">
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.validation }" />校验
       </div>
-      <div v-show="openSections.validation" class="section-body">
+      <div :class="{ collapsed: !openSections.validation }" class="section-body">
         <div v-if="hasTextLimit" class="prop-row">
           <label>字数限制</label
           ><el-input-number v-model="maxLen" :min="0" :max="10000" size="small" @change="onMaxLenChange" />
@@ -129,7 +129,7 @@
       <div class="section-header" @click="toggleSection('advanced')">
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.advanced }" />高级
       </div>
-      <div v-show="openSections.advanced" class="section-body">
+      <div :class="{ collapsed: !openSections.advanced }" class="section-body">
         <TriggerRuleEditor v-if="hasOptions" :component="comp" :all-components="allComponents" @update="(p) => emit('update', p)" />
         <CalcEditor v-if="calcTypes.includes(comp.type)" :component="comp" @update="(p) => emit('update', p)" />
         <RateEditor v-if="comp.type === 'rate'" :component="comp" @update="(p) => emit('update', p)" />
@@ -143,7 +143,7 @@
       <div class="section-header" @click="toggleSection('table')">
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.table }" />{{ comp.type === 'cross-table' ? '交叉表管理' : '表格列管理' }}
       </div>
-      <div v-show="openSections.table" class="section-body">
+      <div :class="{ collapsed: !openSections.table }" class="section-body">
         <div v-for="(col, i) in tableColumns" :key="i" class="table-col-item">
           <div class="col-header">
             <el-select v-model="col.type" size="small" @change="onColTypeChange(i)" style="width:90px">
@@ -371,21 +371,31 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 }
 .section-body {
   padding: 8px 16px 12px;
+  max-height: 600px; overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.3, 0, 0.2, 1), padding 0.3s ease;
+  &.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
 }
 
 .prop-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  gap: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 0; padding: 6px 0; gap: 8px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+
+  &:last-child { border-bottom: none; }
 
   label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    width: 64px;
-    flex-shrink: 0;
+    font-size: 13px; font-weight: 500; color: var(--color-text-secondary);
+    width: 64px; flex-shrink: 0; line-height: 1.4;
+  }
+
+  :deep(.el-input__wrapper) {
+    background: var(--color-page); border: 1px solid var(--color-border);
+    box-shadow: none; border-radius: var(--radius-sm);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  :deep(.el-input.is-focus .el-input__wrapper) {
+    border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.08);
   }
 }
 </style>
