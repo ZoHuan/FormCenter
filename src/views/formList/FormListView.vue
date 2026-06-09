@@ -4,6 +4,7 @@
     <div class="list-content">
       <div class="list-toolbar">
         <h1 class="page-title">我的表单</h1>
+        <span class="form-count" v-if="store.filteredForms.length">共 {{ store.filteredForms.length }} 个</span>
         <div class="toolbar-actions">
           <el-button type="primary" @click="handleCreate">新建表单</el-button>
           <el-button @click="showTemplateDialog = true">从模板创建</el-button>
@@ -42,6 +43,9 @@
           </div>
           <div class="fc-actions" @click.stop>
             <el-button link type="primary" @click="handleEdit(row.id)">编辑</el-button>
+            <el-button v-if="row.status === 'open'" link class="fc-copy" @click="handleCopyLink(row.id)" title="复制链接">
+              <Copy :size="15" />
+            </el-button>
             <el-dropdown trigger="click" @command="(cmd: string) => handleCardAction(cmd, row)">
               <el-button link class="fc-more"><MoreHorizontal :size="16" /></el-button>
               <template #dropdown>
@@ -83,7 +87,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { copyToClipboard } from '@/utils/clipboard'
 import { templates } from '@/utils/templates'
-import { MoreHorizontal } from 'lucide-vue-next'
+import { Copy, MoreHorizontal } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
@@ -196,6 +200,12 @@ function handleReopen(row: FormSchema) {
 .page-title {
   font-size: 30px;
   font-weight: 600;
+}
+.form-count {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-left: 12px;
+  font-weight: 400;
 }
 .toolbar-actions {
   display: flex;
@@ -319,6 +329,10 @@ function handleReopen(row: FormSchema) {
   .form-card:hover & {
     opacity: 1;
   }
+}
+.fc-copy {
+  color: var(--color-text-muted) !important;
+  &:hover { color: var(--color-primary) !important; }
 }
 .no-result {
   text-align: center;
