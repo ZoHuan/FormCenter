@@ -495,6 +495,7 @@ function handleBackToDesigner() {
     box-shadow: inset 0 -2px 0 0 var(--color-primary);
   }
 }
+.field-error {
   color: var(--color-error);
   font-size: 12px;
 }
