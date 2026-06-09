@@ -192,7 +192,11 @@ const openSections = reactive<Record<string, boolean>>({ basic: true, options: f
 
 const colTypes = ['input', 'textarea', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser', 'image']
 function toggleSection(key: string) {
-  ;(openSections as Record<string, boolean>)[key] = !(openSections as Record<string, boolean>)[key]
+  const isOpen = openSections[key]
+  // 手风琴模式：先关闭全部
+  Object.keys(openSections).forEach(k => { openSections[k] = false })
+  // 如果之前是关闭的，则打开；如果之前是打开的，保持关闭（折叠回去）
+  openSections[key] = !isOpen
 }
 function emitUpdate() {
   emit('update', { ...comp })
