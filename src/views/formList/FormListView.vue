@@ -22,13 +22,13 @@
       </div>
       <EmptyState
         v-else-if="store.filteredForms.length === 0 && !store.keyword"
-        text="还没有表单"
-        desc="创建你的第一个表单开始吧"
+        text="开始创建你的第一个表单"
+        desc="搭表单就像发朋友圈，拖一拖就完成"
         action-text="新建表单"
         @action="handleCreate"
       />
       <div v-else class="form-cards">
-        <div v-for="row in store.filteredForms" :key="row.id" class="form-card" :data-status="row.status" @click="handleEdit(row.id)">
+        <div v-for="(row, idx) in store.filteredForms" :key="row.id" class="form-card" :data-status="row.status" :style="{ animationDelay: idx * 0.06 + 's' }" @click="handleEdit(row.id)">
           <div class="fc-left">
             <div class="fc-title">{{ row.title || '未命名表单' }}</div>
             <div class="fc-meta">
@@ -114,14 +114,7 @@ function formatTime(ts: number): string {
     minute: '2-digit',
   })
 }
-function statusType(s: string) {
-  return s === 'open' ? 'success' : s === 'closed' ? 'danger' : 'warning'
-}
-function statusLabel(s: string) {
-  return s === 'open' ? '收集中' : s === 'closed' ? '已关闭' : '草稿'
-}
-
-function handleCreate() {
+function formatTime(ts: number): string {
   router.push('/formDesigner')
 }
 function handleEdit(id: string) {
@@ -189,30 +182,50 @@ function handleReopen(row: FormSchema) {
 .list-content {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 48px 24px 64px;
 }
+
+/* ── 1. 品牌存在感：绿色装饰条 ── */
 .list-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--color-primary);
+    border-radius: 0 0 2px 2px;
+  }
 }
 .page-title {
   font-size: 30px;
   font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
 }
 .form-count {
   font-size: 14px;
   color: var(--color-text-muted);
-  margin-left: 12px;
   font-weight: 400;
 }
 .toolbar-actions {
   display: flex;
   gap: 12px;
 }
+
+/* ── 2. 三段呼吸 ── */
 .search-bar {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   max-width: 360px;
 
   :deep(.el-input__wrapper) {
@@ -220,18 +233,12 @@ function handleReopen(row: FormSchema) {
     box-shadow: inset 0 0 0 1px var(--color-border);
   }
 }
-.form-name {
-  color: var(--color-primary);
-  cursor: pointer;
-}
-.form-name:hover {
-  color: var(--color-primary-hover);
-}
 
+/* ── 5. 卡片入场动画 ── */
 .form-cards {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
+  gap: 10px;
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
@@ -242,15 +249,16 @@ function handleReopen(row: FormSchema) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 20px 24px;
   background: var(--color-card);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-xs);
   cursor: pointer;
-  transition: all 0.15s ease-out;
+  transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
   border-left: 4px solid transparent;
   gap: 16px;
+  animation: card-enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
 
   @media (max-width: 640px) {
     flex-direction: column;
@@ -260,14 +268,36 @@ function handleReopen(row: FormSchema) {
   &:hover {
     box-shadow: var(--shadow-sm);
     border-color: var(--color-border-hover);
-    transform: translateY(-1px);
+    transform: translateX(4px);
   }
 
+  &:active {
+    transform: scale(0.99) translateX(2px);
+    transition: transform 0.1s ease-out;
+  }
+
+  /* ── 4. 状态可视化 ── */
   &[data-status='open'] {
     border-left-color: var(--color-success);
   }
+  &[data-status='closed'] {
+    opacity: 0.7;
+    border-left-color: transparent;
+    .fc-title { color: var(--color-text-muted); }
+  }
   &[data-status='draft'] {
     border-left-color: var(--color-border-hover);
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -319,10 +349,10 @@ function handleReopen(row: FormSchema) {
 .fc-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex-shrink: 0;
   opacity: 0;
-  transition: opacity 0.15s;
+  transition: opacity 0.2s ease-out;
   overflow-x: auto;
   max-width: 320px;
 
@@ -332,12 +362,17 @@ function handleReopen(row: FormSchema) {
 }
 .fc-copy {
   color: var(--color-text-muted) !important;
+  transition: color 0.15s, transform 0.2s;
   &:hover { color: var(--color-primary) !important; }
+  &:active { transform: scale(1.2); }
 }
+
+/* ── 3. 空状态升级 ── */
 .no-result {
   text-align: center;
   color: var(--color-text-muted);
-  padding: 40px 0;
+  padding: 48px 0;
+  font-size: 15px;
 }
 
 .skeleton-list {
