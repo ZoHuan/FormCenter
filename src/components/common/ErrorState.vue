@@ -1,6 +1,6 @@
 <template>
   <div class="state-container">
-    <component :is="icon" class="state-icon" :size="48" stroke-width="2" />
+    <component :is="icon" class="error-icon" :size="40" stroke-width="2" aria-hidden="true" />
     <p class="error-title">{{ text }}</p>
     <p v-if="desc" class="error-desc">{{ desc }}</p>
     <button v-if="actionText" class="retry-btn" @click="$emit('action')">{{ actionText }}</button>
@@ -21,7 +21,7 @@ const icon = AlertTriangle
   gap: 16px;
 }
 
-.state-icon {
+.error-icon {
   color: var(--color-warning);
   margin-bottom: 8px;
 }

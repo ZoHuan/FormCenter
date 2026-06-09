@@ -74,6 +74,7 @@
 .el-button:active { transform: scale(0.97); }
 .el-button { border-radius: var(--radius-sm); }
 .el-button--large { border-radius: var(--radius-md); height: 40px; }
+.el-button:focus-visible { box-shadow: var(--shadow-focus); outline: none; }
 .el-input.is-error .el-input__wrapper { animation: input-shake .3s ease; }
 @keyframes input-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
 

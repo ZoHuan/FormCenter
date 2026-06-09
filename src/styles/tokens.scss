@@ -52,6 +52,35 @@
   --shadow-md: 0 4px 16px rgba(28, 25, 23, 0.08);
   --shadow-lg: 0 8px 32px rgba(28, 25, 23, 0.10);
   --shadow-focus: 0 0 0 3px rgba(45, 106, 79, 0.15);
+
+  /* ── Spacing (4px grid) ── */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ── Z-Index ── */
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-overlay: 300;
+  --z-dialog: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* ── Animation ── */
+  --ease-out: ease-out;
+  --ease-in-out: cubic-bezier(0.3, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1.2);
+  --duration-instant: 0.1s;
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.35s;
+  --duration-spring: 0.5s;
 }
 
 /* ── Dark Mode ── */

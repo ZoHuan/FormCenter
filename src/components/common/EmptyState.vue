@@ -1,9 +1,9 @@
 <template>
   <div class="state-container">
-    <component :is="icon" class="state-icon" :size="48" stroke-width="2" />
+    <component :is="icon" class="state-icon" :size="48" stroke-width="2" aria-hidden="true" />
     <p class="state-title">{{ text }}</p>
     <p v-if="desc" class="state-desc">{{ desc }}</p>
-    <button v-if="actionText" class="action-btn" @click="$emit('action')">{{ actionText }}</button>
+    <button v-if="actionText" class="action-btn" @click="$emit('action')" :aria-label="actionText">{{ actionText }}</button>
   </div>
 </template>
 <script setup lang="ts">

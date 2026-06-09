@@ -4,10 +4,10 @@
       <component :is="typeIcon" class="card-type-icon" :size="14" />
       <span class="card-label">{{ schema.label }}</span>
       <span v-if="schema.required" class="required-star">*</span>
-      <button class="btn-copy" @click.stop="$emit('copy')" title="复制组件">
+      <button class="btn-copy" @click.stop="$emit('copy')" aria-label="复制组件">
         <Copy :size="14" />
       </button>
-      <button class="btn-delete" @click.stop="$emit('remove')" title="删除组件">
+      <button class="btn-delete" @click.stop="$emit('remove')" aria-label="删除组件">
         <X :size="14" />
       </button>
     </div>
