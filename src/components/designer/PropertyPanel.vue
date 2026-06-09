@@ -54,13 +54,18 @@
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.options }" />选项
       </div>
       <div :class="{ collapsed: !openSections.options }" class="section-body">
-        <div v-for="(opt, i) in optionList" :key="i" class="option-row">
-          <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
-          <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
-          <el-button link class="opt-del" @click="removeOption(i)"><X :size="14" /></el-button>
+        <div class="options-list">
+          <div v-for="(opt, i) in optionList" :key="i" class="option-card">
+            <div class="option-index">{{ i + 1 }}</div>
+            <div class="option-fields">
+              <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
+              <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
+            </div>
+            <el-button link class="opt-del" @click="removeOption(i)"><X :size="14" /></el-button>
+          </div>
         </div>
-        <el-button link type="primary" size="small" @click="addOption"><Plus :size="14" /> 添加选项</el-button>
-        <div class="prop-row" style="margin-top:8px">
+        <el-button class="opt-add" @click="addOption"><Plus :size="14" />添加选项</el-button>
+        <div class="opt-default">
           <label>默认值</label>
           <el-select v-model="comp.defaultValue" size="small" clearable @change="emitUpdate">
             <el-option v-for="opt in optionList" :key="opt.value" :label="opt.label" :value="opt.value" />
@@ -400,11 +405,33 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 }
 </style>
 
-.option-row {
-  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
-
-  :deep(.el-input__wrapper) { flex: 1; }
-  .opt-del { color: var(--color-text-muted); &:hover { color: var(--color-error); } }
+/* ── 选项编辑器 ── */
+.options-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.option-card {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px; background: var(--color-page); border-radius: var(--radius-sm);
+  border: 1px solid var(--color-canvas);
+  transition: border-color 0.15s;
+  &:hover { border-color: var(--color-border); }
+}
+.option-index {
+  font-size: 12px; font-weight: 600; color: var(--color-text-muted);
+  width: 18px; text-align: center; flex-shrink: 0;
+}
+.option-fields {
+  display: flex; gap: 6px; flex: 1;
+  :deep(.el-input__wrapper) { background: var(--color-card); }
+}
+.opt-del { color: var(--color-text-muted); flex-shrink: 0; &:hover { color: var(--color-error); } }
+.opt-add {
+  width: 100%; border: 1px dashed var(--color-border); border-radius: var(--radius-sm);
+  color: var(--color-text-secondary); font-size: 13px; height: 36px;
+  &:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-bg); }
+}
+.opt-default {
+  display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--color-canvas);
+  label { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); white-space: nowrap; }
 }
   margin-bottom: 12px;
   padding: 8px;
