@@ -3,8 +3,9 @@
     <div class="palette-title">组件库</div>
     <div v-for="group in COMPONENT_MENU" :key="group.category" class="group">
       <div class="group-title" @click="toggle(group.category)">
-        <span class="arrow" :class="{ open: openGroups.has(group.category) }">▸</span>
-        {{ group.category }}
+        <ChevronRight :size="12" class="arrow-icon" :class="{ open: openGroups.has(group.category) }" />
+        <span class="group-label">{{ group.category }}</span>
+        <span class="group-count">{{ group.items.length }}</span>
       </div>
       <div v-show="openGroups.has(group.category)" class="group-items">
         <div
@@ -17,6 +18,7 @@
         >
           <component :is="typeIcon(type)" class="item-icon" :size="16" />
           <span class="item-label">{{ typeLabel(type) }}</span>
+          <GripVertical :size="12" class="item-grip" />
         </div>
       </div>
     </div>
@@ -28,13 +30,13 @@ import { ref } from 'vue'
 import {
   Type, Layers, Minus, Info,
   TextCursorInput, AlignLeft, Hash, ListOrdered,
-  CircleDot, CheckSquare, ChevronDown, ArrowRightLeft, FolderTree,
+  CircleDot, CheckSquare, ChevronDown, ChevronRight, ArrowRightLeft, FolderTree,
   Calendar, CalendarRange,
   Paperclip, Image, PenLine,
   Star,
   Table2, Link2, CheckCheck,
   MapPin, Users, Building2, UserCheck,
-  QrCode,
+  QrCode, GripVertical,
 } from 'lucide-vue-next'
 import { COMPONENT_MENU } from '@/registry'
 import type { ComponentType } from '@/types'
@@ -78,56 +80,78 @@ function typeLabel(t: string) { return labels[t] ?? t }
 
 <style scoped lang="scss">
 .palette {
-  padding: 10px 8px;
+  padding: 0;
   background: var(--color-page);
   height: 100%;
   overflow-y: auto;
 }
 .palette-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  padding: 4px 8px 12px;
+  padding: 16px 16px 12px;
   color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  background: var(--color-page);
+  z-index: 2;
+}
+
+.group {
+  border-bottom: 1px solid var(--color-canvas);
+  &:first-of-type { margin-top: 0; }
 }
 
 .group-title {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
-  padding: 6px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  padding: 10px 16px;
   cursor: pointer;
   user-select: none;
   display: flex;
   align-items: center;
-  gap: 4px;
-  transition: color 0.15s;
-  text-transform: uppercase;
+  gap: 6px;
+  transition: background 0.15s;
+  letter-spacing: 0;
 
-  &:hover { color: var(--color-text); }
+  &:hover { background: var(--color-canvas); }
+  text-transform: none;
 }
 
-.arrow {
-  font-size: 10px;
+.arrow-icon {
   color: var(--color-text-muted);
-  transition: transform 0.2s;
-  display: inline-block;
-  width: 12px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  &.open { transform: rotate(90deg); }
+}
+
+.group-label { flex: 1; }
+.group-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-canvas);
+  border-radius: 10px;
+  padding: 1px 8px;
+  min-width: 20px;
   text-align: center;
 }
-.arrow.open { transform: rotate(90deg); }
+
+.group-items {
+  padding: 4px 12px 8px;
+}
 
 .palette-item {
-  height: 38px;
+  height: 36px;
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 10px 0 12px;
   gap: 8px;
   font-size: 13px;
   color: var(--color-text);
   cursor: grab;
   border-radius: var(--radius-sm);
-  margin: 1px 0;
   transition: all 0.15s ease-out;
 
   .item-icon {
@@ -137,9 +161,17 @@ function typeLabel(t: string) { return labels[t] ?? t }
   }
 
   .item-label {
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .item-grip {
+    color: var(--color-border-hover);
+    opacity: 0;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
   }
 
   &:hover {
@@ -147,11 +179,12 @@ function typeLabel(t: string) { return labels[t] ?? t }
     transform: translateX(2px);
 
     .item-icon { color: var(--color-primary); }
+    .item-grip { opacity: 1; }
   }
 
   &:active {
     cursor: grabbing;
-    opacity: 0.4;
+    opacity: 0.5;
     transform: none;
   }
 }
