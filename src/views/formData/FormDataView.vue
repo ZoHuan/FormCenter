@@ -17,7 +17,8 @@
       </div>
       <EmptyState v-else-if="subStore.submissions.length === 0" text="暂无提交数据" />
       <template v-else>
-        <el-table :data="pagedData" stripe
+        <div class="table-card">
+          <el-table :data="pagedData" stripe
           ><el-table-column prop="submittedAt" label="提交时间" width="180"
             ><template #default="{ row }">{{ formatTime(row.submittedAt) }}</template></el-table-column
           ><el-table-column
@@ -33,6 +34,7 @@
           :total="subStore.submissions.length"
           layout="prev,pager,next"
         />
+        </div>
       </template>
     </div>
   </div>
@@ -128,6 +130,14 @@ function formatTime(ts: number) {
   font-size: 20px;
   font-weight: 600;
   flex: 1;
+}
+
+.table-card {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
 }
 
 .skeleton-table {
