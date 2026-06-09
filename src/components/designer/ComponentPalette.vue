@@ -140,14 +140,17 @@ function typeLabel(t: string) { return labels[t] ?? t }
 
 .group-items {
   padding: 4px 12px 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
 }
 
 .palette-item {
   height: 36px;
   display: flex;
   align-items: center;
-  padding: 0 10px 0 12px;
-  gap: 8px;
+  padding: 0 8px 0 10px;
+  gap: 6px;
   font-size: 13px;
   color: var(--color-text);
   cursor: grab;
@@ -172,6 +175,7 @@ function typeLabel(t: string) { return labels[t] ?? t }
     opacity: 0;
     transition: opacity 0.15s;
     flex-shrink: 0;
+    width: 10px;
   }
 
   &:hover {
