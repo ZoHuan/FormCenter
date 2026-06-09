@@ -80,6 +80,9 @@
     <el-dialog v-model="showTemplateDialog" title="选择模板" width="680px">
       <div class="template-grid">
         <div v-for="(tpl, key) in templates" :key="key" class="template-card" @click="handleTemplate(key)">
+          <div class="tpl-icon">
+            <component :is="tplIcons[key]" :size="24" />
+          </div>
           <div class="tpl-name">{{ tpl.title }}</div>
           <div class="tpl-desc">{{ tpl.description }}</div>
           <div class="tpl-count">{{ tpl.components.length }} 个字段</div>
@@ -97,7 +100,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { copyToClipboard } from '@/utils/clipboard'
 import { templates } from '@/utils/templates'
-import { Copy, CheckCircle, MoreHorizontal, Pencil, Send, Table2, RotateCcw, Trash2 } from 'lucide-vue-next'
+import { Copy, CheckCircle, MoreHorizontal, Pencil, Send, Table2, RotateCcw, Trash2, CalendarDays, PartyPopper, BarChart3, ClipboardList } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
@@ -107,6 +110,7 @@ const router = useRouter()
 const store = useFormListStore()
 const showTemplateDialog = ref(false)
 const copiedId = ref<string | null>(null)
+const tplIcons: Record<string, any> = { leave: CalendarDays, event: PartyPopper, survey: BarChart3, collect: ClipboardList }
 
 onMounted(() => store.init())
 
@@ -334,9 +338,13 @@ function handleReopen(row: FormSchema) {
 
 /* ── 模板弹窗 ── */
 .template-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.template-card { border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px 20px; cursor: pointer; transition: all 0.2s ease-out; }
+.template-card {
+  border: 2px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px 20px;
+  cursor: pointer; transition: all 0.2s ease-out; text-align: center;
+}
 .template-card:hover { border-color: var(--color-primary); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.tpl-icon { color: var(--color-primary); margin-bottom: 12px; display: flex; justify-content: center; }
 .tpl-name { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-.tpl-desc { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px; }
-.tpl-count { font-size: 11px; color: var(--color-text-muted); }
+.tpl-desc { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 10px; }
+.tpl-count { font-size: 12px; color: var(--color-primary); font-weight: 500; }
 </style>
