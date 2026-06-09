@@ -1,7 +1,7 @@
 <template>
   <div class="palette">
     <div class="palette-title">组件库</div>
-    <div v-for="group in COMPONENT_MENU" :key="group.category" class="group" :data-category="group.category">
+    <div v-for="group in COMPONENT_MENU" :key="group.category" class="group">
       <div class="group-title" @click="toggle(group.category)">
         <ChevronRight :size="12" class="arrow-icon" :class="{ open: openGroups.has(group.category) }" />
         <component :is="catIcon(group.category)" class="cat-icon" :size="14" />
@@ -95,10 +95,6 @@ function typeLabel(t: string) { return labels[t] ?? t }
 .group {
   padding: 8px 0;
   border-bottom: 1px solid var(--color-canvas);
-  border-left: 3px solid transparent;
-  &[data-category='基础字段'] { border-left-color: var(--color-primary); }
-  &[data-category='展示布局'] { border-left-color: var(--color-border-hover); }
-  &[data-category='高级组件'] { border-left-color: var(--color-warning); }
 }
 
 .group-title {
