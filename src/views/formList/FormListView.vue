@@ -114,7 +114,7 @@ function formatTime(ts: number): string {
     minute: '2-digit',
   })
 }
-function formatTime(ts: number): string {
+function handleCreate() {
   router.push('/formDesigner')
 }
 function handleEdit(id: string) {
