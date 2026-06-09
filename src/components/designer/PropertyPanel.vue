@@ -3,7 +3,7 @@
     <div class="prop-title">属性</div>
     <div class="section">
       <div class="section-header" @click="toggleSection('basic')">
-        <span class="section-arrow" :class="{ open: openSections.basic }">▸</span>基础
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.basic }" />基础
       </div>
       <div v-show="openSections.basic" class="section-body">
         <div class="prop-row">
@@ -51,7 +51,7 @@
     </div>
     <div v-if="hasOptions && !isDecorative" class="section">
       <div class="section-header" @click="toggleSection('options')">
-        <span class="section-arrow" :class="{ open: openSections.options }">▸</span>选项
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.options }" />选项
       </div>
       <div v-show="openSections.options" class="section-body">
         <div v-for="(opt, i) in optionList" :key="i" class="option-row">
@@ -70,7 +70,7 @@
     </div>
     <div v-if="hasValidation" class="section">
       <div class="section-header" @click="toggleSection('validation')">
-        <span class="section-arrow" :class="{ open: openSections.validation }">▸</span>校验
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.validation }" />校验
       </div>
       <div v-show="openSections.validation" class="section-body">
         <div v-if="hasTextLimit" class="prop-row">
@@ -127,7 +127,7 @@
     </div>
     <div v-if="hasAdvanced" class="section">
       <div class="section-header" @click="toggleSection('advanced')">
-        <span class="section-arrow" :class="{ open: openSections.advanced }">▸</span>高级
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.advanced }" />高级
       </div>
       <div v-show="openSections.advanced" class="section-body">
         <TriggerRuleEditor v-if="hasOptions" :component="comp" :all-components="allComponents" @update="(p) => emit('update', p)" />
@@ -141,7 +141,7 @@
     </div>
     <div v-if="comp.type === 'table' || comp.type === 'cross-table'" class="section">
       <div class="section-header" @click="toggleSection('table')">
-        <span class="section-arrow" :class="{ open: openSections.table }">▸</span>{{ comp.type === 'cross-table' ? '交叉表管理' : '表格列管理' }}
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.table }" />{{ comp.type === 'cross-table' ? '交叉表管理' : '表格列管理' }}
       </div>
       <div v-show="openSections.table" class="section-body">
         <div v-for="(col, i) in tableColumns" :key="i" class="table-col-item">
@@ -168,6 +168,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
+import { ChevronRight } from 'lucide-vue-next'
 import type { ComponentSchema } from '@/types'
 import TriggerRuleEditor from './TriggerRuleEditor.vue'
 import RateEditor from './RateEditor.vue'
@@ -319,7 +320,7 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 
 <style scoped lang="scss">
 .prop-panel {
-  padding: 16px;
+  padding: 0;
   background: var(--color-card);
   height: 100%;
   overflow-y: auto;
@@ -327,44 +328,49 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 .prop-title {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 16px;
+  padding: 16px;
   color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  background: var(--color-card);
+  z-index: 2;
 }
 
 .section {
-  margin-bottom: 4px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--color-canvas);
 }
 
 .section-header {
   font-size: 13px;
-  font-weight: 500;
-  padding: 10px 0;
+  font-weight: 600;
+  padding: 12px 16px;
   cursor: pointer;
   user-select: none;
   display: flex;
   align-items: center;
   gap: 6px;
-  border-bottom: 1px solid var(--color-canvas);
   color: var(--color-text);
-  transition: color 0.15s;
+  transition: background 0.15s;
 
   &:hover {
     color: var(--color-primary);
+    background: var(--color-canvas);
   }
 }
 
 .section-arrow {
-  font-size: 10px;
   color: var(--color-text-muted);
-  transition: transform 0.2s;
-  display: inline-block;
+  transition: transform 0.2s ease, color 0.15s;
+  flex-shrink: 0;
 }
 .section-arrow.open {
   transform: rotate(90deg);
   color: var(--color-primary);
 }
 .section-body {
-  padding: 10px 0;
+  padding: 8px 16px 12px;
 }
 
 .prop-row {
@@ -378,7 +384,7 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
     font-size: 12px;
     font-weight: 500;
     color: var(--color-text-secondary);
-    width: 60px;
+    width: 64px;
     flex-shrink: 0;
   }
 }
