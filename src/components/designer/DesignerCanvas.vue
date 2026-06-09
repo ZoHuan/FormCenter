@@ -2,8 +2,9 @@
   <div class="canvas" :class="{ 'drag-over': isDragOver }" @drop.prevent="onDrop" @dragover.prevent="onDragOver" @dragleave="onDragLeave" @click="$emit('select', null)">
     <div v-if="components.length === 0" class="canvas-empty">
       <div class="empty-box">
-        <p class="empty-main">拖拽组件到此处开始设计</p>
-        <p class="empty-sub">从左侧组件库选择需要的字段</p>
+        <div class="empty-icon"><Layers :size="32" /></div>
+        <p class="empty-main">拖拽组件到此处</p>
+        <p class="empty-sub">从左侧组件库选择需要的字段开始设计</p>
       </div>
     </div>
     <div v-else class="canvas-card">
@@ -33,6 +34,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { Layers } from 'lucide-vue-next'
 import draggable from 'vuedraggable'
 import type { ComponentType, ComponentSchema } from '@/types'
 import FieldCard from './FieldCard.vue'
@@ -85,27 +87,21 @@ function gridSpan(colspan: number): string {
 .empty-box {
   border: 2px dashed var(--color-primary-light);
   border-radius: var(--radius-lg);
-  padding: 40px 56px;
+  padding: 48px 56px;
   text-align: center;
   transition: all 0.2s;
 
-  p {
-    color: var(--color-text-muted);
-    font-size: 14px;
-    line-height: 1.5;
-    margin: 0;
+  .empty-icon {
+    color: var(--color-primary-light);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
+    opacity: 0.7;
   }
 
-  .empty-main {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    margin-bottom: 4px;
-  }
-
-  .empty-sub {
-    font-size: 13px;
-  }
+  p { color: var(--color-text-muted); font-size: 14px; line-height: 1.5; margin: 0; }
+  .empty-main { font-size: 15px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .empty-sub { font-size: 13px; }
 }
 
 .canvas-card {
