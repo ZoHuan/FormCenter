@@ -4,7 +4,7 @@
     <div v-for="group in COMPONENT_MENU" :key="group.category" class="group">
       <div class="group-title" @click="toggle(group.category)">
         <span class="arrow" :class="{ open: openGroups.has(group.category) }">▸</span>
-        {{ group.category }} ({{ group.items.length }})
+        {{ group.category }}
       </div>
       <div v-show="openGroups.has(group.category)" class="group-items">
         <div
@@ -15,7 +15,8 @@
           @dragstart="onDragStart($event, type)"
           @click="$emit('add', type)"
         >
-          {{ typeLabel(type) }}
+          <component :is="typeIcon(type)" class="item-icon" :size="16" />
+          <span class="item-label">{{ typeLabel(type) }}</span>
         </div>
       </div>
     </div>
@@ -24,8 +25,20 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import {
+  Type, Layers, Minus, Info,
+  TextCursorInput, AlignLeft, Hash, ListOrdered,
+  CircleDot, CheckSquare, ChevronDown, ArrowRightLeft, FolderTree,
+  Calendar, CalendarRange,
+  Paperclip, Image, PenLine,
+  Star,
+  Table2, Link2, CheckCheck,
+  MapPin, Users, Building2, UserCheck,
+  QrCode,
+} from 'lucide-vue-next'
 import { COMPONENT_MENU } from '@/registry'
 import type { ComponentType } from '@/types'
+
 defineEmits<{ add: [type: ComponentType] }>()
 const openGroups = ref(new Set(['装饰', '输入']))
 function toggle(cat: string) {
@@ -35,43 +48,37 @@ function toggle(cat: string) {
 function onDragStart(e: DragEvent, type: ComponentType) {
   e.dataTransfer?.setData('componentType', type)
 }
+
+const icons: Record<string, any> = {
+  title: Type, subtitle: Type, 'group-title': Layers, separator: Minus, 'point-out': Info,
+  input: TextCursorInput, textarea: AlignLeft, numeric: Hash, 'serial-number': ListOrdered,
+  chooser: CircleDot, 'multi-chooser': CheckSquare, selection: ChevronDown, cascader: ArrowRightLeft, tree: FolderTree,
+  date: Calendar, 'date-range': CalendarRange,
+  image: Paperclip, singleImage: Image, signature: PenLine,
+  rate: Star,
+  table: Table2, 'cross-table': Table2, relation: Link2, commitment: CheckCheck,
+  region: MapPin, 'tree-structure': FolderTree,
+  QRCode: QrCode,
+}
+function typeIcon(t: string) { return icons[t] ?? Type }
+
 const labels: Record<string, string> = {
-  title: '大标题',
-  subtitle: '小标题',
-  'group-title': '分组标题',
-  separator: '分隔符',
-  'point-out': '提示',
-  input: '单行文本',
-  textarea: '多行文本',
-  numeric: '数字',
-  'serial-number': '编号',
-  chooser: '单选框',
-  'multi-chooser': '复选框',
-  selection: '下拉框',
-  cascader: '级联选框',
-  tree: '树形选框',
-  date: '日期',
-  'date-range': '日期区间',
-  image: '文件附件',
-  singleImage: '图片',
-  signature: '签名',
+  title: '大标题', subtitle: '小标题', 'group-title': '分组标题', separator: '分隔符', 'point-out': '提示',
+  input: '单行文本', textarea: '多行文本', numeric: '数字', 'serial-number': '编号',
+  chooser: '单选框', 'multi-chooser': '复选框', selection: '下拉框', cascader: '级联选框', tree: '树形选框',
+  date: '日期', 'date-range': '日期区间',
+  image: '文件附件', singleImage: '图片', signature: '签名',
   rate: '评分',
-  table: '表格',
-  'cross-table': '交叉表',
-  relation: '关联查询',
-  commitment: '承诺说明',
-  region: '行政区划',
-  'tree-structure': '树结构',
+  table: '表格', 'cross-table': '交叉表', relation: '关联查询', commitment: '承诺说明',
+  region: '行政区划', 'tree-structure': '树结构',
   QRCode: '二维码',
 }
-function typeLabel(t: string) {
-  return labels[t] ?? t
-}
+function typeLabel(t: string) { return labels[t] ?? t }
 </script>
 
 <style scoped lang="scss">
 .palette {
-  padding: 12px 8px;
+  padding: 10px 8px;
   background: var(--color-page);
   height: 100%;
   overflow-y: auto;
@@ -94,13 +101,10 @@ function typeLabel(t: string) {
   display: flex;
   align-items: center;
   gap: 4px;
-  transition: background 0.15s;
+  transition: color 0.15s;
   text-transform: uppercase;
 
-  &:hover {
-    background: var(--color-canvas);
-    border-radius: 4px;
-  }
+  &:hover { color: var(--color-text); }
 }
 
 .arrow {
@@ -108,31 +112,47 @@ function typeLabel(t: string) {
   color: var(--color-text-muted);
   transition: transform 0.2s;
   display: inline-block;
+  width: 12px;
+  text-align: center;
 }
-.arrow.open {
-  transform: rotate(90deg);
-}
+.arrow.open { transform: rotate(90deg); }
 
 .palette-item {
   height: 38px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 10px;
+  gap: 8px;
   font-size: 13px;
   color: var(--color-text);
   cursor: grab;
   border-radius: var(--radius-sm);
-  margin: 2px 0;
+  margin: 1px 0;
   transition: all 0.15s ease-out;
+
+  .item-icon {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+
+  .item-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   &:hover {
     background: var(--color-primary-bg);
     transform: translateX(2px);
+
+    .item-icon { color: var(--color-primary); }
   }
 
   &:active {
     cursor: grabbing;
     opacity: 0.4;
+    transform: none;
   }
 }
 </style>

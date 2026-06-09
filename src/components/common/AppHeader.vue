@@ -1,6 +1,6 @@
 <template>
   <header v-if="visible" class="app-header">
-    <div class="header-left">
+    <div class="header-left" @click="$router.push('/forms')" style="cursor:pointer">
       <img src="/logo.svg" width="32" height="32" alt="FormCenter" />
       <span class="header-title">FormCenter</span>
     </div>
