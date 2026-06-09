@@ -17,7 +17,7 @@
     </div>
 
     <div v-else-if="loadState === 'submitted'" class="fill-center fill-success">
-      <div class="success-icon">✓</div>
+      <div class="success-icon"><CircleCheck :size="40" /></div>
       <h2>感谢填写</h2>
       <p>你的回复已成功提交</p>
       <div class="success-actions">
@@ -102,6 +102,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { validate } from '@/utils/validators'
 import { DECOR_TYPES } from '@/registry'
+import { CircleCheck } from 'lucide-vue-next'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import FieldRenderer from '@/components/fields/FieldRenderer.vue'
@@ -333,7 +334,6 @@ function handleBackToDesigner() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px;
   margin: 0 auto;
   box-shadow: 0 4px 16px rgba(91, 123, 74, 0.2);
 }
@@ -374,6 +374,7 @@ function handleBackToDesigner() {
   border-radius: 12px;
   padding: 32px;
   box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
+  border-top: 3px solid var(--color-primary);
 }
 .form-title {
   font-size: 24px;
