@@ -50,7 +50,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useFormDesignerStore } from '@/stores/formDesigner'
 import { templates } from '@/utils/templates'
+import { nanoid } from 'nanoid'
 import type { ComponentType } from '@/types'
+import { nanoid } from 'nanoid'
 import ComponentPalette from '@/components/designer/ComponentPalette.vue'
 import DesignerCanvas from '@/components/designer/DesignerCanvas.vue'
 import PropertyPanel from '@/components/designer/PropertyPanel.vue'
@@ -131,7 +133,11 @@ function loadTemplate(key: string) {
   if (tpl && store.schema) {
     store.schema.title = tpl.title
     store.schema.description = tpl.description
-    tpl.components.forEach((c) => store.addComponent(c.type as ComponentType))
+    // 直接使用模板的完整组件配置，而非 addComponent（会丢失所有属性）
+    const cloned = JSON.parse(JSON.stringify(tpl.components)) as ComponentSchema[]
+    cloned.forEach((c) => { c.id = nanoid() })
+    store.components.push(...cloned)
+    store.isDirty = true
     formTitle.value = tpl.title
     formDesc.value = tpl.description || ''
   }
