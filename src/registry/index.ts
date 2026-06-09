@@ -142,16 +142,9 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
 }
 
 export const COMPONENT_MENU = [
-  { category: '装饰', items: ['title', 'subtitle', 'group-title', 'separator', 'point-out'] as ComponentType[] },
-  { category: '输入', items: ['input', 'textarea', 'numeric', 'serial-number'] as ComponentType[] },
-  { category: '选择', items: ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree'] as ComponentType[] },
-  { category: '日期', items: ['date', 'date-range'] as ComponentType[] },
-  { category: '文件', items: ['image', 'singleImage', 'signature'] as ComponentType[] },
-  { category: '评分', items: ['rate'] as ComponentType[] },
-  { category: '高级', items: ['table', 'cross-table', 'relation', 'commitment'] as ComponentType[] },
-  { category: '位置', items: ['region'] as ComponentType[] },
-  { category: '树结构', items: ['tree-structure'] as ComponentType[] },
-  { category: '其他', items: ['QRCode'] as ComponentType[] },
+  { category: '基础字段', items: ['input', 'textarea', 'numeric', 'serial-number', 'chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'tree-structure', 'date', 'date-range', 'rate'] as ComponentType[] },
+  { category: '展示布局', items: ['title', 'subtitle', 'group-title', 'separator', 'point-out'] as ComponentType[] },
+  { category: '高级组件', items: ['image', 'singleImage', 'signature', 'table', 'cross-table', 'relation', 'commitment', 'region', 'QRCode'] as ComponentType[] },
 ]
 
 /** 装饰类组件类型（无需显示标题、无数据交互） */

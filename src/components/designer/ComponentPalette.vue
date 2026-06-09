@@ -42,7 +42,7 @@ import { COMPONENT_MENU } from '@/registry'
 import type { ComponentType } from '@/types'
 
 defineEmits<{ add: [type: ComponentType] }>()
-const openGroups = ref(new Set(['装饰', '输入']))
+const openGroups = ref(new Set(['基础字段', '展示布局']))
 function toggle(cat: string) {
   if (openGroups.value.has(cat)) openGroups.value.delete(cat)
   else openGroups.value.add(cat)
