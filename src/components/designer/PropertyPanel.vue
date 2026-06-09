@@ -9,21 +9,12 @@
         <div class="prop-row">
           <label>标签</label><el-input v-model="comp.label" size="small" @input="emitUpdate" />
         </div>
-        <div class="prop-row">
-          <label>字段名</label><el-input v-model="comp.field" size="small" @input="emitUpdate" />
-        </div>
-        <div v-if="!isSeparator" class="prop-row">
-          <label>描述</label
-          ><el-input v-model="comp.description" size="small" placeholder="占位提示" @input="emitUpdate" />
-        </div>
         <div v-if="!isSeparator && !isDecorative" class="prop-row">
           <label>必填</label><el-switch v-model="comp.required" size="small" @change="emitUpdate" />
         </div>
         <div v-if="!isSeparator" class="prop-row">
-          <label>隐藏</label><el-switch v-model="comp.hidden" size="small" @change="emitUpdate" />
-        </div>
-        <div v-if="!isSeparator && !isDecorative" class="prop-row">
-          <label>可编辑</label><el-switch v-model="comp.editable" size="small" @change="emitUpdate" />
+          <label>描述</label
+          ><el-input v-model="comp.description" size="small" placeholder="占位提示" @input="emitUpdate" />
         </div>
         <div v-if="hasColspan" class="prop-row">
           <label>排列</label
@@ -33,19 +24,28 @@
               label="三列" /><el-option :value="4" label="长标题"
           /></el-select>
         </div>
+        <div class="prop-row">
+          <label>字段名</label><el-input v-model="comp.field" size="small" @input="emitUpdate" />
+        </div>
+        <div v-if="!isSeparator && !isDecorative && !isTable && !isCrossTable" class="prop-row">
+          <label>默认值</label
+          ><el-input v-model="comp.defaultValue" size="small" placeholder="字段初始值" @input="emitUpdate" />
+        </div>
         <div v-if="hasAppStyle" class="prop-row">
           <label>APP排版</label
           ><el-radio-group v-model="comp.appStyle" size="small" @change="emitUpdate"
             ><el-radio :value="0">左右</el-radio><el-radio :value="1">上下</el-radio></el-radio-group
           >
         </div>
-        <div v-if="!isSeparator && !isDecorative && !isTable && !isCrossTable" class="prop-row">
-          <label>默认值</label
-          ><el-input v-model="comp.defaultValue" size="small" placeholder="字段初始值" @input="emitUpdate" />
-        </div>
         <div v-if="hasTooltip" class="prop-row">
           <label>提示信息</label
           ><el-input v-model="comp.tooltip" size="small" placeholder="填写提示（tooltip）" @input="emitUpdate" />
+        </div>
+        <div v-if="!isSeparator" class="prop-row">
+          <label>隐藏</label><el-switch v-model="comp.hidden" size="small" @change="emitUpdate" />
+        </div>
+        <div v-if="!isSeparator && !isDecorative" class="prop-row">
+          <label>可编辑</label><el-switch v-model="comp.editable" size="small" @change="emitUpdate" />
         </div>
       </div>
     </div>
