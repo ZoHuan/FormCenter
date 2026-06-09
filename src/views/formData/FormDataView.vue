@@ -111,10 +111,6 @@ function handleCopyLink() {
   copyToClipboard(`${window.location.origin}/fill/${formId}`)
   ElMessage.success('链接已复制')
 }
-function handleCopyLink() {
-  copyToClipboard(`${window.location.origin}/fill/${formId}`)
-  ElMessage.success('链接已复制')
-}
 function formatTime(ts: number) {
   return new Date(ts).toLocaleString('zh-CN')
 }
