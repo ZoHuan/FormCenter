@@ -70,46 +70,39 @@ function gridSpan(colspan: number): string {
 </script>
 
 <style scoped lang="scss">
-.canvas {
-  min-height: 400px;
-}
+.canvas { min-height: 400px; }
 
 .canvas-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 350px;
-  border-radius: var(--radius-lg);
-  background: var(--color-card);
-  box-shadow: var(--shadow-xs);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 350px; border-radius: var(--radius-lg);
+  background: var(--color-card); box-shadow: var(--shadow-xs);
 }
 
 .empty-box {
   border: 2px dashed var(--color-primary-light);
-  border-radius: var(--radius-lg);
-  padding: 48px 56px;
-  text-align: center;
-  transition: all 0.2s;
+  border-radius: var(--radius-lg); padding: 56px 64px; text-align: center;
+  transition: all 0.3s;
 
   .empty-icon {
-    color: var(--color-primary-light);
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: center;
-    opacity: 0.7;
+    color: var(--color-primary-light); margin-bottom: 16px;
+    display: flex; justify-content: center; opacity: 0.6;
+    animation: float 3s ease-in-out infinite;
   }
 
-  p { color: var(--color-text-muted); font-size: 14px; line-height: 1.5; margin: 0; }
-  .empty-main { font-size: 15px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px; }
+  p { color: var(--color-text-muted); font-size: 14px; line-height: 1.6; margin: 0; }
+  .empty-main { font-size: 16px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 6px; }
   .empty-sub { font-size: 13px; }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
 .canvas-card {
-  background: var(--color-card);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  box-shadow: var(--shadow-xs);
-  min-height: 400px;
+  background: var(--color-card); border-radius: var(--radius-lg);
+  padding: 28px; box-shadow: 0 2px 12px rgba(28, 25, 23, 0.06);
+  min-height: 400px; border: 1px solid rgba(45, 106, 79, 0.06);
 }
 
 .canvas-list {
@@ -136,12 +129,18 @@ function gridSpan(colspan: number): string {
 .canvas.drag-over {
   .canvas-card {
     border-color: var(--color-primary-light);
-    box-shadow: 0 0 0 2px var(--color-primary-bg);
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
   }
   .canvas-empty .empty-box {
     border-color: var(--color-primary);
     background: var(--color-primary-bg);
+    animation: pulse 1.5s ease-in-out infinite;
   }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0); }
+  50% { box-shadow: 0 0 0 8px rgba(45, 106, 79, 0.05); }
 }
 
 @keyframes card-enter {
