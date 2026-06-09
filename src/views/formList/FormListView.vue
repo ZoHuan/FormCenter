@@ -230,12 +230,9 @@ function handleReopen(row: FormSchema) {
     transform: translateY(-1px);
   }
 
-  // Status border colors
-  .status-open &,
   &[data-status='open'] {
     border-left-color: var(--color-success);
   }
-  .status-draft &,
   &[data-status='draft'] {
     border-left-color: var(--color-border-hover);
   }

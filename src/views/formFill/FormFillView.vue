@@ -469,6 +469,14 @@ function handleBackToDesigner() {
   margin-top: 32px;
   padding-top: 24px;
   border-top: 1px solid var(--color-canvas);
+
+  .el-button--large {
+    width: 100%;
+    max-width: 320px;
+    height: 48px;
+    font-size: 15px;
+    border-radius: var(--radius-md);
+  }
 }
 
 .auto-save-hint {
