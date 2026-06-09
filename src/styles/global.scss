@@ -1,3 +1,5 @@
+@use './tokens';
+
 /* ── Element Plus 完整变量映射 ── */
 :root {
   --el-color-success: var(--color-success);
@@ -17,8 +19,6 @@
   --el-border-radius-base: var(--radius-sm);
   --el-border-radius-round: var(--radius-full);
 }
-
-@use './tokens';
 
 .el-button--primary {
   --el-button-bg-color: var(--color-primary);
