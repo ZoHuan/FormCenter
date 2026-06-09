@@ -1,9 +1,13 @@
 @use './tokens';
 
-/* ── Element Plus 完整变量映射 ── */
+/* ── Element Plus 完整变量映射（覆盖所有状态色） ── */
 :root {
   --el-color-primary: var(--color-primary);
   --el-color-primary-light-3: var(--color-primary-hover);
+  --el-color-primary-light-5: var(--color-primary-light);
+  --el-color-primary-light-7: #B7E4D0;
+  --el-color-primary-light-8: #D4F0E5;
+  --el-color-primary-light-9: var(--color-primary-bg);
   --el-color-primary-dark-2: var(--color-primary-active);
   --el-color-success: var(--color-success);
   --el-color-warning: var(--color-warning);
