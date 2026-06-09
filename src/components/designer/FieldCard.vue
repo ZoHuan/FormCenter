@@ -4,12 +4,8 @@
       <component :is="typeIcon" class="card-type-icon" :size="14" />
       <span class="card-label">{{ schema.label }}</span>
       <span v-if="schema.required" class="required-star">*</span>
-      <button class="btn-copy" @click.stop="$emit('copy')" aria-label="复制组件">
-        <Copy :size="14" />
-      </button>
-      <button class="btn-delete" @click.stop="$emit('remove')" aria-label="删除组件">
-        <X :size="14" />
-      </button>
+      <button class="btn-copy" @click.stop="$emit('copy')" aria-label="复制组件"><Copy :size="14" /></button>
+      <button class="btn-delete" @click.stop="$emit('remove')" aria-label="删除组件"><X :size="14" /></button>
     </div>
     <div class="card-preview">
       <span v-if="isTextLike" class="preview-input">{{ schema.description || '请输入' }}</span>
@@ -69,132 +65,65 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: grab;
-  transition: all 0.2s ease-out;
+  transition: all 0.25s cubic-bezier(0.3, 0, 0.2, 1);
 
   &:hover {
     border-color: var(--color-border-hover);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+
+    .btn-copy, .btn-delete { opacity: 1; }
   }
 
-  &:active {
-    cursor: grabbing;
-  }
+  &:active { cursor: grabbing; }
 
   &.selected {
     border: 2px solid var(--color-primary);
-    box-shadow: var(--shadow-focus);
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
 
-    .card-header {
-      background: var(--color-primary-bg);
-    }
+    .card-header { background: var(--color-primary-bg); }
   }
 
-  &.is-error {
-    border-color: var(--color-error);
-    box-shadow: 0 0 0 3px rgba(181, 74, 58, 0.08);
-  }
-
-  &.is-dragging {
-    opacity: 0.5;
-    border-style: dashed;
-    border-color: var(--color-primary-light);
-  }
-
-  &.is-drop-target {
-    background: var(--color-primary-bg);
-    border-color: var(--color-primary);
-  }
+  &.is-error { border-color: var(--color-error); box-shadow: 0 0 0 3px rgba(181, 74, 58, 0.08); }
+  &.is-dragging { opacity: 0.5; border-style: dashed; border-color: var(--color-primary-light); }
+  &.is-drop-target { background: var(--color-primary-bg); border-color: var(--color-primary); }
 }
 
 .card-header {
-  height: 32px;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  background: var(--color-page);
-  border-bottom: 1px solid var(--color-canvas);
-  gap: 8px;
+  height: 34px; display: flex; align-items: center;
+  padding: 0 10px; background: var(--color-page);
+  border-bottom: 1px solid var(--color-canvas); gap: 6px;
 }
 
-.drag-handle {
-  color: var(--color-text-muted);
-  font-size: 14px;
-  cursor: grab;
-  width: 24px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.card-type-icon {
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-  margin-right: 2px;
-}
+.card-type-icon { color: var(--color-text-muted); flex-shrink: 0; }
 .card-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text);
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 13px; font-weight: 500; color: var(--color-text);
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+.required-star { color: var(--color-error); font-size: 11px; margin-left: 2px; flex-shrink: 0; }
 
-.required-star {
-  color: var(--color-error);
-  font-size: 11px;
-  margin-left: 2px;
-  flex-shrink: 0;
+.btn-copy, .btn-delete {
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: transparent; cursor: pointer; flex-shrink: 0;
+  border-radius: var(--radius-sm); opacity: 0; transition: all 0.15s;
 }
-
 .btn-copy {
-  border: none;
-  background: transparent;
-  color: var(--color-primary);
-  font-size: 12px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: var(--radius-sm);
-  flex-shrink: 0;
-  transition: background 0.15s;
-
-  &:hover { background: var(--color-primary-bg); }
+  width: 28px; height: 28px; color: var(--color-text-muted);
+  &:hover { background: var(--color-primary-bg); color: var(--color-primary); }
 }
-
 .btn-delete {
-  border: none;
-  background: transparent;
-  color: var(--color-text-muted);
-  font-size: 14px;
-  cursor: pointer;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border-radius: var(--radius-sm);
-  transition: all 0.15s;
-
-  &:hover { color: var(--color-error); background: rgba(181,74,58,0.08); }
+  width: 28px; height: 28px; color: var(--color-text-muted);
+  &:hover { background: rgba(181,74,58,0.08); color: var(--color-error); }
 }
 
 .card-preview {
-  padding: 8px 12px 12px;
-  min-height: 36px;
-  display: flex;
-  align-items: center;
+  padding: 10px 12px 12px; min-height: 40px;
+  display: flex; align-items: center;
 }
 
-.preview-input,
-.preview-select,
-.preview-table,
-.preview-sign {
-  color: var(--color-text-muted);
-  font-size: 13px;
+.preview-input, .preview-select, .preview-table, .preview-sign {
+  color: var(--color-text-muted); font-size: 13px;
+  background: var(--color-page); padding: 6px 10px;
+  border-radius: 4px; width: 100%;
 }
 </style>
