@@ -57,9 +57,9 @@
         <div v-for="(opt, i) in optionList" :key="i" class="option-row">
           <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
           <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
-          <el-button link type="danger" size="small" @click="removeOption(i)">×</el-button>
+          <el-button link class="opt-del" @click="removeOption(i)"><X :size="14" /></el-button>
         </div>
-        <el-button link type="primary" size="small" @click="addOption">+ 添加选项</el-button>
+        <el-button link type="primary" size="small" @click="addOption"><Plus :size="14" /> 添加选项</el-button>
         <div class="prop-row" style="margin-top:8px">
           <label>默认值</label>
           <el-select v-model="comp.defaultValue" size="small" clearable @change="emitUpdate">
@@ -168,7 +168,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
-import { ChevronRight } from 'lucide-vue-next'
+import { ChevronRight, X, Plus } from 'lucide-vue-next'
 import type { ComponentSchema } from '@/types'
 import TriggerRuleEditor from './TriggerRuleEditor.vue'
 import RateEditor from './RateEditor.vue'
@@ -400,7 +400,12 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 }
 </style>
 
-.table-col-item {
+.option-row {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+
+  :deep(.el-input__wrapper) { flex: 1; }
+  .opt-del { color: var(--color-text-muted); &:hover { color: var(--color-error); } }
+}
   margin-bottom: 12px;
   padding: 8px;
   border: 1px solid var(--color-border);
