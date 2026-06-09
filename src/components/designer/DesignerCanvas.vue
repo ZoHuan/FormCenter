@@ -3,27 +3,28 @@
     <div v-if="components.length === 0" class="canvas-empty">
       <div class="empty-box"><p>拖拽组件到此处开始设计</p></div>
     </div>
-    <draggable
-      v-else
-      :list="localComponents"
-      item-key="id"
-      class="canvas-list"
-      ghost-class="ghost"
-      :animation="300"
-      @change="onSortChange"
-    >
-      <template #item="{ element: comp }">
-        <div class="canvas-row" :style="{ gridColumn: gridSpan(comp.colspan) }">
-          <FieldCard
-            :schema="comp"
-            :selected="comp.id === selectedId"
-            @select="$emit('select', comp.id)"
-            @remove="$emit('remove', comp.id)"
-            @copy="$emit('copy', comp.id)"
-          />
-        </div>
-      </template>
-    </draggable>
+    <div v-else class="canvas-card">
+      <draggable
+        :list="localComponents"
+        item-key="id"
+        class="canvas-list"
+        ghost-class="ghost"
+        :animation="300"
+        @change="onSortChange"
+      >
+        <template #item="{ element: comp }">
+          <div class="canvas-row" :style="{ gridColumn: gridSpan(comp.colspan) }">
+            <FieldCard
+              :schema="comp"
+              :selected="comp.id === selectedId"
+              @select="$emit('select', comp.id)"
+              @remove="$emit('remove', comp.id)"
+              @copy="$emit('copy', comp.id)"
+            />
+          </div>
+        </template>
+      </draggable>
+    </div>
   </div>
 </template>
 
@@ -81,6 +82,14 @@ function gridSpan(colspan: number): string {
     font-size: 14px;
     line-height: 1.5;
   }
+}
+
+.canvas-card {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-xs);
+  min-height: 400px;
 }
 
 .canvas-list {
