@@ -1,7 +1,8 @@
 <template>
   <div class="err-page">
     <h1>404</h1>
-    <p>页面不存在</p>
+    <p>页面未找到</p>
+    <p class="err-desc">你访问的页面不存在或已删除</p>
     <el-button type="primary" @click="$router.push('/forms')">返回首页</el-button>
   </div>
 </template>
@@ -28,5 +29,12 @@
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 8px;
+}
+.err-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin-top: -4px;
+  margin-bottom: 16px;
 }
 </style>

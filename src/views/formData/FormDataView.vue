@@ -46,6 +46,7 @@ import { ElMessage } from 'element-plus'
 import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { exportToExcel } from '@/utils/excel'
+import { copyToClipboard } from '@/utils/clipboard'
 import AppHeader from '@/components/common/AppHeader.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
@@ -105,6 +106,14 @@ function handleExport() {
     schema.value?.title ?? 'export',
   )
   ElMessage.success('导出成功')
+}
+function handleCopyLink() {
+  copyToClipboard(`${window.location.origin}/fill/${formId}`)
+  ElMessage.success('链接已复制')
+}
+function handleCopyLink() {
+  copyToClipboard(`${window.location.origin}/fill/${formId}`)
+  ElMessage.success('链接已复制')
 }
 function formatTime(ts: number) {
   return new Date(ts).toLocaleString('zh-CN')
