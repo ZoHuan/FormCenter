@@ -217,6 +217,12 @@ function handleReopen(row: FormSchema) {
   cursor: pointer;
   transition: all 0.15s ease-out;
   border-left: 4px solid transparent;
+  gap: 16px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
   &:hover {
     box-shadow: var(--shadow-sm);
@@ -270,6 +276,8 @@ function handleReopen(row: FormSchema) {
   flex-shrink: 0;
   opacity: 0;
   transition: opacity 0.15s;
+  overflow-x: auto;
+  max-width: 320px;
 
   .form-card:hover & {
     opacity: 1;

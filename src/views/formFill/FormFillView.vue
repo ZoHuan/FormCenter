@@ -508,11 +508,11 @@ function handleBackToDesigner() {
   display: flex;
   align-items: center;
   padding: 0 16px;
-  background: var(--color-primary-bg);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-card);
   margin-bottom: 16px;
   gap: 12px;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 1px 0 var(--color-border);
 }
 
 .preview-tag {
