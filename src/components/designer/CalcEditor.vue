@@ -99,12 +99,18 @@ function saveRules(list: Array<{ id: string; description: string; expression: st
   margin-top: 8px;
 }
 .rule-card {
-  padding: 8px;
+  padding: 10px 12px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-primary-bg);
-  margin-bottom: 8px;
+  background: var(--color-page);
+  margin-bottom: 6px;
   position: relative;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-card);
+  }
 }
 .rule-line {
   font-size: 12px;
@@ -112,6 +118,8 @@ function saveRules(list: Array<{ id: string; description: string; expression: st
   display: flex;
   align-items: center;
   gap: 4px;
+  margin-bottom: 3px;
+  padding-right: 64px;
 }
 .rule-expr {
   font-size: 12px;
@@ -120,13 +128,14 @@ function saveRules(list: Array<{ id: string; description: string; expression: st
     JetBrains Mono,
     monospace;
   margin-top: 2px;
+  word-break: break-all;
 }
 .rule-btns {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
   display: flex;
-  gap: 4px;
+  gap: 2px;
 }
 .dialog-row {
   margin-bottom: 16px;
