@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { Calculator, Plus } from 'lucide-vue-next'
 import type { ComponentSchema } from '@/types'
 
@@ -52,6 +52,17 @@ const dialogVisible = ref(false)
 const editingIndex = ref(-1)
 const formDesc = ref('')
 const formExpr = ref('')
+
+// 切换组件时重置编辑器状态
+watch(
+  () => props.component.id,
+  () => {
+    dialogVisible.value = false
+    editingIndex.value = -1
+    formDesc.value = ''
+    formExpr.value = ''
+  },
+)
 
 function addRule() {
   editingIndex.value = -1

@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
 import { Plus } from 'lucide-vue-next'
 import type { ComponentSchema } from '@/types'
 
@@ -88,6 +88,18 @@ const targetComponents = computed(() =>
 const dialogVisible = ref(false)
 const editingIndex = ref(-1)
 const form = reactive({ sourceValue: '', action: 'show', targetField: '' })
+
+// 切换组件时重置编辑器状态
+watch(
+  () => props.component.id,
+  () => {
+    dialogVisible.value = false
+    editingIndex.value = -1
+    form.sourceValue = ''
+    form.action = 'show'
+    form.targetField = ''
+  },
+)
 
 function getOptionLabel(val: string) {
   return optionList.value.find((o) => o.value === val)?.label ?? val
