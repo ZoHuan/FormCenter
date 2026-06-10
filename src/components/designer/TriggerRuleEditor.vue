@@ -9,19 +9,19 @@
         <el-button link type="danger" size="small" @click="removeRule(i)">删除</el-button>
       </div>
     </div>
-    <el-button v-if="hasOptions" link type="primary" size="small" @click="addRule">+ 添加触发条件</el-button>
+    <el-button v-if="hasOptions" class="btn-add" @click="addRule"><Plus :size="14" />添加触发条件</el-button>
 
     <el-dialog v-model="dialogVisible" :title="editingIndex >= 0 ? '编辑触发条件' : '添加触发条件'" width="480px">
       <div class="dialog-body">
         <div class="dialog-row">
           <label>触发选项</label>
-          <el-select v-model="form.sourceValue" placeholder="选择选项" style="width:100%">
+          <el-select v-model="form.sourceValue" placeholder="选择选项" style="width: 100%">
             <el-option v-for="opt in optionList" :key="opt.value" :label="opt.label" :value="opt.value" />
           </el-select>
         </div>
         <div class="dialog-row">
           <label>触发行为</label>
-          <el-select v-model="form.action" placeholder="选择行为" style="width:100%">
+          <el-select v-model="form.action" placeholder="选择行为" style="width: 100%">
             <el-option value="show" label="隐藏的组件变为可见" />
             <el-option value="require" label="组件变为必填" />
             <el-option value="enable" label="只读组件变为可编辑" />
@@ -31,7 +31,13 @@
         <div class="dialog-row">
           <label>目标组件</label>
           <div class="target-list">
-            <el-checkbox v-for="c in targetComponents" :key="c.field" :model-value="form.targetField === c.field" @change="() => (form.targetField = c.field)">{{ c.label }}</el-checkbox>
+            <el-checkbox
+              v-for="c in targetComponents"
+              :key="c.field"
+              :model-value="form.targetField === c.field"
+              @change="() => (form.targetField = c.field)"
+              >{{ c.label }}</el-checkbox
+            >
           </div>
         </div>
       </div>
@@ -45,13 +51,15 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue'
+import { Plus } from 'lucide-vue-next'
 import type { ComponentSchema } from '@/types'
 
 const props = defineProps<{ component: ComponentSchema; allComponents: ComponentSchema[] }>()
 const emit = defineEmits<{ update: [patch: Partial<ComponentSchema>] }>()
 
 const rules = computed<Array<{ sourceValue: string; action: string; targetField: string }>>({
-  get: () => (props.component.triggerRules as Array<{ sourceValue: string; action: string; targetField: string }>) ?? [],
+  get: () =>
+    (props.component.triggerRules as Array<{ sourceValue: string; action: string; targetField: string }>) ?? [],
   set: () => {},
 })
 
@@ -60,9 +68,22 @@ const hasOptions = computed(() => {
   return opts && opts.length > 0
 })
 
-const optionList = computed(() => (props.component.props as Record<string, unknown>)?.options as Array<{ label: string; value: string }> ?? [])
+const optionList = computed(
+  () => ((props.component.props as Record<string, unknown>)?.options as Array<{ label: string; value: string }>) ?? [],
+)
 
-const targetComponents = computed(() => props.allComponents.filter((c) => c.field && c.id !== props.component.id && c.type !== 'title' && c.type !== 'subtitle' && c.type !== 'group-title' && c.type !== 'separator' && c.type !== 'point-out'))
+const targetComponents = computed(() =>
+  props.allComponents.filter(
+    (c) =>
+      c.field &&
+      c.id !== props.component.id &&
+      c.type !== 'title' &&
+      c.type !== 'subtitle' &&
+      c.type !== 'group-title' &&
+      c.type !== 'separator' &&
+      c.type !== 'point-out',
+  ),
+)
 
 const dialogVisible = ref(false)
 const editingIndex = ref(-1)
@@ -73,7 +94,12 @@ function getOptionLabel(val: string) {
 }
 
 function actionLabel(a: string) {
-  const m: Record<string, string> = { show: '隐藏的组件变为可见', require: '组件变为必填', enable: '只读组件变为可编辑', disable: '可编辑组件变为只读' }
+  const m: Record<string, string> = {
+    show: '隐藏的组件变为可见',
+    require: '组件变为必填',
+    enable: '只读组件变为可编辑',
+    disable: '可编辑组件变为只读',
+  }
   return m[a] ?? a
 }
 
@@ -107,7 +133,14 @@ function removeRule(i: number) {
 function confirmRule() {
   if (!form.sourceValue || !form.targetField) return
   const list = [...rules.value]
-  const entry = { id: Date.now().toString(), type: 'trigger' as const, sourceField: props.component.field, sourceValue: form.sourceValue, targetField: form.targetField, action: form.action as 'show' | 'hide' | 'require' | 'optional' | 'enable' | 'disable' }
+  const entry = {
+    id: Date.now().toString(),
+    type: 'trigger' as const,
+    sourceField: props.component.field,
+    sourceValue: form.sourceValue,
+    targetField: form.targetField,
+    action: form.action as 'show' | 'hide' | 'require' | 'optional' | 'enable' | 'disable',
+  }
   if (editingIndex.value >= 0) list[editingIndex.value] = entry
   else list.push(entry)
   emit('update', { triggerRules: list })
@@ -116,7 +149,9 @@ function confirmRule() {
 </script>
 
 <style scoped lang="scss">
-.trigger-section { margin-top: 8px; }
+.trigger-section {
+  margin-top: 8px;
+}
 
 .rule-card {
   padding: 8px;
@@ -126,12 +161,54 @@ function confirmRule() {
   margin-bottom: 8px;
   position: relative;
 
-  .rule-line { font-size: 12px; margin-bottom: 2px; color: var(--color-text); }
-  .rule-action { color: var(--color-text-secondary); }
-  .rule-target { color: var(--color-primary); }
-  .rule-btns { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; }
+  .rule-line {
+    font-size: 12px;
+    margin-bottom: 2px;
+    color: var(--color-text);
+  }
+  .rule-action {
+    color: var(--color-text-secondary);
+  }
+  .rule-target {
+    color: var(--color-primary);
+  }
+  .rule-btns {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+  }
 }
 
-.dialog-row { margin-bottom: 16px; label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; } }
-.target-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.dialog-row {
+  margin-bottom: 16px;
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+}
+.target-list {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.btn-add {
+  width: 100%;
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 500;
+  height: 36px;
+  transition: all 0.15s;
+  &:hover {
+    background: var(--color-primary-bg);
+  }
+}
 </style>
