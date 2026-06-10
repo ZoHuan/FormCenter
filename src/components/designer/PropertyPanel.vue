@@ -55,16 +55,14 @@
       </div>
       <div :class="{ collapsed: !openSections.options }" class="section-body">
         <div class="options-list">
-          <div v-for="(opt, i) in optionList" :key="i" class="option-card">
-            <div class="option-index">{{ i + 1 }}</div>
-            <div class="option-fields">
-              <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
-              <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
-            </div>
-            <el-button link class="opt-del" @click="removeOption(i)"><X :size="14" /></el-button>
+          <div v-for="(opt, i) in optionList" :key="i" class="option-row">
+            <span class="opt-num">{{ i + 1 }}</span>
+            <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
+            <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
+            <el-button link class="btn-del" @click="removeOption(i)"><X :size="14" /></el-button>
           </div>
         </div>
-        <el-button class="opt-add" @click="addOption"><Plus :size="14" />添加选项</el-button>
+        <el-button class="btn-add" @click="addOption"><Plus :size="14" />添加选项</el-button>
         <div class="opt-default">
           <label>默认值</label>
           <el-select v-model="comp.defaultValue" size="small" clearable @change="emitUpdate">
@@ -89,10 +87,12 @@
           <label>最大值</label><el-input-number v-model="numMax" size="small" @change="onNumMaxChange" />
         </div>
         <div v-if="hasRadix" class="prop-row">
-          <label>小数位数</label><el-input-number v-model="numRadix" :min="0" :max="10" size="small" @change="onNumRadixChange" />
+          <label>小数位数</label
+          ><el-input-number v-model="numRadix" :min="0" :max="10" size="small" @change="onNumRadixChange" />
         </div>
         <div v-if="hasUnit" class="prop-row">
-          <label>单位</label><el-input v-model="numUnit" size="small" placeholder="如：元、个" @input="onNumUnitChange" />
+          <label>单位</label
+          ><el-input v-model="numUnit" size="small" placeholder="如：元、个" @input="onNumUnitChange" />
         </div>
         <div v-if="hasAutoWrap" class="prop-row">
           <label>自动换行</label><el-switch v-model="autoWrap" size="small" @change="onAutoWrapChange" />
@@ -111,13 +111,19 @@
           </el-select>
         </div>
         <div v-if="hasImageSize" class="prop-row">
-          <label>最大上传数</label><el-input-number v-model="maxCount" :min="1" size="small" @change="onMaxCountChange" />
+          <label>最大上传数</label
+          ><el-input-number v-model="maxCount" :min="1" size="small" @change="onMaxCountChange" />
         </div>
         <div v-if="hasImageSize" class="prop-row">
-          <label>文件大小上限</label><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span style="font-size:12px;color:var(--color-text-muted);margin-left:4px">KB</span>
+          <label>文件大小上限</label
+          ><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span
+            style="font-size: 12px; color: var(--color-text-muted); margin-left: 4px"
+            >KB</span
+          >
         </div>
         <div v-if="hasImageSize" class="prop-row">
-          <label>文件类型</label><el-input v-model="fileTypes" size="small" placeholder=".jpg;.png" @input="onFileTypesChange" />
+          <label>文件类型</label
+          ><el-input v-model="fileTypes" size="small" placeholder=".jpg;.png" @input="onFileTypesChange" />
         </div>
         <div v-if="hasHideWhenEmpty" class="prop-row">
           <label>无值时隐藏</label><el-switch v-model="hideWhenEmpty" size="small" @change="onHideWhenEmptyChange" />
@@ -135,7 +141,12 @@
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.advanced }" />高级
       </div>
       <div :class="{ collapsed: !openSections.advanced }" class="section-body">
-        <TriggerRuleEditor v-if="hasOptions" :component="comp" :all-components="allComponents" @update="(p) => emit('update', p)" />
+        <TriggerRuleEditor
+          v-if="hasOptions"
+          :component="comp"
+          :all-components="allComponents"
+          @update="(p) => emit('update', p)"
+        />
         <CalcEditor v-if="calcTypes.includes(comp.type)" :component="comp" @update="(p) => emit('update', p)" />
         <RateEditor v-if="comp.type === 'rate'" :component="comp" @update="(p) => emit('update', p)" />
         <RelationEditor v-if="comp.type === 'relation'" :component="comp" @update="(p) => emit('update', p)" />
@@ -146,25 +157,34 @@
     </div>
     <div v-if="comp.type === 'table' || comp.type === 'cross-table'" class="section">
       <div class="section-header" @click="toggleSection('table')">
-        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.table }" />{{ comp.type === 'cross-table' ? '交叉表管理' : '表格列管理' }}
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.table }" />{{
+          comp.type === 'cross-table' ? '交叉表管理' : '表格列管理'
+        }}
       </div>
       <div :class="{ collapsed: !openSections.table }" class="section-body">
         <div v-for="(col, i) in tableColumns" :key="i" class="table-col-item">
           <div class="col-header">
-            <el-select v-model="col.type" size="small" @change="onColTypeChange(i)" style="width:90px">
+            <el-select v-model="col.type" size="small" @change="onColTypeChange(i)" style="width: 90px">
               <el-option v-for="t in colTypes" :key="t" :label="t" :value="t" />
             </el-select>
-            <el-input v-model="col.title" size="small" placeholder="列标题" style="flex:1" @input="emitUpdate" />
+            <el-input v-model="col.title" size="small" placeholder="列标题" style="flex: 1" @input="emitUpdate" />
             <el-button link type="danger" size="small" @click="removeTableCol(i)">×</el-button>
           </div>
           <div class="col-body">
-            <div class="prop-row"><label>宽度</label><el-input-number v-model="col.width" :min="60" :max="600" size="small" @change="emitUpdate" /></div>
-            <div class="prop-row"><label>必填</label><el-switch v-model="col.required" size="small" @change="emitUpdate" /></div>
+            <div class="prop-row">
+              <label>宽度</label
+              ><el-input-number v-model="col.width" :min="60" :max="600" size="small" @change="emitUpdate" />
+            </div>
+            <div class="prop-row">
+              <label>必填</label><el-switch v-model="col.required" size="small" @change="emitUpdate" />
+            </div>
           </div>
         </div>
         <el-button link type="primary" size="small" @click="addTableCol">+ 添加字段</el-button>
-        <div style="border-top:1px solid var(--color-border);margin:12px 0;padding-top:8px">
-          <div class="prop-row"><label>显示序号</label><el-switch v-model="tableShowIndex" size="small" @change="onTableShowIndexChange" /></div>
+        <div style="border-top: 1px solid var(--color-border); margin: 12px 0; padding-top: 8px">
+          <div class="prop-row">
+            <label>显示序号</label><el-switch v-model="tableShowIndex" size="small" @change="onTableShowIndexChange" />
+          </div>
         </div>
       </div>
     </div>
@@ -194,13 +214,21 @@ watch(
   (val) => Object.assign(comp, val),
   { deep: true },
 )
-const openSections = reactive<Record<string, boolean>>({ basic: true, options: false, validation: false, advanced: false, table: true })
+const openSections = reactive<Record<string, boolean>>({
+  basic: true,
+  options: false,
+  validation: false,
+  advanced: false,
+  table: true,
+})
 
 const colTypes = ['input', 'textarea', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser', 'image']
 function toggleSection(key: string) {
   const isOpen = openSections[key]
   // 手风琴模式：先关闭全部
-  Object.keys(openSections).forEach(k => { openSections[k] = false })
+  Object.keys(openSections).forEach((k) => {
+    openSections[k] = false
+  })
   // 如果之前是关闭的，则打开；如果之前是打开的，保持关闭（折叠回去）
   openSections[key] = !isOpen
 }
@@ -214,8 +242,35 @@ const isDecorative = computed(() => ['title', 'subtitle', 'group-title', 'separa
 const isSeparator = computed(() => comp.type === 'separator')
 const isTable = computed(() => comp.type === 'table')
 const isCrossTable = computed(() => comp.type === 'cross-table')
-const hasTooltip = computed(() => ['input', 'textarea', 'numeric', 'chooser', 'multi-chooser', 'selection', 'image', 'singleImage', 'commitment'].includes(comp.type))
-const hasColspan = computed(() => !['title', 'subtitle', 'group-title', 'point-out', 'separator', 'signature', 'relation', 'region', 'QRCode', 'table', 'cross-table'].includes(comp.type))
+const hasTooltip = computed(() =>
+  [
+    'input',
+    'textarea',
+    'numeric',
+    'chooser',
+    'multi-chooser',
+    'selection',
+    'image',
+    'singleImage',
+    'commitment',
+  ].includes(comp.type),
+)
+const hasColspan = computed(
+  () =>
+    ![
+      'title',
+      'subtitle',
+      'group-title',
+      'point-out',
+      'separator',
+      'signature',
+      'relation',
+      'region',
+      'QRCode',
+      'table',
+      'cross-table',
+    ].includes(comp.type),
+)
 const hasAppStyle = computed(() => !['separator', 'table', 'cross-table', 'QRCode'].includes(comp.type))
 const hasMax = computed(() => isNumeric.value)
 const hasRadix = computed(() => isNumeric.value)
@@ -227,14 +282,27 @@ const hasImageSize = computed(() => ['image', 'singleImage'].includes(comp.type)
 const hasHideWhenEmpty = computed(() => comp.type === 'point-out')
 const hasEnableSearch = computed(() => comp.type === 'tree' || comp.type === 'tree-structure')
 const hasEnableSingle = computed(() => comp.type === 'tree' || comp.type === 'tree-structure')
-const hasValidation = computed(() =>
-  hasTextLimit.value || isNumeric.value || hasAutoWrap.value || hasRareChars.value ||
-  hasDateType.value || hasImageSize.value || hasHideWhenEmpty.value ||
-  hasEnableSearch.value || hasEnableSingle.value
+const hasValidation = computed(
+  () =>
+    hasTextLimit.value ||
+    isNumeric.value ||
+    hasAutoWrap.value ||
+    hasRareChars.value ||
+    hasDateType.value ||
+    hasImageSize.value ||
+    hasHideWhenEmpty.value ||
+    hasEnableSearch.value ||
+    hasEnableSingle.value,
 )
-const hasAdvanced = computed(() =>
-  hasOptions.value || calcTypes.includes(comp.type) || comp.type === 'rate' ||
-  comp.type === 'relation' || comp.type === 'signature' || comp.type === 'QRCode' || isDecorative.value
+const hasAdvanced = computed(
+  () =>
+    hasOptions.value ||
+    calcTypes.includes(comp.type) ||
+    comp.type === 'rate' ||
+    comp.type === 'relation' ||
+    comp.type === 'signature' ||
+    comp.type === 'QRCode' ||
+    isDecorative.value,
 )
 
 const optionList = computed<{ label: string; value: string }[]>({
@@ -243,7 +311,10 @@ const optionList = computed<{ label: string; value: string }[]>({
 })
 
 function addOption() {
-  const list = [...optionList.value, { label: `选项${optionList.value.length + 1}`, value: `${optionList.value.length}` }]
+  const list = [
+    ...optionList.value,
+    { label: `选项${optionList.value.length + 1}`, value: `${optionList.value.length}` },
+  ]
   ;(comp.props as Record<string, unknown>).options = list
   emitUpdate()
 }
@@ -255,17 +326,26 @@ function removeOption(index: number) {
 }
 
 const tableColumns = computed<Array<{ title: string; type: string; width?: number; required?: boolean }>>({
-  get: () => ((comp.props as Record<string, unknown>)?.columns as Array<{ title: string; type: string; width?: number; required?: boolean }>) ?? [],
+  get: () =>
+    ((comp.props as Record<string, unknown>)?.columns as Array<{
+      title: string
+      type: string
+      width?: number
+      required?: boolean
+    }>) ?? [],
   set: () => {},
 })
 
 const tableShowIndex = computed({
-  get: () => (comp.props as Record<string, unknown>)?.showIndex as boolean ?? false,
+  get: () => ((comp.props as Record<string, unknown>)?.showIndex as boolean) ?? false,
   set: () => {},
 })
 
 function addTableCol() {
-  const cols = [...tableColumns.value, { title: `列${tableColumns.value.length + 1}`, type: 'input', width: 120, required: false }]
+  const cols = [
+    ...tableColumns.value,
+    { title: `列${tableColumns.value.length + 1}`, type: 'input', width: 120, required: false },
+  ]
   ;(comp.props as Record<string, unknown>).columns = cols
   emitUpdate()
 }
@@ -290,37 +370,95 @@ const maxLen = computed({
 })
 const numMin = computed({ get: () => ((comp.props as Record<string, unknown>)?.min as number) ?? 0, set: () => {} })
 const numMax = computed({ get: () => ((comp.props as Record<string, unknown>)?.max as number) ?? 0, set: () => {} })
-const numRadix = computed({ get: () => ((comp.props as Record<string, unknown>)?.decimalPlaces as number) ?? 0, set: () => {} })
+const numRadix = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.decimalPlaces as number) ?? 0,
+  set: () => {},
+})
 const numUnit = computed({ get: () => ((comp.props as Record<string, unknown>)?.unit as string) ?? '', set: () => {} })
-const autoWrap = computed({ get: () => ((comp.props as Record<string, unknown>)?.autoSize as boolean) ?? false, set: () => {} })
-const allowRare = computed({ get: () => ((comp.props as Record<string, unknown>)?.allowRareChars as boolean) ?? false, set: () => {} })
-const dateType = computed({ get: () => ((comp.props as Record<string, unknown>)?.dateType as string) ?? 'date', set: () => {} })
-const maxCount = computed({ get: () => ((comp.props as Record<string, unknown>)?.maxCount as number) ?? 3, set: () => {} })
-const maxSize = computed({ get: () => ((comp.props as Record<string, unknown>)?.maxSize as number) ?? 0, set: () => {} })
-const fileTypes = computed({ get: () => ((comp.props as Record<string, unknown>)?.fileTypes as string) ?? '', set: () => {} })
-const hideWhenEmpty = computed({ get: () => ((comp.props as Record<string, unknown>)?.hideWhenEmpty as boolean) ?? false, set: () => {} })
-const enableSearch = computed({ get: () => ((comp.props as Record<string, unknown>)?.enableSearch as boolean) ?? false, set: () => {} })
-const enableSingle = computed({ get: () => ((comp.props as Record<string, unknown>)?.enableSingle as boolean) ?? false, set: () => {} })
+const autoWrap = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.autoSize as boolean) ?? false,
+  set: () => {},
+})
+const allowRare = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.allowRareChars as boolean) ?? false,
+  set: () => {},
+})
+const dateType = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.dateType as string) ?? 'date',
+  set: () => {},
+})
+const maxCount = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.maxCount as number) ?? 3,
+  set: () => {},
+})
+const maxSize = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.maxSize as number) ?? 0,
+  set: () => {},
+})
+const fileTypes = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.fileTypes as string) ?? '',
+  set: () => {},
+})
+const hideWhenEmpty = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.hideWhenEmpty as boolean) ?? false,
+  set: () => {},
+})
+const enableSearch = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.enableSearch as boolean) ?? false,
+  set: () => {},
+})
+const enableSingle = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.enableSingle as boolean) ?? false,
+  set: () => {},
+})
 
 function setProp(key: string, val: unknown) {
   ;(comp.props as Record<string, unknown>)[key] = val
   emitUpdate()
 }
 
-function onMaxLenChange(v: number | undefined) { setProp('maxLength', v ?? 0) }
-function onNumRangeChange() { setProp('min', numMin.value) }
-function onNumMaxChange(v: number | undefined) { setProp('max', v ?? 0) }
-function onNumRadixChange(v: number | undefined) { setProp('decimalPlaces', v ?? 0) }
-function onNumUnitChange(v: string) { setProp('unit', v) }
-function onAutoWrapChange(v: boolean) { setProp('autoSize', v) }
-function onRareChange(v: boolean) { setProp('allowRareChars', v) }
-function onDateTypeChange(v: string) { setProp('dateType', v) }
-function onMaxCountChange(v: number | undefined) { setProp('maxCount', v ?? 3) }
-function onMaxSizeChange(v: number | undefined) { setProp('maxSize', v ?? 0) }
-function onFileTypesChange(v: string) { setProp('fileTypes', v) }
-function onHideWhenEmptyChange(v: boolean) { setProp('hideWhenEmpty', v) }
-function onEnableSearchChange(v: boolean) { setProp('enableSearch', v) }
-function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
+function onMaxLenChange(v: number | undefined) {
+  setProp('maxLength', v ?? 0)
+}
+function onNumRangeChange() {
+  setProp('min', numMin.value)
+}
+function onNumMaxChange(v: number | undefined) {
+  setProp('max', v ?? 0)
+}
+function onNumRadixChange(v: number | undefined) {
+  setProp('decimalPlaces', v ?? 0)
+}
+function onNumUnitChange(v: string) {
+  setProp('unit', v)
+}
+function onAutoWrapChange(v: boolean) {
+  setProp('autoSize', v)
+}
+function onRareChange(v: boolean) {
+  setProp('allowRareChars', v)
+}
+function onDateTypeChange(v: string) {
+  setProp('dateType', v)
+}
+function onMaxCountChange(v: number | undefined) {
+  setProp('maxCount', v ?? 3)
+}
+function onMaxSizeChange(v: number | undefined) {
+  setProp('maxSize', v ?? 0)
+}
+function onFileTypesChange(v: string) {
+  setProp('fileTypes', v)
+}
+function onHideWhenEmptyChange(v: boolean) {
+  setProp('hideWhenEmpty', v)
+}
+function onEnableSearchChange(v: boolean) {
+  setProp('enableSearch', v)
+}
+function onEnableSingleChange(v: boolean) {
+  setProp('enableSingle', v)
+}
 </script>
 
 <style scoped lang="scss">
@@ -367,7 +505,9 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 
 .section-arrow {
   color: var(--color-text-muted);
-  transition: transform 0.2s ease, color 0.15s;
+  transition:
+    transform 0.2s ease,
+    color 0.15s;
   flex-shrink: 0;
 }
 .section-arrow.open {
@@ -376,71 +516,162 @@ function onEnableSingleChange(v: boolean) { setProp('enableSingle', v) }
 }
 .section-body {
   padding: 8px 16px 12px;
-  max-height: 600px; overflow: hidden;
-  transition: max-height 0.3s cubic-bezier(0.3, 0, 0.2, 1), padding 0.3s ease;
-  &.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  max-height: 600px;
+  overflow: hidden;
+  transition:
+    max-height 0.3s cubic-bezier(0.3, 0, 0.2, 1),
+    padding 0.3s ease;
+  &.collapsed {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 .prop-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 0; padding: 6px 0; gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: 6px 0;
+  gap: 8px;
   border-bottom: 1px solid transparent;
   transition: border-color 0.15s;
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 
   label {
-    font-size: 13px; font-weight: 500; color: var(--color-text-secondary);
-    width: 72px; flex-shrink: 0; line-height: 1.4; white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    width: 72px;
+    flex-shrink: 0;
+    line-height: 1.4;
+    white-space: nowrap;
   }
 
   :deep(.el-input__wrapper) {
-    background: var(--color-page); border: 1px solid var(--color-border);
-    box-shadow: none; border-radius: var(--radius-sm);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--color-page);
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+    border-radius: var(--radius-sm);
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
   }
   :deep(.el-input.is-focus .el-input__wrapper) {
-    border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.08);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.08);
+  }
+}
+
+/* ── 选项编辑器 ── */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.opt-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-canvas);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--color-primary-bg);
+  }
+
+  :deep(.el-input) {
+    display: flex !important;
+  }
+  :deep(.el-input__wrapper) {
+    box-shadow: none !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: var(--radius-xs) !important;
+    padding: 0 8px !important;
+    background: var(--color-card) !important;
+  }
+  :deep(.el-input.is-focus .el-input__wrapper) {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 1px rgba(45, 106, 79, 0.12) !important;
+  }
+
+  .el-input:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+  }
+  .el-input:nth-child(3) {
+    width: 52px;
+    flex-shrink: 0;
+  }
+}
+
+.opt-spacer {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.btn-del {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  &:hover {
+    color: var(--color-error);
+    background: rgba(181, 74, 58, 0.06);
+  }
+}
+
+.btn-add {
+  width: 100%;
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 500;
+  height: 36px;
+  transition: all 0.15s;
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-bg);
+  }
+}
+
+.opt-default {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-canvas);
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
   }
 }
 </style>
-
-/* ── 选项编辑器 ── */
-.options-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-.option-card {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px; background: var(--color-page); border-radius: var(--radius-sm);
-  border: 1px solid var(--color-canvas);
-  transition: border-color 0.15s;
-  &:hover { border-color: var(--color-border); }
-}
-.option-index {
-  font-size: 12px; font-weight: 600; color: var(--color-text-muted);
-  width: 18px; text-align: center; flex-shrink: 0;
-}
-.option-fields {
-  display: flex; gap: 6px; flex: 1;
-  :deep(.el-input__wrapper) { background: var(--color-card); }
-}
-.opt-del { color: var(--color-text-muted); flex-shrink: 0; &:hover { color: var(--color-error); } }
-.opt-add {
-  width: 100%; border: 1px dashed var(--color-border); border-radius: var(--radius-sm);
-  color: var(--color-text-secondary); font-size: 13px; height: 36px;
-  &:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-bg); }
-}
-.opt-default {
-  display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px;
-  border-top: 1px solid var(--color-canvas);
-  label { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); white-space: nowrap; }
-}
-  margin-bottom: 12px;
-  padding: 8px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-primary-bg);
-
-  .col-header { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
-  .col-body { padding-left: 4px; }
-}
-
-.option-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
