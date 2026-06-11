@@ -1,5 +1,6 @@
 import type { ComponentSchema, ComponentType } from '@/types'
 import { nanoid } from 'nanoid'
+import { regionTree } from '@/mock/region'
 
 const defaultComponent: ComponentSchema = {
   id: '',
@@ -89,9 +90,26 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
         },
       }
     case 'cascader':
-      return { ...base, type: 'cascader', label: '级联选框', description: '请选择' }
-    case 'tree':
-      return { ...base, type: 'tree', label: '树形选框', description: '请选择' }
+      return {
+        ...base,
+        type: 'cascader',
+        label: '级联选框',
+        description: '请选择',
+        props: {
+          options: [
+            {
+              label: '选项1',
+              value: '0',
+              children: [
+                { label: '子选项1-1', value: '0-0' },
+                { label: '子选项1-2', value: '0-1' },
+              ],
+            },
+            { label: '选项2', value: '1', children: [{ label: '子选项2-1', value: '1-0' }] },
+            { label: '选项3', value: '2' },
+          ],
+        },
+      }
     case 'date':
       return { ...base, type: 'date', label: '日期', description: '请选择日期', props: { dateType: 'date' } }
     case 'date-range':
@@ -127,13 +145,64 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
         props: { showTitle: true, initialRows: 3, columns: [], showIndex: true },
       }
     case 'relation':
-      return { ...base, type: 'relation', label: '关联查询', props: { showTitle: true } }
+      return {
+        ...base,
+        type: 'relation',
+        label: '关联查询',
+        props: {
+          showTitle: true,
+          options: [
+            { label: '记录1', value: '1' },
+            { label: '记录2', value: '2' },
+            { label: '记录3', value: '3' },
+          ],
+        },
+      }
     case 'commitment':
       return { ...base, type: 'commitment', label: '承诺说明', description: '本人确认以上信息属实' }
     case 'region':
-      return { ...base, type: 'region', label: '行政区划', description: '请选择地区' }
+      return { ...base, type: 'region', label: '行政区划', description: '请选择地区', props: { options: regionTree } }
     case 'tree-structure':
-      return { ...base, type: 'tree-structure', label: '树结构', description: '请选择' }
+      return {
+        ...base,
+        type: 'tree-structure',
+        label: '树结构',
+        description: '请选择',
+        props: {
+          options: [
+            {
+              label: '总公司',
+              value: 'root',
+              children: [
+                {
+                  label: '技术中心',
+                  value: 'tech',
+                  children: [
+                    { label: '前端组', value: 'frontend' },
+                    { label: '后端组', value: 'backend' },
+                  ],
+                },
+                {
+                  label: '产品中心',
+                  value: 'product',
+                  children: [
+                    { label: '产品组', value: 'pm' },
+                    { label: '设计组', value: 'design' },
+                  ],
+                },
+                {
+                  label: '运营中心',
+                  value: 'ops',
+                  children: [
+                    { label: '市场组', value: 'market' },
+                    { label: '客服组', value: 'cs' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      }
     case 'QRCode':
       return { ...base, type: 'QRCode', label: '二维码', editable: false, props: { content: '' } }
     default:
@@ -142,9 +211,38 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
 }
 
 export const COMPONENT_MENU = [
-  { category: '基础字段', items: ['input', 'textarea', 'numeric', 'chooser', 'multi-chooser', 'selection', 'date', 'date-range', 'rate', 'serial-number', 'cascader', 'tree'] as ComponentType[] },
+  {
+    category: '基础字段',
+    items: [
+      'input',
+      'textarea',
+      'numeric',
+      'chooser',
+      'multi-chooser',
+      'selection',
+      'date',
+      'date-range',
+      'rate',
+      'serial-number',
+      'cascader',
+    ] as ComponentType[],
+  },
   { category: '展示布局', items: ['title', 'subtitle', 'group-title', 'separator', 'point-out'] as ComponentType[] },
-  { category: '高级组件', items: ['image', 'singleImage', 'signature', 'table', 'cross-table', 'commitment', 'relation', 'region', 'tree-structure', 'QRCode'] as ComponentType[] },
+  {
+    category: '高级组件',
+    items: [
+      'image',
+      'singleImage',
+      'signature',
+      'table',
+      'cross-table',
+      'commitment',
+      'relation',
+      'region',
+      'tree-structure',
+      'QRCode',
+    ] as ComponentType[],
+  },
 ]
 
 /** 装饰类组件类型（无需显示标题、无数据交互） */
