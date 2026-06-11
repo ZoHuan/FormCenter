@@ -4,12 +4,7 @@
       <el-button link @click="handleBack">← 返回</el-button>
       <div class="title-area">
         <input v-model="formTitle" class="title-input" placeholder="请输入表单标题" @blur="onTitleBlur" />
-        <input
-          v-model="formDesc"
-          class="desc-input"
-          placeholder="添加描述（选填）"
-          @blur="onDescBlur"
-        />
+        <input v-model="formDesc" class="desc-input" placeholder="添加描述（选填）" @blur="onDescBlur" />
       </div>
       <div class="toolbar-right">
         <el-button @click="handlePreview">预览</el-button>
@@ -140,7 +135,9 @@ function loadTemplate(key: string) {
     store.schema.description = tpl.description
     // 直接使用模板的完整组件配置，而非 addComponent（会丢失所有属性）
     const cloned = JSON.parse(JSON.stringify(tpl.components)) as ComponentSchema[]
-    cloned.forEach((c) => { c.id = nanoid() })
+    cloned.forEach((c) => {
+      c.id = nanoid()
+    })
     store.components.push(...cloned)
     store.isDirty = true
     formTitle.value = tpl.title
@@ -187,8 +184,13 @@ function handleSave() {
 
 function toggleStatus(status: 'draft' | 'open' | 'closed') {
   if (status === 'open' && store.components.length === 0) return ElMessage.warning('请先添加组件')
-  if (store.schema) { store.schema.status = status; store.save() }
-  ElMessage.success(status === 'open' ? '已发布，可通过链接收集数据' : status === 'closed' ? '已停止收集' : '已切换为草稿')
+  if (store.schema) {
+    store.schema.status = status
+    store.save()
+  }
+  ElMessage.success(
+    status === 'open' ? '已发布，可通过链接收集数据' : status === 'closed' ? '已停止收集' : '已切换为草稿',
+  )
 }
 
 function handleSaveDraft() {
@@ -210,61 +212,120 @@ function handlePublish() {
 
 function handlePreview() {
   if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
-  const id = store.schema?.id || store.save()
+  const id = store.save()
   if (id) window.open(`/fill/${id}?preview=1`)
 }
 </script>
 
 <style scoped lang="scss">
-.designer-page { height: 100vh; display: flex; flex-direction: column; }
+.designer-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 /* ── 工具栏 ── */
 .toolbar {
-  display: flex; align-items: center; padding: 10px 20px; gap: 20px;
-  background: var(--color-card); box-shadow: 0 1px 0 var(--color-border); z-index: 10; min-height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  gap: 20px;
+  background: var(--color-card);
+  box-shadow: 0 1px 0 var(--color-border);
+  z-index: 10;
+  min-height: 56px;
 }
-.title-area { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.title-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 .title-input {
-  border: none; background: transparent; font-size: 18px; font-weight: 600;
-  color: var(--color-text); width: 100%; outline: none;
-  border-bottom: 2px solid transparent; padding-bottom: 2px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  width: 100%;
+  outline: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
   transition: border-color 0.2s;
-  &::placeholder { color: var(--color-text-muted); font-weight: 400; }
-  &:focus { border-bottom-color: var(--color-primary); }
+  &::placeholder {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+  &:focus {
+    border-bottom-color: var(--color-primary);
+  }
 }
 .desc-input {
-  border: none; background: transparent; font-size: 13px;
-  color: var(--color-text-secondary); width: 100%; outline: none;
-  border-bottom: 1px solid transparent; padding-bottom: 1px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  width: 100%;
+  outline: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
   transition: border-color 0.2s;
-  &::placeholder { color: var(--color-text-muted); }
-  &:focus { border-bottom-color: var(--color-border-hover); }
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+  &:focus {
+    border-bottom-color: var(--color-border-hover);
+  }
 }
-.toolbar-right { display: flex; gap: 10px; align-items: center; }
+.toolbar-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
 /* ── 三栏布局 ── */
-.designer-body { flex: 1; display: flex; overflow: hidden; }
+.designer-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
 .panel-left {
-  width: 260px; overflow-y: auto;
+  width: 260px;
+  overflow-y: auto;
   background: var(--color-page);
   box-shadow: 1px 0 0 var(--color-border);
 }
 .canvas-area {
-  flex: 1; overflow-y: auto; padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
   background: var(--color-canvas);
   background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 .panel-right {
-  width: 300px; overflow-y: auto;
+  width: 300px;
+  overflow-y: auto;
   background: var(--color-card);
   box-shadow: -1px 0 0 var(--color-border);
 }
 
 /* ── 空状态 ── */
 .no-select {
-  padding: 56px 32px; text-align: center; color: var(--color-text-muted); font-size: 14px;
-  .no-select-icon { color: var(--color-border-hover); margin-bottom: 16px; display: flex; justify-content: center; opacity: 0.6; }
-  p { margin: 0; line-height: 1.6; }
+  padding: 56px 32px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  .no-select-icon {
+    color: var(--color-border-hover);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    opacity: 0.6;
+  }
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
 }
 </style>
