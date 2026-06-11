@@ -46,12 +46,33 @@ const fonts = [
 const sizes = [12, 14, 16, 18, 20, 22, 24, 26]
 
 const propsData = reactive<Record<string, unknown>>({})
-watch(() => props.component.props, (val) => { Object.assign(propsData, val || {}) }, { immediate: true, deep: true })
+watch(
+  () => props.component.props,
+  (val) => {
+    Object.assign(propsData, val || {})
+  },
+  { immediate: true, deep: true },
+)
 
-function emitUpdate() { emit('update', { ...props.component, props: { ...propsData } }) }
+function emitUpdate() {
+  emit('update', { ...props.component, props: { ...propsData } })
+}
 </script>
 
 <style scoped lang="scss">
-.decoration-editor .prop-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.decoration-editor .prop-row label { font-size: 12px; color: var(--color-text-secondary); width: 60px; flex-shrink: 0; }
+.decoration-editor .prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.decoration-editor .prop-row label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  width: 60px;
+  flex-shrink: 0;
+}
+.decoration-editor :deep(.el-radio-button--small .el-radio-button__inner) {
+  width: 100%;
+}
 </style>
