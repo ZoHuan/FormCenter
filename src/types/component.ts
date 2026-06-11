@@ -31,8 +31,6 @@ export type ComponentType =
   | 'cross-table'
   | 'relation'
   | 'commitment'
-  // 位置
-  | 'region'
   // 树结构
   | 'tree-structure'
   // 其他

@@ -1,6 +1,5 @@
 import type { ComponentSchema, ComponentType } from '@/types'
 import { nanoid } from 'nanoid'
-import { regionTree } from '@/mock/region'
 
 const defaultComponent: ComponentSchema = {
   id: '',
@@ -134,7 +133,16 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
         type: 'table',
         label: '表格',
         subComponents: [],
-        props: { showTitle: true, initialRows: 3, columns: [], showIndex: true },
+        props: {
+          showTitle: true,
+          initialRows: 3,
+          showIndex: true,
+          columns: [
+            { title: '列1', type: 'input', width: 120, required: false },
+            { title: '列2', type: 'input', width: 120, required: false },
+            { title: '列3', type: 'input', width: 120, required: false },
+          ],
+        },
       }
     case 'cross-table':
       return {
@@ -173,8 +181,6 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
       }
     case 'commitment':
       return { ...base, type: 'commitment', label: '承诺说明', description: '本人确认以上信息属实' }
-    case 'region':
-      return { ...base, type: 'region', label: '行政区划', description: '请选择地区', props: { options: regionTree } }
     case 'tree-structure':
       return {
         ...base,
@@ -251,7 +257,6 @@ export const COMPONENT_MENU = [
       'cross-table',
       'commitment',
       'relation',
-      'region',
       'tree-structure',
       'QRCode',
     ] as ComponentType[],
