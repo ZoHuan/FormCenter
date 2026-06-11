@@ -52,24 +52,32 @@
 
           <div class="fields">
             <div v-for="(row, ri) in layoutRows" :key="ri" class="field-row">
-              <div 
-                v-for="comp in row" 
-                :key="comp.id" 
-                class="field-item" 
-                :class="{ 
+              <div
+                v-for="comp in row"
+                :key="comp.id"
+                class="field-item"
+                :class="{
                   'app-style-horizontal': comp.appStyle === 0,
                   'app-style-vertical': comp.appStyle === 1,
                   'is-decor': isDecorType(comp.type),
-                  'has-own-title': hasOwnTitle(comp.type)
+                  'has-own-title': hasOwnTitle(comp.type),
                 }"
                 :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }"
               >
-                <label v-if="!isDecorType(comp.type) && !hasOwnTitle(comp.type)" class="field-label" :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }">
+                <label
+                  v-if="!isDecorType(comp.type) && !hasOwnTitle(comp.type)"
+                  class="field-label"
+                  :class="{ stacked: comp.colspan === 4 || comp.appStyle === 1 }"
+                >
                   {{ comp.label }}
                   <span v-if="comp.required" class="required">*</span>
                 </label>
                 <div class="field-input">
-                  <FieldRenderer :comp="comp" :model-value="formData[comp.field]" @update:model-value="(v) => (formData[comp.field] = v)" />
+                  <FieldRenderer
+                    :comp="comp"
+                    :model-value="formData[comp.field]"
+                    @update:model-value="(v) => (formData[comp.field] = v)"
+                  />
                 </div>
                 <p v-if="fieldErrors[comp.field]" class="field-error">{{ fieldErrors[comp.field] }}</p>
               </div>
@@ -119,11 +127,16 @@ function startAutoSave(getData: () => Record<string, unknown>) {
   autoSaveTimer = setInterval(() => {
     subStore.saveDraft(formId, getData())
     autoSaveHint.value = true
-    setTimeout(() => { autoSaveHint.value = false }, 2000)
+    setTimeout(() => {
+      autoSaveHint.value = false
+    }, 2000)
   }, 60000)
 }
 function stopAutoSave() {
-  if (autoSaveTimer) { clearInterval(autoSaveTimer); autoSaveTimer = null }
+  if (autoSaveTimer) {
+    clearInterval(autoSaveTimer)
+    autoSaveTimer = null
+  }
 }
 
 const isPreview = computed(() => route.query.preview === '1')
@@ -205,34 +218,50 @@ const layoutRows = computed(() => {
 })
 
 // 触发规则：监听表单数据变化，自动显隐/必填/可编辑目标组件
-watch(formData, () => {
-  if (!schema.value) return
-  const comps = schema.value.components
-  for (const comp of comps) {
-    if (!comp.triggerRules?.length) continue
-    const value = formData[comp.field]
-    for (const rule of comp.triggerRules) {
-      const match = String(rule.sourceValue) === String(value)
-      applyTriggerRule(comps, rule, match)
+watch(
+  formData,
+  () => {
+    if (!schema.value) return
+    const comps = schema.value.components
+    for (const comp of comps) {
+      if (!comp.triggerRules?.length) continue
+      const value = formData[comp.field]
+      for (const rule of comp.triggerRules) {
+        const match = String(rule.sourceValue) === String(value)
+        applyTriggerRule(comps, rule, match)
+      }
     }
-  }
-}, { deep: true })
+  },
+  { deep: true },
+)
 
 function applyTriggerRule(comps: ComponentSchema[], rule: TriggerRule, match: boolean) {
   const target = comps.find((c) => c.field === rule.targetField)
   if (!target) return
   switch (rule.action) {
-    case 'show': target.hidden = !match; break
-    case 'hide': target.hidden = match; break
-    case 'require': target.required = match; break
-    case 'optional': target.required = !match; break
-    case 'enable': target.editable = match; break
-    case 'disable': target.editable = !match; break
+    case 'show':
+      target.hidden = !match
+      break
+    case 'hide':
+      target.hidden = match
+      break
+    case 'require':
+      target.required = match
+      break
+    case 'optional':
+      target.required = !match
+      break
+    case 'enable':
+      target.editable = match
+      break
+    case 'disable':
+      target.editable = !match
+      break
   }
 }
 
 function isSelectType(t: string) {
-  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'tree-structure', 'region'].includes(t)
+  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree-structure', 'region'].includes(t)
 }
 
 function isDecorType(t: string) {
@@ -265,7 +294,7 @@ function discardDraft() {
   }
 }
 
-  function handleSaveDraft() {
+function handleSaveDraft() {
   if (!schema.value) return
   subStore.saveDraft(formId, { ...formData })
   ElMessage.success('已暂存')
@@ -276,19 +305,32 @@ async function handleSubmit() {
   let hasError = false
   for (const c of visibleComponents.value) {
     const err = validate(formData[c.field], { required: c.required, ...(c.props as Record<string, unknown>) })
-    if (err) { fieldErrors[c.field] = err; hasError = true } else { delete fieldErrors[c.field] }
+    if (err) {
+      fieldErrors[c.field] = err
+      hasError = true
+    } else {
+      delete fieldErrors[c.field]
+    }
   }
   if (hasError) {
     const first = visibleComponents.value.find((c) => fieldErrors[c.field])
-    if (first) document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (first)
+      document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     return
   }
-  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', { confirmButtonText: '确认', cancelButtonText: '取消', type: 'warning' })
+  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
   submitting.value = true
   const ok = subStore.submit(schema.value.id, { ...formData })
   submitting.value = false
-  if (ok) { subStore.clearDraft(formId); stopAutoSave(); loadState.value = 'submitted' }
-  else ElMessage.error('提交失败，请重试')
+  if (ok) {
+    subStore.clearDraft(formId)
+    stopAutoSave()
+    loadState.value = 'submitted'
+  } else ElMessage.error('提交失败，请重试')
 }
 
 function resetForm() {
@@ -301,7 +343,6 @@ function handleBackToDesigner() {
   if (schema.value?.id) window.open(`/formDesigner/${schema.value.id}`, '_self')
   else router.push('/forms')
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -409,7 +450,7 @@ function handleBackToDesigner() {
       &:not(.is-decor) {
         flex-direction: row;
         align-items: flex-start;
-        
+
         .field-label {
           width: 80px;
           flex-shrink: 0;
@@ -418,7 +459,7 @@ function handleBackToDesigner() {
           line-height: 1.4;
           margin-top: 12px;
         }
-        
+
         .field-input {
           flex: 1;
         }
@@ -428,19 +469,19 @@ function handleBackToDesigner() {
 
   // APP排版：上下排列模式
   &.app-style-vertical {
-      .field-label {
-        margin-bottom: 8px;
-      }
+    .field-label {
+      margin-bottom: 8px;
+    }
   }
 
   // 移动端适配
   @media (max-width: 720px) {
     flex: 0 0 100% !important; // 移动端强制满宽
-    
+
     // 移动端所有组件标签都在上方
-      .field-label {
-        margin-bottom: 8px;
-      }
+    .field-label {
+      margin-bottom: 8px;
+    }
   }
 }
 .field-label {
@@ -589,7 +630,7 @@ function handleBackToDesigner() {
     cursor: pointer;
     background: transparent;
     color: var(--color-text-muted);
-    transition: all .2s;
+    transition: all 0.2s;
 
     &.active {
       background: var(--color-card);

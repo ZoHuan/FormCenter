@@ -24,13 +24,33 @@
 import { computed } from 'vue'
 import { Copy, X } from 'lucide-vue-next'
 import {
-  Type, Layers, Minus, Info,
-  TextCursorInput, AlignLeft, Hash, ListOrdered,
-  CircleDot, CheckSquare, ChevronDown, ArrowRightLeft, FolderTree,
-  Calendar, CalendarRange,
-  Paperclip, Image, PenLine,
-  Star, Table2, Link2, CheckCheck,
-  MapPin, Users, Building2, UserCheck, QrCode,
+  Type,
+  Layers,
+  Minus,
+  Info,
+  TextCursorInput,
+  AlignLeft,
+  Hash,
+  ListOrdered,
+  CircleDot,
+  CheckSquare,
+  ChevronDown,
+  ArrowRightLeft,
+  FolderTree,
+  Calendar,
+  CalendarRange,
+  Paperclip,
+  Image,
+  PenLine,
+  Star,
+  Table2,
+  Link2,
+  CheckCheck,
+  MapPin,
+  Users,
+  Building2,
+  UserCheck,
+  QrCode,
 } from 'lucide-vue-next'
 import type { ComponentSchema } from '@/types'
 
@@ -38,22 +58,42 @@ const props = defineProps<{ schema: ComponentSchema; selected: boolean }>()
 defineEmits<{ select: []; remove: []; copy: [] }>()
 
 const iconMap: Record<string, any> = {
-  title: Type, subtitle: Type, 'group-title': Layers, separator: Minus, 'point-out': Info,
-  input: TextCursorInput, textarea: AlignLeft, numeric: Hash, 'serial-number': ListOrdered,
-  chooser: CircleDot, 'multi-chooser': CheckSquare, selection: ChevronDown,
-  cascader: ArrowRightLeft, tree: FolderTree,
-  date: Calendar, 'date-range': CalendarRange,
-  image: Paperclip, singleImage: Image, signature: PenLine,
-  rate: Star, table: Table2, 'cross-table': Table2, relation: Link2, commitment: CheckCheck,
-  region: MapPin, 'map-location': MapPin,
-  'user-tree': Users, 'org-tree': Building2, 'signature-name': UserCheck,
+  title: Type,
+  subtitle: Type,
+  'group-title': Layers,
+  separator: Minus,
+  'point-out': Info,
+  input: TextCursorInput,
+  textarea: AlignLeft,
+  numeric: Hash,
+  'serial-number': ListOrdered,
+  chooser: CircleDot,
+  'multi-chooser': CheckSquare,
+  selection: ChevronDown,
+  cascader: ArrowRightLeft,
+  tree: FolderTree,
+  date: Calendar,
+  'date-range': CalendarRange,
+  image: Paperclip,
+  singleImage: Image,
+  signature: PenLine,
+  rate: Star,
+  table: Table2,
+  'cross-table': Table2,
+  relation: Link2,
+  commitment: CheckCheck,
+  region: MapPin,
+  'map-location': MapPin,
+  'user-tree': Users,
+  'org-tree': Building2,
+  'signature-name': UserCheck,
   QRCode: QrCode,
 }
 const typeIcon = computed(() => iconMap[props.schema.type] ?? Type)
 
 const isTextLike = computed(() => ['input', 'textarea', 'numeric', 'serial-number'].includes(props.schema.type))
 const isSelectLike = computed(() =>
-  ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree', 'region', 'tree-structure'].includes(props.schema.type),
+  ['chooser', 'multi-chooser', 'selection', 'cascader', 'region', 'tree-structure'].includes(props.schema.type),
 )
 const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type))
 </script>
@@ -73,59 +113,122 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
     box-shadow: 0 2px 8px rgba(45, 106, 79, 0.1);
     transform: translateY(-1px);
 
-    .btn-copy, .btn-delete { opacity: 1; }
+    .btn-copy,
+    .btn-delete {
+      opacity: 1;
+    }
   }
 
-  &:active { cursor: grabbing; }
+  &:active {
+    cursor: grabbing;
+  }
 
   &.selected {
     border: 2px solid var(--color-primary);
     box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
 
-    .card-header { background: var(--color-primary-bg); }
+    .card-header {
+      background: var(--color-primary-bg);
+    }
   }
 
-  &.is-error { border-color: var(--color-error); box-shadow: 0 0 0 3px rgba(181, 74, 58, 0.08); }
-  &.is-dragging { opacity: 0.5; border-style: dashed; border-color: var(--color-primary-light); }
-  &.is-drop-target { background: var(--color-primary-bg); border-color: var(--color-primary); }
+  &.is-error {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(181, 74, 58, 0.08);
+  }
+  &.is-dragging {
+    opacity: 0.5;
+    border-style: dashed;
+    border-color: var(--color-primary-light);
+  }
+  &.is-drop-target {
+    background: var(--color-primary-bg);
+    border-color: var(--color-primary);
+  }
 }
 
 .card-header {
-  height: 34px; display: flex; align-items: center;
-  padding: 0 10px; background: var(--color-page);
-  border-bottom: 1px solid var(--color-canvas); gap: 6px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: var(--color-page);
+  border-bottom: 1px solid var(--color-canvas);
+  gap: 6px;
 }
 
-.card-type-icon { color: var(--color-text-muted); flex-shrink: 0; }
+.card-type-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
 .card-label {
-  font-size: 13px; font-weight: 500; color: var(--color-text);
-  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.required-star { color: var(--color-error); font-size: 11px; margin-left: 2px; flex-shrink: 0; }
+.required-star {
+  color: var(--color-error);
+  font-size: 11px;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
 
-.btn-copy, .btn-delete {
-  display: flex; align-items: center; justify-content: center;
-  border: none; background: transparent; cursor: pointer; flex-shrink: 0;
-  border-radius: var(--radius-sm); opacity: 0; transition: all 0.15s;
+.btn-copy,
+.btn-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: all 0.15s;
 }
 .btn-copy {
-  width: 28px; height: 28px; color: var(--color-text-muted);
-  &:hover { background: var(--color-primary-bg); color: var(--color-primary); }
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-muted);
+  &:hover {
+    background: var(--color-primary-bg);
+    color: var(--color-primary);
+  }
 }
 .btn-delete {
-  width: 28px; height: 28px; color: var(--color-text-muted);
-  &:hover { background: rgba(181,74,58,0.08); color: var(--color-error); }
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-muted);
+  &:hover {
+    background: rgba(181, 74, 58, 0.08);
+    color: var(--color-error);
+  }
 }
 
 .card-preview {
-  padding: 10px 12px 12px; min-height: 40px;
-  display: flex; align-items: center;
+  padding: 10px 12px 12px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
 }
 
-.preview-input, .preview-select, .preview-table, .preview-sign {
-  color: var(--color-text-muted); font-size: 13px;
-  background: var(--color-page); padding: 8px 12px;
-  border-radius: 5px; width: 100%; height: 36px;
-  display: flex; align-items: center;
+.preview-input,
+.preview-select,
+.preview-table,
+.preview-sign {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  background: var(--color-page);
+  padding: 8px 12px;
+  border-radius: 5px;
+  width: 100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
 }
 </style>

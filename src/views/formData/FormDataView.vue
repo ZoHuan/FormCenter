@@ -15,25 +15,31 @@
           <div class="sk-cell" v-for="j in 4" :key="j" :style="{ width: 60 + Math.random() * 30 + '%' }" />
         </div>
       </div>
-      <EmptyState v-else-if="subStore.submissions.length === 0" text="暂无提交数据" desc="分享表单链接，数据会出现在这里" action-text="复制链接" @action="handleCopyLink" />
+      <EmptyState
+        v-else-if="subStore.submissions.length === 0"
+        text="暂无提交数据"
+        desc="分享表单链接，数据会出现在这里"
+        action-text="复制链接"
+        @action="handleCopyLink"
+      />
       <template v-else>
         <div class="table-card">
           <el-table :data="pagedData" stripe
-          ><el-table-column prop="submittedAt" label="提交时间" width="180"
-            ><template #default="{ row }">{{ formatTime(row.submittedAt) }}</template></el-table-column
-          ><el-table-column
-            v-for="col in columns"
-            :key="col.field"
-            :prop="col.field"
-            :label="col.title"
-            min-width="120" /></el-table
-        ><el-pagination
-          v-if="subStore.submissions.length > pageSize"
-          v-model:current-page="page"
-          :page-size="pageSize"
-          :total="subStore.submissions.length"
-          layout="prev,pager,next"
-        />
+            ><el-table-column prop="submittedAt" label="提交时间" width="180"
+              ><template #default="{ row }">{{ formatTime(row.submittedAt) }}</template></el-table-column
+            ><el-table-column
+              v-for="col in columns"
+              :key="col.field"
+              :prop="col.field"
+              :label="col.title"
+              min-width="120" /></el-table
+          ><el-pagination
+            v-if="subStore.submissions.length > pageSize"
+            v-model:current-page="page"
+            :page-size="pageSize"
+            :total="subStore.submissions.length"
+            layout="prev,pager,next"
+          />
         </div>
       </template>
     </div>
@@ -72,7 +78,6 @@ const columns = computed(() => {
     'multi-chooser',
     'selection',
     'cascader',
-    'tree',
     'rate',
     'image',
     'singleImage',
@@ -159,29 +164,32 @@ function formatTime(ts: number) {
   border-bottom: 1px solid var(--color-canvas);
   padding: 0 12px;
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .sk-cell {
   height: 14px;
   margin: 17px 0;
   border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--color-canvas) 0%,
-    var(--color-page) 40%,
-    var(--color-canvas) 80%
-  );
+  background: linear-gradient(90deg, var(--color-canvas) 0%, var(--color-page) 40%, var(--color-canvas) 80%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
   flex: 1;
   min-width: 80px;
 
-  &:not(:last-child) { margin-right: 12px; }
+  &:not(:last-child) {
+    margin-right: 12px;
+  }
 }
 
 @keyframes skeleton-shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 </style>
