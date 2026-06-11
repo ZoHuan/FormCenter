@@ -142,7 +142,20 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
         type: 'cross-table',
         label: '交叉表',
         subComponents: [],
-        props: { showTitle: true, initialRows: 3, columns: [], showIndex: true },
+        props: {
+          showTitle: true,
+          showIndex: true,
+          rowLabels: [
+            { label: '行标签1', value: 'r1' },
+            { label: '行标签2', value: 'r2' },
+            { label: '行标签3', value: 'r3' },
+          ],
+          colLabels: [
+            { label: '列标签1', value: 'c1' },
+            { label: '列标签2', value: 'c2' },
+            { label: '列标签3', value: 'c3' },
+          ],
+        },
       }
     case 'relation':
       return {

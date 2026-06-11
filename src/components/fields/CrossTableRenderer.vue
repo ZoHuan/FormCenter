@@ -1,117 +1,81 @@
 <template>
   <div class="cross-table-field">
-    <div class="table-wrapper">
-      <table class="inner-table">
-        <thead>
-          <tr>
-            <th v-for="col in columns" :key="col.field">
-              {{ col.title }}
-              <span v-if="col.required" class="required">*</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, ri) in tableData" :key="ri">
-            <td v-for="col in columns" :key="col.field">
-              <el-input
-                v-if="col.type === 'input' || col.type === 'textarea'"
-                v-model="row[col.field]"
-                size="small"
-                :placeholder="col.description"
-                @input="onRowChange"
-              />
-              <el-input-number
-                v-else-if="col.type === 'numeric'"
-                v-model="row[col.field]"
-                size="small"
-                controls-position="right"
-                @change="onRowChange"
-              />
-              <el-date-picker
-                v-else-if="col.type === 'date'"
-                v-model="row[col.field]"
-                size="small"
-                type="date"
-                placeholder="选择日期"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                @change="onRowChange"
-              />
-              <el-select
-                v-else-if="col.type === 'selection' || col.type === 'chooser' || col.type === 'multi-chooser'"
-                v-model="row[col.field]"
-                size="small"
-                placeholder="请选择"
-                clearable
-                :multiple="col.type === 'multi-chooser'"
-                @change="onRowChange"
-              >
-                <el-option
-                  v-for="opt in getColOptions(col)"
-                  :key="opt.value"
-                  :label="opt.label"
-                  :value="opt.value"
-                />
-              </el-select>
-              <el-input
-                v-else
-                v-model="row[col.field]"
-                size="small"
-                :placeholder="col.description"
-                @input="onRowChange"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="table-footer">
-      <el-button size="small" @click="addRow">添加行</el-button>
-      <span class="row-count">共 {{ tableData.length }} 行</span>
-    </div>
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th class="corner-cell"><span v-if="showIndex">#</span></th>
+          <th v-for="col in colLabels" :key="col.value" class="col-header-cell">
+            {{ col.label }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, ri) in rowLabels" :key="row.value">
+          <td class="row-header-cell">
+            <span v-if="showIndex" class="row-index">{{ ri + 1 }}</span>
+            {{ row.label }}
+          </td>
+          <td v-for="col in colLabels" :key="col.value" class="data-cell">
+            <el-select
+              :model-value="getCellValue(row.value, col.value)"
+              size="small"
+              placeholder="选择"
+              clearable
+              @update:model-value="(v) => setCellValue(row.value, col.value, v)"
+            >
+              <el-option v-for="o in ratingOptions" :key="o.value" :label="o.label" :value="o.value" />
+            </el-select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type { ComponentSchema, TableColumnSchema } from '@/types'
+import type { ComponentSchema } from '@/types'
 
 const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
 const emit = defineEmits<{ 'update:modelValue': [value: unknown] }>()
 
 const compProps = computed(() => (props.comp.props as Record<string, unknown>) || {})
-const columns = computed(() => (compProps.value.columns as TableColumnSchema[]) || [])
-const initialRows = computed(() => (compProps.value.initialRows as number) ?? 3)
+const rowLabels = computed(() => (compProps.value.rowLabels as Array<{ label: string; value: string }>) ?? [])
+const colLabels = computed(() => (compProps.value.colLabels as Array<{ label: string; value: string }>) ?? [])
+const showIndex = computed(() => (compProps.value.showIndex as boolean) ?? true)
 
-const tableData = ref<Array<Record<string, unknown>>>([])
+const ratingOptions = [
+  { label: '✓', value: 'checked' },
+  { label: '✗', value: 'unchecked' },
+  { label: '-', value: 'na' },
+]
+
+const matrixData = ref<Record<string, Record<string, string>>>({})
 
 onMounted(() => {
-  if (Array.isArray(props.modelValue) && props.modelValue.length > 0) {
-    tableData.value = [...props.modelValue as Array<Record<string, unknown>>]
-  } else {
-    tableData.value = Array.from({ length: initialRows.value }, () => ({}))
+  if (props.modelValue && typeof props.modelValue === 'object') {
+    matrixData.value = { ...(props.modelValue as Record<string, Record<string, string>>) }
   }
 })
 
-function addRow() { tableData.value.push({}); onRowChange() }
-function onRowChange() { emit('update:modelValue', tableData.value) }
+function getCellValue(rowKey: string, colKey: string): string {
+  return matrixData.value[rowKey]?.[colKey] ?? ''
+}
 
-function getColOptions(col: TableColumnSchema) {
-  const cp = (col.props as Record<string, unknown>) || {}
-  return (cp.options as Array<{ label: string; value: string }>) || []
+function setCellValue(rowKey: string, colKey: string, val: unknown) {
+  if (!matrixData.value[rowKey]) matrixData.value[rowKey] = {}
+  matrixData.value[rowKey][colKey] = val as string
+  emit('update:modelValue', { ...matrixData.value })
 }
 </script>
 
 <style scoped lang="scss">
 .cross-table-field {
   width: 100%;
-}
-
-.table-wrapper {
   overflow-x: auto;
 }
 
-.inner-table {
+.matrix-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
@@ -119,31 +83,40 @@ function getColOptions(col: TableColumnSchema) {
   th,
   td {
     border: 1px solid var(--color-border);
-    padding: 6px 10px;
-    text-align: left;
+    padding: 6px 8px;
+    text-align: center;
   }
 
-  th {
+  .corner-cell {
+    background: var(--color-canvas);
+    width: 40px;
+    color: var(--color-text-muted);
+  }
+
+  .col-header-cell {
     background: var(--color-canvas);
     font-weight: 500;
     white-space: nowrap;
+    min-width: 80px;
   }
 
-  .required {
-    color: var(--color-error);
-    margin-left: 2px;
+  .row-header-cell {
+    background: var(--color-canvas);
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+    .row-index {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      margin-right: 6px;
+    }
   }
-}
 
-.table-footer {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 8px;
-
-  .row-count {
-    font-size: 12px;
-    color: var(--color-text-muted);
+  .data-cell {
+    :deep(.el-select) {
+      width: 100%;
+    }
   }
 }
 </style>

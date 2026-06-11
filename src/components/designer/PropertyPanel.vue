@@ -171,11 +171,48 @@
         <DecorationEditor v-if="isDecorative" :component="comp" @update="(p) => emit('update', p)" />
       </div>
     </div>
-    <div v-if="comp.type === 'table' || comp.type === 'cross-table'" class="section">
+    <div v-if="comp.type === 'cross-table'" class="section">
+      <div class="section-header" @click="toggleSection('crossTable')">
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.crossTable }" />交叉表配置
+      </div>
+      <div :class="{ collapsed: !openSections.crossTable }" class="section-body">
+        <div class="prop-row">
+          <label>行标签</label>
+          <span class="label-count">{{ (crossRowLabels as any[]).length }}项</span>
+        </div>
+        <div class="options-list" style="margin-bottom: 6px">
+          <div v-for="(opt, i) in crossRowLabels" :key="i" class="option-row">
+            <span class="opt-num">{{ i + 1 }}</span>
+            <el-input v-model="opt.label" size="small" placeholder="行名" @input="emitUpdate" />
+            <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
+            <el-button link class="btn-del" @click="removeCrossRowLabel(i)"><X :size="14" /></el-button>
+          </div>
+        </div>
+        <el-button class="btn-add" @click="addCrossRowLabel"><Plus :size="14" />添加行标签</el-button>
+        <div class="prop-row" style="margin-top: 12px">
+          <label>列标签</label>
+          <span class="label-count">{{ (crossColLabels as any[]).length }}项</span>
+        </div>
+        <div class="options-list" style="margin-bottom: 6px">
+          <div v-for="(opt, i) in crossColLabels" :key="i" class="option-row">
+            <span class="opt-num">{{ i + 1 }}</span>
+            <el-input v-model="opt.label" size="small" placeholder="列名" @input="emitUpdate" />
+            <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
+            <el-button link class="btn-del" @click="removeCrossColLabel(i)"><X :size="14" /></el-button>
+          </div>
+        </div>
+        <el-button class="btn-add" @click="addCrossColLabel"><Plus :size="14" />添加列标签</el-button>
+        <div class="table-footer">
+          <div class="prop-row">
+            <label>显示序号</label
+            ><el-switch v-model="crossTableShowIndex" size="small" @change="onCrossTableShowIndexChange" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="comp.type === 'table'" class="section">
       <div class="section-header" @click="toggleSection('table')">
-        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.table }" />{{
-          comp.type === 'cross-table' ? '交叉表管理' : '表格列管理'
-        }}
+        <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.table }" />表格列管理
       </div>
       <div :class="{ collapsed: !openSections.table }" class="section-body">
         <div v-for="(col, i) in tableColumns" :key="i" class="table-col-item">
@@ -239,6 +276,7 @@ const openSections = reactive<Record<string, boolean>>({
   validation: false,
   advanced: false,
   table: true,
+  crossTable: true,
 })
 
 const colTypes = ['input', 'textarea', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser', 'image']
@@ -296,7 +334,6 @@ const hasColspan = computed(
       'separator',
       'signature',
       'relation',
-      'region',
       'QRCode',
       'table',
       'cross-table',
@@ -445,6 +482,64 @@ function onTableShowIndexChange(v: boolean) {
   ensureProps().showIndex = v
   emitUpdate()
 }
+
+// ── 交叉表 ──
+const crossRowLabels = computed<any[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.rowLabels as any[]) ?? [],
+  set: () => {},
+})
+
+const crossColLabels = computed<any[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.colLabels as any[]) ?? [],
+  set: () => {},
+})
+
+const crossTableShowIndex = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.showIndex as boolean) ?? true,
+  set: () => {},
+})
+
+function addCrossRowLabel() {
+  const list = [
+    ...(crossRowLabels.value as any[]),
+    {
+      label: `行${(crossRowLabels.value as any[]).length + 1}`,
+      value: `r${(crossRowLabels.value as any[]).length + 1}`,
+    },
+  ]
+  ensureProps().rowLabels = list
+  emitUpdate()
+}
+
+function removeCrossRowLabel(i: number) {
+  const list = (crossRowLabels.value as any[]).filter((_: unknown, idx: number) => idx !== i)
+  ensureProps().rowLabels = list
+  emitUpdate()
+}
+
+function addCrossColLabel() {
+  const list = [
+    ...(crossColLabels.value as any[]),
+    {
+      label: `列${(crossColLabels.value as any[]).length + 1}`,
+      value: `c${(crossColLabels.value as any[]).length + 1}`,
+    },
+  ]
+  ensureProps().colLabels = list
+  emitUpdate()
+}
+
+function removeCrossColLabel(i: number) {
+  const list = (crossColLabels.value as any[]).filter((_: unknown, idx: number) => idx !== i)
+  ensureProps().colLabels = list
+  emitUpdate()
+}
+
+function onCrossTableShowIndexChange(v: boolean) {
+  ensureProps().showIndex = v
+  emitUpdate()
+}
+
 const maxLen = computed({
   get: () => ((comp.props as Record<string, unknown>)?.maxLength as number) ?? 0,
   set: () => {},
@@ -846,5 +941,14 @@ function onEnableSingleChange(v: boolean) {
   &:hover {
     background: var(--color-primary-bg);
   }
+}
+
+.label-count {
+  font-size: 11px;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  padding: 1px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
 }
 </style>
