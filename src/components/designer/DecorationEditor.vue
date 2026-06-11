@@ -76,6 +76,9 @@ function emitUpdate() {
   flex-shrink: 0;
   white-space: nowrap;
 }
+.decoration-editor :deep(.el-radio-group) label {
+  width: 60px;
+}
 .decoration-editor :deep(.el-radio-button--small .el-radio-button__inner) {
   width: 100%;
 }
