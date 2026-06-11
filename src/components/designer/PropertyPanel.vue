@@ -54,12 +54,26 @@
         <ChevronRight :size="14" class="section-arrow" :class="{ open: openSections.options }" />选项
       </div>
       <div :class="{ collapsed: !openSections.options }" class="section-body">
-        <div class="options-list">
+        <!-- 树形选项编辑器（级联 / 树结构） -->
+        <div v-if="isNestedOptions" class="options-list">
+          <OptionTreeNode
+            :nodes="optionList"
+            :depth="0"
+            :path="[]"
+            :allowNested="true"
+            :collapsed="collapsedNodes"
+            @update="emitUpdate"
+            @addChild="addChildOption"
+            @remove="removeOption"
+          />
+        </div>
+        <!-- 平铺选项编辑器（单选 / 多选 / 下拉） -->
+        <div v-else class="options-list">
           <div v-for="(opt, i) in optionList" :key="i" class="option-row">
             <span class="opt-num">{{ i + 1 }}</span>
             <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
             <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
-            <el-button link class="btn-del" @click="removeOption(i)"><X :size="14" /></el-button>
+            <el-button link class="btn-del" @click="removeOption([i])"><X :size="14" /></el-button>
           </div>
         </div>
         <el-button class="btn-add" @click="addOption"><Plus :size="14" />添加选项</el-button>
@@ -194,6 +208,7 @@
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
 import { ChevronRight, X, Plus } from 'lucide-vue-next'
+import OptionTreeNode from './OptionTreeNode.vue'
 import type { ComponentSchema } from '@/types'
 import TriggerRuleEditor from './TriggerRuleEditor.vue'
 import RateEditor from './RateEditor.vue'
@@ -235,7 +250,9 @@ function toggleSection(key: string) {
 function emitUpdate() {
   emit('update', { ...comp })
 }
-const hasOptions = computed(() => ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree'].includes(comp.type))
+const hasOptions = computed(() =>
+  ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree-structure'].includes(comp.type),
+)
 const hasTextLimit = computed(() => ['input', 'textarea'].includes(comp.type))
 const isNumeric = computed(() => comp.type === 'numeric')
 const isDecorative = computed(() => ['title', 'subtitle', 'group-title', 'separator', 'point-out'].includes(comp.type))
@@ -280,8 +297,8 @@ const hasRareChars = computed(() => comp.type === 'textarea')
 const hasDateType = computed(() => ['date', 'date-range'].includes(comp.type))
 const hasImageSize = computed(() => ['image', 'singleImage'].includes(comp.type))
 const hasHideWhenEmpty = computed(() => comp.type === 'point-out')
-const hasEnableSearch = computed(() => comp.type === 'tree' || comp.type === 'tree-structure')
-const hasEnableSingle = computed(() => comp.type === 'tree' || comp.type === 'tree-structure')
+const hasEnableSearch = computed(() => comp.type === 'tree-structure')
+const hasEnableSingle = computed(() => comp.type === 'tree-structure')
 const hasValidation = computed(
   () =>
     hasTextLimit.value ||
@@ -305,23 +322,73 @@ const hasAdvanced = computed(
     isDecorative.value,
 )
 
-const optionList = computed<{ label: string; value: string }[]>({
-  get: () => ((comp.props as Record<string, unknown>)?.options as Array<{ label: string; value: string }>) ?? [],
+const optionList = computed<any[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.options as any[]) ?? [],
   set: () => {},
 })
+
+const isNestedOptions = computed(() => ['cascader', 'tree-structure'].includes(comp.type))
+const collapsedNodes = reactive(new Set<string>())
+
+function ensureProps(): Record<string, unknown> {
+  if (!comp.props) {
+    ;(comp as unknown as Record<string, unknown>).props = {}
+  }
+  return comp.props as Record<string, unknown>
+}
+
+function cloneOptions(opts: any[]): any[] {
+  return opts.map((opt) => ({
+    label: opt.label,
+    value: opt.value,
+    ...(opt.children ? { children: cloneOptions(opt.children) } : {}),
+  }))
+}
 
 function addOption() {
   const list = [
     ...optionList.value,
     { label: `选项${optionList.value.length + 1}`, value: `${optionList.value.length}` },
   ]
-  ;(comp.props as Record<string, unknown>).options = list
+  ensureProps().options = list
   emitUpdate()
 }
 
-function removeOption(index: number) {
-  const list = optionList.value.filter((_: unknown, i: number) => i !== index)
-  ;(comp.props as Record<string, unknown>).options = list
+function addChildOption(path: number[]) {
+  // auto-expand parent node so new child is visible
+  if (path.length > 0) collapsedNodes.delete(nodeKey(path))
+  else collapsedNodes.delete('root')
+
+  const list = cloneOptions(optionList.value)
+  let node = list[path[0]]
+  for (let i = 1; i < path.length; i++) {
+    node = node.children![path[i]]
+  }
+  if (!node.children) node.children = []
+  node.children.push({
+    label: `子选项${node.children.length + 1}`,
+    value: `${node.value}-${node.children.length}`,
+  })
+  ensureProps().options = list
+  emitUpdate()
+}
+
+function nodeKey(path: number[]) {
+  return path.length > 0 ? `root-${path.join('-')}` : 'root'
+}
+
+function removeOption(path: number[]) {
+  // clear collapse state for removed node and its descendants
+  for (const k of collapsedNodes) {
+    if (k.startsWith(`root-${path.join('-')}`)) collapsedNodes.delete(k)
+  }
+  const list = cloneOptions(optionList.value)
+  let arr: any[] = list
+  for (let i = 0; i < path.length - 1; i++) {
+    arr = arr[path[i]].children!
+  }
+  arr.splice(path[path.length - 1], 1)
+  ensureProps().options = list
   emitUpdate()
 }
 
@@ -346,13 +413,13 @@ function addTableCol() {
     ...tableColumns.value,
     { title: `列${tableColumns.value.length + 1}`, type: 'input', width: 120, required: false },
   ]
-  ;(comp.props as Record<string, unknown>).columns = cols
+  ensureProps().columns = cols
   emitUpdate()
 }
 
 function removeTableCol(index: number) {
   const cols = tableColumns.value.filter((_: unknown, i: number) => i !== index)
-  ;(comp.props as Record<string, unknown>).columns = cols
+  ensureProps().columns = cols
   emitUpdate()
 }
 
@@ -361,7 +428,7 @@ function onColTypeChange(index: number) {
 }
 
 function onTableShowIndexChange(v: boolean) {
-  ;(comp.props as Record<string, unknown>).showIndex = v
+  ensureProps().showIndex = v
   emitUpdate()
 }
 const maxLen = computed({
@@ -413,7 +480,7 @@ const enableSingle = computed({
 })
 
 function setProp(key: string, val: unknown) {
-  ;(comp.props as Record<string, unknown>)[key] = val
+  ensureProps()[key] = val
   emitUpdate()
 }
 
@@ -575,20 +642,6 @@ function onEnableSingleChange(v: boolean) {
   margin-bottom: 10px;
 }
 
-.opt-num {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  background: var(--color-canvas);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 .option-row {
   display: flex;
   align-items: center;
@@ -626,9 +679,17 @@ function onEnableSingleChange(v: boolean) {
   }
 }
 
-.opt-spacer {
-  font-size: 12px;
+.opt-num {
+  font-size: 11px;
+  font-weight: 600;
   color: var(--color-text-muted);
+  background: var(--color-canvas);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 

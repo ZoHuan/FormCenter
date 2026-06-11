@@ -101,8 +101,19 @@ watch(
   },
 )
 
+function findOption(opts: any[], val: string): any {
+  for (const o of opts) {
+    if (o.value === val) return o
+    if (o.children) {
+      const found = findOption(o.children, val)
+      if (found) return found
+    }
+  }
+  return null
+}
+
 function getOptionLabel(val: string) {
-  return optionList.value.find((o) => o.value === val)?.label ?? val
+  return findOption(optionList.value, val)?.label ?? val
 }
 
 function actionLabel(a: string) {
