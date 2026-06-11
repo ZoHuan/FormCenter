@@ -9,7 +9,7 @@
           :key="opt.value"
           class="icon-option"
           :class="{ active: icon === opt.value }"
-          @click="icon = opt.value; emitUpdate()"
+          @click="pickIcon(opt.value)"
         >
           <component :is="opt.icon" :size="18" />
           <span>{{ opt.label }}</span>
@@ -100,6 +100,10 @@ function emitUpdate() {
 function onMaxChange() {
   emitUpdate()
 }
+function pickIcon(v: string) {
+  icon.value = v
+  emitUpdate()
+}
 </script>
 
 <style scoped lang="scss">
@@ -113,13 +117,14 @@ function onMaxChange() {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0;
   padding: 6px 0;
   gap: 8px;
   label {
     font-size: 13px;
     font-weight: 500;
     color: var(--color-text-secondary);
-    width: 64px;
+    width: 72px;
     flex-shrink: 0;
     white-space: nowrap;
   }
