@@ -228,36 +228,55 @@ function handlePreview() {
 .toolbar {
   display: flex;
   align-items: center;
-  padding: 10px 20px;
-  gap: 20px;
+  padding: 8px 20px;
+  gap: 16px;
   background: var(--color-card);
   box-shadow: 0 1px 0 var(--color-border);
   z-index: 10;
-  min-height: 56px;
+  min-height: 52px;
+
+  .el-button.is-link {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+
+    &:hover {
+      color: var(--color-primary);
+      background: var(--color-primary-bg);
+    }
+  }
 }
 .title-area {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+  padding: 4px 0;
 }
 .title-input {
   border: none;
   background: transparent;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--color-text);
   width: 100%;
   outline: none;
-  border-bottom: 2px solid transparent;
-  padding-bottom: 2px;
+  border-bottom: 2px solid var(--color-canvas);
+  padding: 2px 0 4px;
+  border-radius: 0;
   transition: border-color 0.2s;
+
   &::placeholder {
     color: var(--color-text-muted);
     font-weight: 400;
   }
   &:focus {
     border-bottom-color: var(--color-primary);
+  }
+  &:hover:not(:focus) {
+    border-bottom-color: var(--color-border);
   }
 }
 .desc-input {
@@ -268,19 +287,42 @@ function handlePreview() {
   width: 100%;
   outline: none;
   border-bottom: 1px solid transparent;
-  padding-bottom: 1px;
+  padding: 0 0 2px;
+  border-radius: 0;
   transition: border-color 0.2s;
+
   &::placeholder {
     color: var(--color-text-muted);
   }
   &:focus {
-    border-bottom-color: var(--color-border-hover);
+    border-bottom-color: var(--color-primary);
   }
 }
 .toolbar-right {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
+
+  .el-button {
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    height: 34px;
+    padding: 0 16px;
+  }
+  .el-button--primary {
+    box-shadow: 0 1px 3px rgba(45, 106, 79, 0.25);
+  }
+  .el-button.is-plain {
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-bg);
+    }
+  }
 }
 
 /* ── 三栏布局 ── */
