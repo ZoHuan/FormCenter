@@ -104,7 +104,6 @@ const icons: Record<string, any> = {
   'cross-table': Table2,
   relation: Link2,
   commitment: CheckCheck,
-  region: MapPin,
   'tree-structure': FolderTree,
   QRCode: QrCode,
 }
@@ -136,7 +135,6 @@ const labels: Record<string, string> = {
   'cross-table': '交叉表',
   relation: '关联查询',
   commitment: '承诺说明',
-  region: '行政区划',
   'tree-structure': '树结构',
   QRCode: '二维码',
 }

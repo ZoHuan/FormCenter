@@ -261,7 +261,7 @@ function applyTriggerRule(comps: ComponentSchema[], rule: TriggerRule, match: bo
 }
 
 function isSelectType(t: string) {
-  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree-structure', 'region'].includes(t)
+  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree-structure'].includes(t)
 }
 
 function isDecorType(t: string) {

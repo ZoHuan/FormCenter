@@ -82,7 +82,6 @@ const iconMap: Record<string, any> = {
   'cross-table': Table2,
   relation: Link2,
   commitment: CheckCheck,
-  region: MapPin,
   'map-location': MapPin,
   'user-tree': Users,
   'org-tree': Building2,
@@ -93,7 +92,7 @@ const typeIcon = computed(() => iconMap[props.schema.type] ?? Type)
 
 const isTextLike = computed(() => ['input', 'textarea', 'numeric', 'serial-number'].includes(props.schema.type))
 const isSelectLike = computed(() =>
-  ['chooser', 'multi-chooser', 'selection', 'cascader', 'region', 'tree-structure'].includes(props.schema.type),
+  ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree-structure'].includes(props.schema.type),
 )
 const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type))
 </script>

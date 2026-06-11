@@ -82,7 +82,6 @@ const columns = computed(() => {
     'image',
     'singleImage',
     'signature',
-    'region',
     'tree-structure',
     'commitment',
     'relation',

@@ -61,12 +61,6 @@
       :model-value="modelValue"
       @update:model-value="(v) => $emit('update:modelValue', v)"
     />
-    <RegionRenderer
-      v-else-if="comp.type === 'region'"
-      :comp="comp"
-      :model-value="modelValue"
-      @update:model-value="(v) => $emit('update:modelValue', v)"
-    />
     <TreeRenderer
       v-else-if="comp.type === 'tree-structure'"
       :comp="comp"
@@ -101,7 +95,6 @@ import TableRenderer from './TableRenderer.vue'
 import CrossTableRenderer from './CrossTableRenderer.vue'
 import RelationRenderer from './RelationRenderer.vue'
 import CommitmentRenderer from './CommitmentRenderer.vue'
-import RegionRenderer from './RegionRenderer.vue'
 import TreeRenderer from './TreeRenderer.vue'
 import QRCodeRenderer from './QRCodeRenderer.vue'
 
