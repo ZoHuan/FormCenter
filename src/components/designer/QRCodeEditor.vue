@@ -18,7 +18,10 @@ const p = computed(() => props.component.props as Record<string, unknown>)
 
 const content = computed({
   get: () => (p.value?.content as string) ?? '',
-  set: (v) => { p.value.content = v; emitUpdate() }
+  set: (v) => {
+    p.value.content = v
+    emitUpdate()
+  },
 })
 
 function emitUpdate() {
@@ -27,19 +30,20 @@ function emitUpdate() {
 </script>
 
 <style scoped lang="scss">
-.qr-editor {
-  .prop-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-
-    label {
-      font-size: 12px;
-      color: var(--color-text-secondary);
-      width: 80px;
-      flex-shrink: 0;
-    }
-  }
+.qr-editor .prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: 6px 0;
+  gap: 8px;
+}
+.qr-editor .prop-row label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  width: 72px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 </style>

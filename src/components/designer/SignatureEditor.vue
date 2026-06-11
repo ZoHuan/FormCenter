@@ -6,7 +6,13 @@
     </div>
     <div class="prop-row">
       <label>签章描述</label>
-      <el-input v-model="signerDescription" size="small" maxlength="10" placeholder="请输入签章描述" @input="emitUpdate" />
+      <el-input
+        v-model="signerDescription"
+        size="small"
+        maxlength="10"
+        placeholder="请输入签章描述"
+        @input="emitUpdate"
+      />
     </div>
     <div class="prop-row">
       <label>显示日期</label>
@@ -33,22 +39,34 @@ const p = computed(() => props.component.props as Record<string, unknown>)
 
 const signerName = computed({
   get: () => (p.value?.signerName as string) ?? '',
-  set: (v) => { p.value.signerName = v; emitUpdate() }
+  set: (v) => {
+    p.value.signerName = v
+    emitUpdate()
+  },
 })
 
 const signerDescription = computed({
   get: () => (p.value?.signerDescription as string) ?? '',
-  set: (v) => { p.value.signerDescription = v; emitUpdate() }
+  set: (v) => {
+    p.value.signerDescription = v
+    emitUpdate()
+  },
 })
 
 const showDate = computed({
   get: () => (p.value?.showDate as boolean) ?? false,
-  set: (v) => { p.value.showDate = v; emitUpdate() }
+  set: (v) => {
+    p.value.showDate = v
+    emitUpdate()
+  },
 })
 
 const uploadType = computed({
   get: () => (p.value?.uploadType as string) ?? 'draw',
-  set: (v) => { p.value.uploadType = v; emitUpdate() }
+  set: (v) => {
+    p.value.uploadType = v
+    emitUpdate()
+  },
 })
 
 function emitUpdate() {
@@ -57,19 +75,20 @@ function emitUpdate() {
 </script>
 
 <style scoped lang="scss">
-.sig-editor {
-  .prop-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-
-    label {
-      font-size: 12px;
-      color: var(--color-text-secondary);
-      width: 80px;
-      flex-shrink: 0;
-    }
-  }
+.sig-editor .prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: 6px 0;
+  gap: 8px;
+}
+.sig-editor .prop-row label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  width: 72px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 </style>
