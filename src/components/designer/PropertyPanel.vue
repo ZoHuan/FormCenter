@@ -693,7 +693,7 @@ function onEnableSingleChange(v: boolean) {
 .section-body {
   padding: 8px 16px 12px;
   max-height: 600px;
-  overflow: hidden;
+  overflow-y: auto;
   transition:
     max-height 0.3s cubic-bezier(0.3, 0, 0.2, 1),
     padding 0.3s ease;
