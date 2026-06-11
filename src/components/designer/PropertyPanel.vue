@@ -130,9 +130,11 @@
         </div>
         <div v-if="hasImageSize" class="prop-row">
           <label>文件大小上限</label
-          ><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span
-            style="font-size: 12px; color: var(--color-text-muted); margin-left: 4px"
-            >KB</span
+          ><span class="input-with-unit"
+            ><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span
+              class="unit-label"
+              >KB</span
+            ></span
           >
         </div>
         <div v-if="hasImageSize" class="prop-row">
@@ -631,6 +633,22 @@ function onEnableSingleChange(v: boolean) {
   :deep(.el-input.is-focus .el-input__wrapper) {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.08);
+  }
+  :deep(.el-input-number) {
+    width: auto;
+  }
+  :deep(.el-input-number .el-input__wrapper) {
+    padding-right: 4px;
+  }
+  .input-with-unit {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .unit-label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
   }
 }
 

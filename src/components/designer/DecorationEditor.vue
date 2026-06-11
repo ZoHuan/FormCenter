@@ -64,13 +64,17 @@ function emitUpdate() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 0;
+  padding: 6px 0;
+  gap: 8px;
 }
 .decoration-editor .prop-row label {
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--color-text-secondary);
-  width: 60px;
+  width: 72px;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 .decoration-editor :deep(.el-radio-button--small .el-radio-button__inner) {
   width: 100%;
