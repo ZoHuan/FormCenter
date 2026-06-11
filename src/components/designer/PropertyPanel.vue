@@ -180,11 +180,13 @@
       <div :class="{ collapsed: !openSections.table }" class="section-body">
         <div v-for="(col, i) in tableColumns" :key="i" class="table-col-item">
           <div class="col-header">
-            <el-select v-model="col.type" size="small" @change="onColTypeChange(i)" style="width: 90px">
-              <el-option v-for="t in colTypes" :key="t" :label="t" :value="t" />
+            <span class="col-index">{{ i + 1 }}</span>
+            <el-select v-model="col.type" size="small" @change="onColTypeChange(i)">
+              <template #label="{ label }">{{ colTypeLabels[label] ?? label }}</template>
+              <el-option v-for="t in colTypes" :key="t" :label="colTypeLabels[t]" :value="t" />
             </el-select>
-            <el-input v-model="col.title" size="small" placeholder="列标题" style="flex: 1" @input="emitUpdate" />
-            <el-button link type="danger" size="small" @click="removeTableCol(i)">×</el-button>
+            <el-input v-model="col.title" size="small" placeholder="列标题" @input="emitUpdate" />
+            <el-button link class="col-del" @click="removeTableCol(i)"><X :size="14" /></el-button>
           </div>
           <div class="col-body">
             <div class="prop-row">
@@ -196,8 +198,8 @@
             </div>
           </div>
         </div>
-        <el-button link type="primary" size="small" @click="addTableCol">+ 添加字段</el-button>
-        <div style="border-top: 1px solid var(--color-border); margin: 12px 0; padding-top: 8px">
+        <el-button class="btn-add-col" @click="addTableCol"><Plus :size="14" />添加字段</el-button>
+        <div class="table-footer">
           <div class="prop-row">
             <label>显示序号</label><el-switch v-model="tableShowIndex" size="small" @change="onTableShowIndexChange" />
           </div>
@@ -240,6 +242,16 @@ const openSections = reactive<Record<string, boolean>>({
 })
 
 const colTypes = ['input', 'textarea', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser', 'image']
+const colTypeLabels: Record<string, string> = {
+  input: '单行文本',
+  textarea: '多行文本',
+  numeric: '数字',
+  date: '日期',
+  selection: '下拉框',
+  chooser: '单选框',
+  'multi-chooser': '复选框',
+  image: '图片',
+}
 function toggleSection(key: string) {
   const isOpen = openSections[key]
   // 手风琴模式：先关闭全部
@@ -751,6 +763,88 @@ function onEnableSingleChange(v: boolean) {
     font-weight: 500;
     color: var(--color-text-secondary);
     white-space: nowrap;
+  }
+}
+
+/* ── 表格列管理 ── */
+.table-col-item {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.15s;
+
+  &:hover {
+    box-shadow: 0 1px 4px rgba(45, 106, 79, 0.08);
+  }
+}
+.col-index {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-canvas);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.col-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-border);
+
+  :deep(.el-select) {
+    width: 90px;
+    flex-shrink: 0;
+  }
+  :deep(.el-input) {
+    flex: 1;
+    min-width: 0;
+  }
+}
+.col-del {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--color-error);
+  }
+}
+.col-body {
+  padding: 4px 8px 6px;
+
+  .prop-row {
+    margin-bottom: 0;
+    padding: 4px 0;
+  }
+  :deep(.el-input-number) {
+    width: 100px;
+  }
+}
+.table-footer {
+  border-top: 1px solid var(--color-border);
+  margin: 4px 0 0;
+  padding-top: 8px;
+}
+.btn-add-col {
+  width: 100%;
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-size: 13px;
+  height: 36px;
+  transition: all 0.15s;
+
+  &:hover {
+    background: var(--color-primary-bg);
   }
 }
 </style>
