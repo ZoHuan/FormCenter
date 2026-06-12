@@ -29,6 +29,17 @@ export const useFormListStore = defineStore('formList', () => {
             c.field = `${c.type}_${c.id.slice(0, 8)}`
             hasFix = true
           }
+          if ((c.type === 'table' || c.type === 'cross-table') && c.props) {
+            const cols = (c.props as Record<string, unknown>).columns as Array<Record<string, unknown>>
+            if (cols) {
+              cols.forEach((col, i) => {
+                if (!col.field) {
+                  col.field = `col_${i + 1}`
+                  hasFix = true
+                }
+              })
+            }
+          }
         })
       })
       if (hasFix) save()

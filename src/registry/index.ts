@@ -135,7 +135,7 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
         subComponents: [],
         props: {
           showTitle: true,
-          initialRows: 3,
+          initialRows: 1,
           showIndex: true,
           columns: [
             { title: '列1', type: 'input', field: 'col1', width: 120, required: false },
