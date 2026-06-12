@@ -39,7 +39,11 @@
                     {{ comp.label }}<span v-if="comp.required" class="required">*</span>
                   </label>
                   <div class="field-input">
-                    <FieldRenderer :comp="comp" :model-value="undefined" />
+                    <FieldRenderer
+                      :comp="comp"
+                      :model-value="formData[comp.field]"
+                      @update:model-value="(v) => (formData[comp.field] = v)"
+                    />
                   </div>
                 </div>
               </div>
@@ -57,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { X } from 'lucide-vue-next'
 import { DECOR_TYPES } from '@/registry'
 import FieldRenderer from '@/components/fields/FieldRenderer.vue'
@@ -72,6 +76,7 @@ const props = defineProps<{
 defineEmits<{ close: [] }>()
 
 const mode = ref<'pc' | 'mobile'>('pc')
+const formData = reactive<Record<string, unknown>>({})
 const isDecorType = (t: string) => (DECOR_TYPES as string[]).includes(t)
 const isTableType = (t: string) => t === 'table' || t === 'cross-table'
 const hasOwnLabel = (t: string) => isTableType(t)
@@ -246,7 +251,7 @@ const layoutRows = computed(() => {
       width: 80px;
       flex-shrink: 0;
       text-align: right;
-      margin-top: 10px;
+      line-height: 32px;
     }
     .field-input {
       flex: 1;
@@ -310,6 +315,38 @@ const layoutRows = computed(() => {
   }
   &:focus {
     box-shadow: inset 0 -2px 0 0 var(--color-primary);
+  }
+}
+.field-input :deep(.el-rate) {
+  vertical-align: middle;
+}
+.field-input :deep(.el-input-number) {
+  width: 140px;
+}
+.field-input :deep(.el-input-number .el-input__wrapper) {
+  padding-right: 30px;
+}
+.field-input :deep(.el-input-number__decrease),
+.field-input :deep(.el-input-number__increase) {
+  width: 26px;
+  height: 50%;
+  background: transparent;
+  border-left: 1px solid transparent;
+  color: var(--color-text-muted);
+  border-radius: 0;
+  transition: all 0.15s;
+
+  &:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-bg);
+    border-left-color: var(--color-border);
+  }
+}
+.field-input :deep(.el-input-number__decrease) {
+  border-bottom: 1px solid transparent;
+
+  &:hover {
+    border-bottom-color: var(--color-border);
   }
 }
 
