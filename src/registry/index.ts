@@ -138,9 +138,9 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
           initialRows: 3,
           showIndex: true,
           columns: [
-            { title: '列1', type: 'input', width: 120, required: false },
-            { title: '列2', type: 'input', width: 120, required: false },
-            { title: '列3', type: 'input', width: 120, required: false },
+            { title: '列1', type: 'input', field: 'col1', width: 120, required: false },
+            { title: '列2', type: 'input', field: 'col2', width: 120, required: false },
+            { title: '列3', type: 'input', field: 'col3', width: 120, required: false },
           ],
         },
       }
