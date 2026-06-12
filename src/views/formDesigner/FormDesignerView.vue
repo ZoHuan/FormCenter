@@ -7,7 +7,7 @@
         <input v-model="formDesc" class="desc-input" placeholder="添加描述（选填）" @blur="onDescBlur" />
       </div>
       <div class="toolbar-right">
-        <el-button @click="handlePreview">预览</el-button>
+        <el-button @click="showPreview = true">预览</el-button>
         <el-button plain @click="handleSaveDraft">保存草稿</el-button>
         <el-button type="primary" @click="handlePublish">发布</el-button>
       </div>
@@ -41,6 +41,13 @@
         </div>
       </div>
     </div>
+    <PreviewModal
+      :visible="showPreview"
+      :form-title="formTitle"
+      :form-desc="formDesc"
+      :components="store.components"
+      @close="showPreview = false"
+    />
   </div>
 </template>
 
@@ -52,6 +59,7 @@ import { useFormDesignerStore } from '@/stores/formDesigner'
 import { templates } from '@/utils/templates'
 import { nanoid } from 'nanoid'
 import { MousePointer2 } from 'lucide-vue-next'
+import PreviewModal from '@/components/designer/PreviewModal.vue'
 import type { ComponentType } from '@/types'
 import ComponentPalette from '@/components/designer/ComponentPalette.vue'
 import DesignerCanvas from '@/components/designer/DesignerCanvas.vue'
@@ -62,6 +70,7 @@ const router = useRouter()
 const store = useFormDesignerStore()
 const formTitle = ref('')
 const formDesc = ref('')
+const showPreview = ref(false)
 
 onMounted(() => {
   const id = route.params.id as string
@@ -208,12 +217,6 @@ function handlePublish() {
   const id = store.save()
   ElMessage.success('已发布，可通过链接收集数据')
   if (route.path === '/formDesigner') router.replace(`/formDesigner/${id}`)
-}
-
-function handlePreview() {
-  if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
-  const id = store.save()
-  if (id) window.open(`/fill/${id}?preview=1`)
 }
 </script>
 
