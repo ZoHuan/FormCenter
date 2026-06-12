@@ -255,50 +255,40 @@ function handlePublish() {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  padding: 4px 0;
+  justify-content: center;
+  gap: 2px;
+  padding: 0;
 }
 .title-input {
   border: none;
   background: transparent;
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--color-text);
   width: 100%;
   outline: none;
-  border-bottom: 2px solid var(--color-canvas);
-  padding: 2px 0 4px;
-  border-radius: 0;
-  transition: border-color 0.2s;
+  padding: 0;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
 
   &::placeholder {
     color: var(--color-text-muted);
     font-weight: 400;
-  }
-  &:focus {
-    border-bottom-color: var(--color-primary);
-  }
-  &:hover:not(:focus) {
-    border-bottom-color: var(--color-border);
   }
 }
 .desc-input {
   border: none;
   background: transparent;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   width: 100%;
   outline: none;
-  border-bottom: 1px solid transparent;
-  padding: 0 0 2px;
-  border-radius: 0;
-  transition: border-color 0.2s;
+  padding: 0;
+  line-height: 1.5;
 
   &::placeholder {
     color: var(--color-text-muted);
-  }
-  &:focus {
-    border-bottom-color: var(--color-primary);
+    opacity: 0.6;
   }
 }
 .toolbar-right {
