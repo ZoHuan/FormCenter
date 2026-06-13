@@ -19,21 +19,32 @@ const content = computed(() => {
   return (p?.content as string) || ''
 })
 
-watch(content, async (val) => {
-  if (val) {
-    try {
-      qrUrl.value = await QRCode.toDataURL(val, { width: 200, margin: 2 })
-    } catch (e) {
-      console.error('QRCode generation failed:', e)
+watch(
+  content,
+  async (val) => {
+    if (val) {
+      try {
+        qrUrl.value = await QRCode.toDataURL(val, { width: 200, margin: 2 })
+      } catch (e) {
+        console.error('QRCode generation failed:', e)
+        qrUrl.value = ''
+      }
+    } else {
       qrUrl.value = ''
     }
-  } else {
-    qrUrl.value = ''
-  }
-}, { immediate: true })
+  },
+  { immediate: true },
+)
 </script>
 <style scoped>
-.qr-field { text-align: center; }
-.qr-img { max-width: 200px; max-height: 200px; }
-.qr-placeholder { color: var(--color-text-muted); font-size: 13px; }
+.qr-field {
+}
+.qr-img {
+  max-width: 200px;
+  max-height: 200px;
+}
+.qr-placeholder {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
 </style>

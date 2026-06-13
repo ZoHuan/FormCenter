@@ -1,0 +1,414 @@
+<template>
+  <div class="mobile-renderer">
+    <!-- ═══════ 主渲染链（v-if 连续，不可打断） ═══════ -->
+    <van-field
+      v-if="isInput"
+      :model-value="modelValue"
+      :label="comp.label"
+      :required="comp.required"
+      :placeholder="comp.description"
+      :type="fieldType"
+      :rows="comp.type === 'textarea' ? 3 : 1"
+      :maxlength="hasMaxLen ? maxLen : undefined"
+      @update:model-value="onChange"
+    />
+    <van-field
+      v-else-if="comp.type === 'serial-number'"
+      :model-value="modelValue"
+      :label="comp.label"
+      readonly
+      :placeholder="comp.description"
+    />
+    <van-field v-else-if="comp.type === 'chooser'" :label="comp.label" :required="comp.required">
+      <template #input>
+        <van-radio-group
+          :model-value="modelValue"
+          :disabled="!comp.editable"
+          direction="horizontal"
+          @update:model-value="onChange"
+        >
+          <van-radio v-for="opt in options" :key="opt.value" :name="opt.value">{{ opt.label }}</van-radio>
+        </van-radio-group>
+      </template>
+    </van-field>
+    <van-field v-else-if="comp.type === 'multi-chooser'" :label="comp.label" :required="comp.required">
+      <template #input>
+        <van-checkbox-group
+          :model-value="(modelValue as string[]) || []"
+          :disabled="!comp.editable"
+          direction="horizontal"
+          @update:model-value="onChange"
+        >
+          <van-checkbox v-for="opt in options" :key="opt.value" :name="opt.value" shape="square">{{
+            opt.label
+          }}</van-checkbox>
+        </van-checkbox-group>
+      </template>
+    </van-field>
+    <van-field
+      v-else-if="comp.type === 'selection'"
+      :model-value="getOptionLabel(modelValue as string)"
+      :label="comp.label"
+      :required="comp.required"
+      readonly
+      is-link
+      :placeholder="comp.description"
+      @click="showPicker = true"
+    />
+    <van-field
+      v-else-if="comp.type === 'cascader'"
+      :model-value="cascaderDisplay"
+      :label="comp.label"
+      :required="comp.required"
+      readonly
+      is-link
+      :placeholder="comp.description"
+      @click="showCascader = true"
+    />
+    <van-field
+      v-else-if="comp.type === 'date'"
+      :model-value="(modelValue as string) || ''"
+      :label="comp.label"
+      :required="comp.required"
+      readonly
+      is-link
+      :placeholder="comp.description"
+      @click="showDatePicker = true"
+    />
+    <van-field
+      v-else-if="comp.type === 'date-range'"
+      :model-value="dateRangeLabel"
+      :label="comp.label"
+      :required="comp.required"
+      readonly
+      is-link
+      :placeholder="comp.description"
+      @click="showDateRangePicker = true"
+    />
+    <van-field v-else-if="comp.type === 'rate'" :label="comp.label" :required="comp.required">
+      <template #input
+        ><van-rate
+          :model-value="(modelValue as number) || 0"
+          :count="rateMax"
+          :size="18"
+          :color="rateColor"
+          @update:model-value="onChange"
+      /></template>
+    </van-field>
+    <van-field v-else-if="comp.type === 'file'" :label="comp.label" :required="comp.required">
+      <template #input
+        ><van-uploader
+          :model-value="fileList"
+          :max-count="uploadMaxCount"
+          multiple
+          accept="*"
+          upload-text="上传附件"
+          preview-size="60"
+          @update:model-value="onUploadChange"
+      /></template>
+    </van-field>
+    <van-field v-else-if="comp.type === 'image'" :label="comp.label" :required="comp.required">
+      <template #input
+        ><van-uploader
+          :model-value="singleImageList"
+          max-count="1"
+          preview-size="80"
+          upload-text="上传图片"
+          @update:model-value="onSingleImageChange"
+      /></template>
+    </van-field>
+    <van-field
+      v-else-if="comp.type === 'signature' || comp.type === 'relation'"
+      :model-value="comp.type === 'signature' && modelValue ? '已签名' : (modelValue as string) || ''"
+      :label="comp.label"
+      :required="comp.required"
+      readonly
+      is-link
+      :placeholder="comp.description"
+    />
+    <van-cell v-else-if="comp.type === 'commitment'">
+      <template #title
+        ><van-checkbox :model-value="!!modelValue" @update:model-value="(v) => onChange(v ? [{ value: '1' }] : [])">{{
+          comp.description || '本人确认以上信息属实'
+        }}</van-checkbox></template
+      >
+    </van-cell>
+    <van-field
+      v-else-if="comp.type === 'tree-structure'"
+      :model-value="(modelValue as string) || ''"
+      :label="comp.label"
+      :required="comp.required"
+      readonly
+      is-link
+      :placeholder="comp.description"
+      @click="showTree = true"
+    />
+    <van-cell
+      v-else-if="comp.type === 'table' || comp.type === 'cross-table'"
+      :title="comp.label"
+      label="请在桌面端查看"
+    />
+    <van-cell v-else-if="comp.type === 'QRCode'" :title="comp.label" value="预览不支持" />
+    <div v-else-if="isDecor" class="mobile-decor">
+      <h2 v-if="comp.type === 'title'">{{ comp.label }}</h2>
+      <h3 v-else-if="comp.type === 'subtitle'">{{ comp.label }}</h3>
+      <p v-else-if="comp.type === 'group-title'" class="decor-group">{{ comp.label }}</p>
+      <van-divider v-else-if="comp.type === 'separator'" />
+      <p v-else class="decor-hint">{{ comp.description }}</p>
+    </div>
+    <van-field
+      v-else
+      :model-value="modelValue"
+      :label="comp.label"
+      :placeholder="comp.description"
+      @update:model-value="onChange"
+    />
+
+    <!-- ═══════ 弹出层（独立 v-if，不放链中） ═══════ -->
+    <van-action-sheet v-if="comp.type === 'selection'" v-model:show="showPicker" :title="comp.label">
+      <van-picker :columns="pickerColumns" @confirm="onPickerConfirm" @cancel="showPicker = false" />
+    </van-action-sheet>
+    <van-popup v-if="comp.type === 'cascader'" v-model:show="showCascader" round position="bottom">
+      <van-cascader
+        :options="cascaderOptions"
+        :model-value="(modelValue as string) || ''"
+        title="请选择"
+        @finish="onCascaderFinish"
+        @close="showCascader = false"
+      />
+    </van-popup>
+    <van-calendar v-if="comp.type === 'date'" v-model:show="showDatePicker" @confirm="onDateConfirm" />
+    <van-calendar
+      v-if="comp.type === 'date-range'"
+      v-model:show="showDateRangePicker"
+      type="range"
+      @confirm="onDateRangeConfirm"
+    />
+    <van-popup v-if="comp.type === 'tree-structure'" v-model:show="showTree" round position="bottom">
+      <van-cascader
+        :options="cascaderOptions"
+        :model-value="(modelValue as string) || ''"
+        title="请选择"
+        @finish="onCascaderFinish"
+        @close="showTree = false"
+      />
+    </van-popup>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { DECOR_TYPES } from '@/registry'
+import type { ComponentSchema } from '@/types'
+import {
+  Field as VanField,
+  Cell as VanCell,
+  RadioGroup as VanRadioGroup,
+  Radio as VanRadio,
+  CheckboxGroup as VanCheckboxGroup,
+  Checkbox as VanCheckbox,
+  ActionSheet as VanActionSheet,
+  Picker as VanPicker,
+  Popup as VanPopup,
+  Cascader as VanCascader,
+  Calendar as VanCalendar,
+  Rate as VanRate,
+  Uploader as VanUploader,
+  Divider as VanDivider,
+} from 'vant'
+
+const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
+const emit = defineEmits<{ 'update:modelValue': [value: unknown] }>()
+
+const compProps = computed(() => (props.comp.props as Record<string, unknown>) || {})
+const options = computed(() => (compProps.value.options as Array<{ label: string; value: string }>) ?? [])
+const maxLen = computed(() => (compProps.value.maxLength as number) ?? 100)
+const rateMax = computed(() => (compProps.value.maxScore as number) ?? 5)
+const rateColor = computed(() => (compProps.value.iconColor as string) || '#F7BA2A')
+const uploadMaxCount = computed(() => (compProps.value.maxCount as number) ?? 3)
+
+const isInput = computed(() => ['input', 'textarea', 'numeric'].includes(props.comp.type))
+const isDecor = computed(() => (DECOR_TYPES as string[]).includes(props.comp.type))
+const hasMaxLen = computed(() => props.comp.type === 'input')
+
+const fieldType = computed(() => {
+  if (props.comp.type === 'textarea') return 'textarea'
+  if (props.comp.type === 'numeric') return 'digit'
+  return 'text'
+})
+
+const pickerColumns = computed(() => options.value.map((o) => ({ text: o.label, value: o.value })))
+const cascaderOptions = computed(() => {
+  const cvt = (opts: any[]): any[] =>
+    opts.map((o) => ({ text: o.label, value: o.value, ...(o.children ? { children: cvt(o.children) } : {}) }))
+  return cvt(options.value)
+})
+
+const dateRangeLabel = computed(() => {
+  const v = props.modelValue
+  return Array.isArray(v) && v.length === 2 ? `${v[0]} 至 ${v[1]}` : ''
+})
+
+const fileList = ref<Array<{ url: string }>>([])
+const singleImageList = ref<Array<{ url: string }>>([])
+const showPicker = ref(false),
+  showCascader = ref(false),
+  showTree = ref(false),
+  showDatePicker = ref(false),
+  showDateRangePicker = ref(false)
+
+function onChange(v: unknown) {
+  emit('update:modelValue', v)
+}
+function getOptionLabel(val: string) {
+  return options.value.find((o) => o.value === val)?.label ?? ''
+}
+function onPickerConfirm({ selectedOptions }: any) {
+  emit('update:modelValue', selectedOptions[0]?.value)
+  showPicker.value = false
+}
+function onCascaderFinish({ selectedOptions }: any) {
+  emit('update:modelValue', selectedOptions.map((o: any) => o.value).join('/'))
+  showCascader.value = false
+  showTree.value = false
+}
+function onDateConfirm(date: Date) {
+  emit('update:modelValue', formatDate(date))
+  showDatePicker.value = false
+}
+function onDateRangeConfirm(dates: Date[]) {
+  if (dates.length === 2) emit('update:modelValue', [formatDate(dates[0]), formatDate(dates[1])])
+  showDateRangePicker.value = false
+}
+function onUploadChange(list: Array<{ file?: File; url?: string }>) {
+  fileList.value = list as any
+  emit(
+    'update:modelValue',
+    list.map((f) => (f.file ? f.file.name : '')),
+  )
+}
+function onSingleImageChange(list: Array<{ file?: File; url?: string }>) {
+  singleImageList.value = list as any
+  if (list.length && list[0].file) emit('update:modelValue', list[0].file.name)
+}
+function formatDate(date: Date) {
+  const y = date.getFullYear(),
+    m = String(date.getMonth() + 1).padStart(2, '0'),
+    d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+const cascaderDisplay = computed(() => {
+  const v = props.modelValue
+  if (!v) return ''
+  const val = String(v)
+  const find = (opts: any[], t: string): string => {
+    for (const o of opts) {
+      if (o.value === t) return o.label
+      if (o.children) {
+        const f = find(o.children, t)
+        if (f) return f
+      }
+    }
+    return t
+  }
+  return val
+    .split('/')
+    .map((v2) => find(options.value, v2))
+    .join(' / ')
+})
+</script>
+
+<style scoped lang="scss">
+.mobile-renderer {
+  width: 100%;
+  :deep(.van-cell__title) {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    line-height: 24px;
+    flex: none;
+    width: 64px;
+  }
+  :deep(.van-cell) {
+    padding: 8px 16px;
+  }
+  :deep(.van-field__control) {
+    font-size: 15px;
+  }
+  :deep(.van-field__control::placeholder) {
+    color: var(--color-text-muted);
+  }
+  :deep(.van-cell::after) {
+    border-color: var(--color-border);
+  }
+  :deep(.van-radio-group),
+  :deep(.van-checkbox-group) {
+    padding: 0;
+  }
+  :deep(.van-radio) {
+    margin: 0 14px 0 0;
+  }
+  :deep(.van-checkbox) {
+    margin: 0 14px 0 0;
+  }
+  :deep(.van-rate) {
+    padding: 0;
+  }
+}
+.upload-count {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+.single-preview {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.preview-del {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 11px;
+  text-align: center;
+  padding: 2px 0;
+}
+.mobile-decor {
+  padding: 12px 16px;
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 8px 0;
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 4px 0;
+    color: var(--color-text-secondary);
+  }
+  .decor-group {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+  .decor-hint {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    padding: 10px 16px;
+    background: var(--color-primary-bg);
+    border-radius: 8px;
+    line-height: 1.6;
+  }
+}
+</style>

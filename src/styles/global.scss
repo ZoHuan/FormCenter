@@ -5,8 +5,8 @@
   --el-color-primary: var(--color-primary);
   --el-color-primary-light-3: var(--color-primary-hover);
   --el-color-primary-light-5: var(--color-primary-light);
-  --el-color-primary-light-7: #B7E4D0;
-  --el-color-primary-light-8: #D4F0E5;
+  --el-color-primary-light-7: #b7e4d0;
+  --el-color-primary-light-8: #d4f0e5;
   --el-color-primary-light-9: var(--color-primary-bg);
   --el-color-primary-dark-2: var(--color-primary-active);
   --el-color-success: var(--color-success);
@@ -77,13 +77,40 @@
   --el-tag-border-color: transparent;
 }
 
-.el-button { transition: transform .1s ease, box-shadow .15s ease; }
-.el-button:active { transform: scale(0.97); }
-.el-button { border-radius: var(--radius-sm); }
-.el-button--large { border-radius: var(--radius-md); height: 40px; }
-.el-button:focus-visible { box-shadow: var(--shadow-focus); outline: none; }
-.el-input.is-error .el-input__wrapper { animation: input-shake .3s ease; }
-@keyframes input-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+.el-button {
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
+}
+.el-button:active {
+  transform: scale(0.97);
+}
+.el-button {
+  border-radius: var(--radius-sm);
+}
+.el-button--large {
+  border-radius: var(--radius-md);
+  height: 40px;
+}
+.el-button:focus-visible {
+  box-shadow: var(--shadow-focus);
+  outline: none;
+}
+.el-input.is-error .el-input__wrapper {
+  animation: input-shake 0.3s ease;
+}
+@keyframes input-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
 
 /* ── Global refinements ── */
 ::selection {
@@ -99,7 +126,10 @@ a {
   color: var(--color-primary);
   text-decoration: none;
 
-  &:hover { text-decoration: underline; color: var(--color-primary-hover); }
+  &:hover {
+    text-decoration: underline;
+    color: var(--color-primary-hover);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -130,8 +160,12 @@ a {
 
 /* ── Skeleton shimmer ── */
 @keyframes skeleton-shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* ── Dialog ── */
@@ -153,8 +187,14 @@ a {
   animation: dialog-in 0.3s cubic-bezier(0.3, 0, 0.2, 1);
 }
 @keyframes dialog-in {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ── Switch ── */
@@ -257,18 +297,63 @@ a {
 
 /* ── Additional Keyframes ── */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes slide-down {
-  from { opacity: 0; transform: translateY(-16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes bounce-in {
-  0%   { transform: scale(0.8); }
-  50%  { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ── Vant 4 品牌色映射 ── */
+:root {
+  --van-primary-color: var(--color-primary);
+  --van-success-color: var(--color-success);
+  --van-warning-color: var(--color-warning);
+  --van-danger-color: var(--color-error);
+  --van-text-color: var(--color-text);
+  --van-text-color-secondary: var(--color-text-secondary);
+  --van-text-color-regular: var(--color-text-secondary);
+  --van-background: var(--color-page);
+  --van-background-2: var(--color-card);
+  --van-card-background: var(--color-card);
+  --van-border-color: var(--color-border);
+  --van-gray-1: var(--color-card);
+  --van-gray-2: var(--color-canvas);
+  --van-gray-3: var(--color-page);
+  --van-gray-5: var(--color-text-muted);
+  --van-gray-7: var(--color-text-secondary);
+  --van-gray-8: var(--color-text);
+  --van-radio-checked-icon-color: var(--color-primary);
+  --van-checkbox-checked-icon-color: var(--color-primary);
+  --van-button-primary-background: var(--color-primary);
+  --van-button-primary-border-color: var(--color-primary);
 }

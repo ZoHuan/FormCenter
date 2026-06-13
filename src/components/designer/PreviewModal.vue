@@ -32,7 +32,7 @@
                   :style="{ flex: `0 0 ${widthMap[comp.colspan] || 100}%` }"
                 >
                   <label
-                    v-if="!isDecorType(comp.type) && !hasOwnLabel(comp.type)"
+                    v-if="!isDecorType(comp.type) && !hasOwnLabel(comp.type) && shouldShowLabel(comp.type)"
                     class="field-label"
                     :class="{ 'table-title': isTableType(comp.type) }"
                   >
@@ -41,6 +41,7 @@
                   <div class="field-input">
                     <FieldRenderer
                       :comp="comp"
+                      :mode="mode"
                       :model-value="formData[comp.field]"
                       @update:model-value="(v) => (formData[comp.field] = v)"
                     />
@@ -67,6 +68,24 @@ import { DECOR_TYPES } from '@/registry'
 import FieldRenderer from '@/components/fields/FieldRenderer.vue'
 import type { ComponentSchema } from '@/types'
 
+const mobileTypes = [
+  'input',
+  'textarea',
+  'numeric',
+  'serial-number',
+  'chooser',
+  'multi-chooser',
+  'selection',
+  'cascader',
+  'date',
+  'date-range',
+  'rate',
+  'file',
+  'image',
+  'commitment',
+  'tree-structure',
+]
+
 const props = defineProps<{
   visible: boolean
   formTitle: string
@@ -80,6 +99,7 @@ const formData = reactive<Record<string, unknown>>({})
 const isDecorType = (t: string) => (DECOR_TYPES as string[]).includes(t)
 const isTableType = (t: string) => t === 'table' || t === 'cross-table'
 const hasOwnLabel = (t: string) => isTableType(t)
+const shouldShowLabel = (t: string) => mode.value !== 'mobile' || !mobileTypes.includes(t)
 const visibleComponents = computed(() => props.components.filter((c) => !c.hidden))
 const widthMap: Record<number, number> = { 1: 100, 2: 50, 3: 33.33, 4: 100 }
 
@@ -199,7 +219,78 @@ const layoutRows = computed(() => {
   &.is-mobile {
     max-width: 375px;
     margin: 0 auto;
-    padding: 32px 24px;
+    padding: 28px 0 32px;
+    border-radius: 12px;
+
+    .form-title {
+      font-size: 22px;
+      padding: 0 16px;
+    }
+
+    .form-desc {
+      font-size: 14px;
+      margin-bottom: 24px;
+      padding: 0 16px;
+    }
+
+    .form-header {
+      margin-bottom: 24px;
+    }
+
+    .fields {
+      gap: 0;
+    }
+
+    .field-row {
+      gap: 0;
+    }
+
+    .field-item {
+      gap: 0;
+
+      &:not(:has(.mobile-renderer)) {
+        padding: 10px 16px;
+      }
+
+      &:has(.decor-renderer) {
+        padding: 10px 16px;
+      }
+    }
+
+    .field-label {
+      width: 64px;
+      flex-shrink: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      line-height: 24px;
+    }
+
+    .app-horizontal .field-label {
+      flex: none;
+      width: 64px;
+      margin-right: 12px;
+      text-align: left;
+      line-height: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      word-wrap: break-word;
+    }
+
+    .app-vertical .field-label {
+      width: auto;
+    }
+
+    .form-footer {
+      margin-top: 24px;
+      padding: 20px 16px 0;
+      border-top: none;
+
+      .el-button--large {
+        border-radius: 8px;
+      }
+    }
   }
 }
 
@@ -245,13 +336,16 @@ const layoutRows = computed(() => {
   &.app-horizontal {
     flex-direction: row;
     align-items: flex-start;
-    gap: 16px;
+    gap: 12px;
 
     .field-label {
-      width: 80px;
+      width: 64px;
       flex-shrink: 0;
       text-align: right;
       line-height: 32px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
     }
     .field-input {
       flex: 1;
@@ -266,10 +360,11 @@ const layoutRows = computed(() => {
 }
 
 .field-label {
+  width: 64px;
+  flex-shrink: 0;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text);
-  margin-bottom: 2px;
+  color: var(--color-text-secondary);
 }
 
 .table-title {
@@ -290,7 +385,6 @@ const layoutRows = computed(() => {
   box-shadow: inset 0 -1px 0 0 var(--color-border);
   background: transparent;
   padding: 0 4px;
-  height: 44px;
   transition: box-shadow 0.25s ease;
 
   &:hover {

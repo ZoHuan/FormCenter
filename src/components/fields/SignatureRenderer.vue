@@ -1,6 +1,17 @@
 <template>
   <div class="signature-field">
-    <canvas ref="canvasRef" width="300" height="150" @mousedown="start" @mousemove="draw" @mouseup="stop" @touchstart.prevent="start" @touchmove.prevent="draw" @touchend="stop" />
+    <div class="sig-canvas-wrap">
+      <canvas
+        ref="canvasRef"
+        @mousedown="start"
+        @mousemove="draw"
+        @mouseup="stop"
+        @mouseleave="stop"
+        @touchstart.prevent="startTouch"
+        @touchmove.prevent="drawTouch"
+        @touchend="stop"
+      />
+    </div>
     <div class="sig-actions">
       <el-button size="small" @click="clear">清除</el-button>
     </div>
@@ -13,7 +24,7 @@ import { setFile, getFile, removeFile } from '@/utils/storage'
 import { nanoid } from 'nanoid'
 import type { ComponentSchema } from '@/types'
 
-const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
+const props = defineProps<{ comp: ComponentSchema; modelValue: unknown; mode?: string }>()
 const emit = defineEmits<{ 'update:modelValue': [value: unknown] }>()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -23,8 +34,15 @@ const currentFileId = ref<string | null>(null)
 
 onMounted(() => {
   if (canvasRef.value) {
+    const rect = canvasRef.value.parentElement!.getBoundingClientRect()
+    canvasRef.value.width = rect.width
+    canvasRef.value.height = props.mode === 'mobile' ? 120 : 150
     ctx = canvasRef.value.getContext('2d')
-    if (ctx) { ctx.lineWidth = 2; ctx.strokeStyle = '#1A1814'; ctx.lineCap = 'round' }
+    if (ctx) {
+      ctx.lineWidth = 2
+      ctx.strokeStyle = '#1A1814'
+      ctx.lineCap = 'round'
+    }
   }
   if (props.modelValue && typeof props.modelValue === 'string' && props.modelValue.startsWith('file:')) {
     const fileId = props.modelValue.replace('file:', '')
@@ -39,8 +57,32 @@ onMounted(() => {
   }
 })
 
-function start(e: MouseEvent | TouchEvent) { drawing.value = true; const p = getPos(e); ctx?.beginPath(); ctx?.moveTo(p.x, p.y) }
-function draw(e: MouseEvent | TouchEvent) { if (!drawing.value) return; const p = getPos(e); ctx?.lineTo(p.x, p.y); ctx?.stroke() }
+function start(e: MouseEvent) {
+  drawing.value = true
+  const p = mousePos(e)
+  ctx?.beginPath()
+  ctx?.moveTo(p.x, p.y)
+}
+function draw(e: MouseEvent) {
+  if (!drawing.value) return
+  const p = mousePos(e)
+  ctx?.lineTo(p.x, p.y)
+  ctx?.stroke()
+}
+function startTouch(e: TouchEvent) {
+  e.preventDefault()
+  drawing.value = true
+  const p = touchPos(e)
+  ctx?.beginPath()
+  ctx?.moveTo(p.x, p.y)
+}
+function drawTouch(e: TouchEvent) {
+  e.preventDefault()
+  if (!drawing.value) return
+  const p = touchPos(e)
+  ctx?.lineTo(p.x, p.y)
+  ctx?.stroke()
+}
 
 async function stop() {
   drawing.value = false
@@ -64,24 +106,29 @@ async function clear() {
   }
 }
 
-function getPos(e: MouseEvent | TouchEvent) {
+function mousePos(e: MouseEvent) {
   const r = canvasRef.value!.getBoundingClientRect()
-  const ev = 'touches' in e ? e.touches[0] : e
-  return { x: ev.clientX - r.left, y: ev.clientY - r.top }
+  return { x: e.clientX - r.left, y: e.clientY - r.top }
+}
+function touchPos(e: TouchEvent) {
+  const r = canvasRef.value!.getBoundingClientRect()
+  return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top }
 }
 </script>
 
 <style scoped lang="scss">
 .signature-field {
-  canvas {
+  .sig-canvas-wrap {
     border: 2px dashed var(--color-border);
     border-radius: 8px;
+    overflow: hidden;
+  }
+  canvas {
+    display: block;
+    width: 100%;
     cursor: crosshair;
     touch-action: none;
-    width: 100%;
-    max-width: 300px;
   }
-
   .sig-actions {
     margin-top: 8px;
   }
