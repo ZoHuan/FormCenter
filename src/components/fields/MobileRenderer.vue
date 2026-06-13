@@ -96,16 +96,28 @@
       /></template>
     </van-field>
     <van-field v-else-if="comp.type === 'file'" :label="comp.label" :required="comp.required">
-      <template #input
-        ><van-uploader
+      <template #input>
+        <van-uploader
           :model-value="fileList"
           :max-count="uploadMaxCount"
           multiple
+          :preview-image="false"
+          :show-upload="true"
           accept="*"
-          upload-text="上传附件"
-          preview-size="60"
           @update:model-value="onUploadChange"
-      /></template>
+        >
+          <template #default>
+            <div class="upload-btn"><van-icon name="plus" size="16" /><span>上传附件</span></div>
+          </template>
+        </van-uploader>
+        <div v-if="fileList.length" class="file-list">
+          <div v-for="(f, i) in fileList" :key="i" class="file-item">
+            <van-icon name="description" size="16" />
+            <span class="file-text">{{ f.file?.name || '文件 ' + (i + 1) }}</span>
+            <van-icon name="cross" size="14" class="file-remove" @click="removeFile(i)" />
+          </div>
+        </div>
+      </template>
     </van-field>
     <van-field v-else-if="comp.type === 'image'" :label="comp.label" :required="comp.required">
       <template #input
@@ -215,6 +227,8 @@ import {
   Rate as VanRate,
   Uploader as VanUploader,
   Divider as VanDivider,
+  Button as VanButton,
+  Icon as VanIcon,
 } from 'vant'
 
 const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
@@ -291,6 +305,13 @@ function onSingleImageChange(list: Array<{ file?: File; url?: string }>) {
   singleImageList.value = list as any
   if (list.length && list[0].file) emit('update:modelValue', list[0].file.name)
 }
+function removeFile(i: number) {
+  fileList.value.splice(i, 1)
+  emit(
+    'update:modelValue',
+    fileList.value.map((f) => (f.file ? f.file.name : '')),
+  )
+}
 function formatDate(date: Date) {
   const y = date.getFullYear(),
     m = String(date.getMonth() + 1).padStart(2, '0'),
@@ -354,35 +375,61 @@ const cascaderDisplay = computed(() => {
   :deep(.van-rate) {
     padding: 0;
   }
+  :deep(.van-field__control--custom) {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: auto;
+  }
+  :deep(.van-field__body) {
+    overflow: visible;
+  }
+  :deep(.van-uploader__input-wrapper) {
+    display: flex !important;
+  }
 }
-.upload-count {
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
   font-size: 12px;
-  color: var(--color-text-muted);
-  margin-top: 4px;
-}
-.single-preview {
-  position: relative;
-  width: 80px;
-  height: 80px;
+  color: var(--color-primary);
+  background: transparent;
+  border: 1px dashed var(--color-primary);
   border-radius: 6px;
-  overflow: hidden;
   cursor: pointer;
+  transition: all 0.15s;
+  &:active {
+    opacity: 0.7;
+  }
 }
-.preview-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.file-list {
+  margin-top: 10px;
 }
-.preview-del {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  font-size: 11px;
-  text-align: center;
-  padding: 2px 0;
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  background: var(--color-page);
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.file-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file-remove {
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  &:active {
+    color: var(--color-error);
+  }
 }
 .mobile-decor {
   padding: 12px 16px;
