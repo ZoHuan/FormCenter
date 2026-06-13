@@ -1,7 +1,13 @@
 <template>
   <div class="image-field">
-    <div v-if="comp.type === 'image'" class="upload-area">
-      <el-upload :show-file-list="true" :limit="maxCount" :auto-upload="false" :on-change="handleChange" :file-list="fileList">
+    <div v-if="comp.type === 'file'" class="upload-area">
+      <el-upload
+        :show-file-list="true"
+        :limit="maxCount"
+        :auto-upload="false"
+        :on-change="handleChange"
+        :file-list="fileList"
+      >
         <el-button size="small">上传附件</el-button>
       </el-upload>
     </div>
@@ -23,20 +29,25 @@ import type { ComponentSchema } from '@/types'
 const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
 const emit = defineEmits<{ 'update:modelValue': [value: unknown] }>()
 
-const maxCount = computed(() => (props.comp.props as Record<string, unknown>)?.maxCount as number ?? 3)
+const maxCount = computed(() => ((props.comp.props as Record<string, unknown>)?.maxCount as number) ?? 3)
 const fileList = ref<Array<{ name: string; raw: File }>>([])
 const imagePreview = ref('')
 
 onMounted(() => {
   if (props.modelValue && typeof props.modelValue === 'string' && props.modelValue.startsWith('file:')) {
     const fileId = props.modelValue.replace('file:', '')
-    getFile(fileId).then((f) => { if (f) imagePreview.value = f.dataURL })
+    getFile(fileId).then((f) => {
+      if (f) imagePreview.value = f.dataURL
+    })
   }
 })
 
 function handleChange(file: { name: string; raw: File }) {
   fileList.value.push(file)
-  emit('update:modelValue', fileList.value.map(f => f.name))
+  emit(
+    'update:modelValue',
+    fileList.value.map((f) => f.name),
+  )
 }
 
 function handleSingleChange(file: { raw: File }) {

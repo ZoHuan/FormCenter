@@ -114,11 +114,11 @@
             <el-option value="timeperiod" label="时间段" />
           </el-select>
         </div>
-        <div v-if="hasImageSize" class="prop-row">
+        <div v-if="hasUploadSize" class="prop-row">
           <label>最大上传数</label
           ><el-input-number v-model="maxCount" :min="1" size="small" @change="onMaxCountChange" />
         </div>
-        <div v-if="hasImageSize" class="prop-row">
+        <div v-if="hasUploadSize" class="prop-row">
           <label>文件大小上限</label
           ><span class="input-with-unit"
             ><el-input-number v-model="maxSize" :min="0" size="small" @change="onMaxSizeChange" /><span
@@ -127,7 +127,7 @@
             ></span
           >
         </div>
-        <div v-if="hasImageSize" class="prop-row">
+        <div v-if="hasUploadSize" class="prop-row">
           <label>文件类型</label
           ><el-input v-model="fileTypes" size="small" placeholder=".jpg;.png" @input="onFileTypesChange" />
         </div>
@@ -312,17 +312,9 @@ const isSeparator = computed(() => comp.type === 'separator')
 const isTable = computed(() => comp.type === 'table')
 const isCrossTable = computed(() => comp.type === 'cross-table')
 const hasTooltip = computed(() =>
-  [
-    'input',
-    'textarea',
-    'numeric',
-    'chooser',
-    'multi-chooser',
-    'selection',
-    'image',
-    'singleImage',
-    'commitment',
-  ].includes(comp.type),
+  ['input', 'textarea', 'numeric', 'chooser', 'multi-chooser', 'selection', 'file', 'image', 'commitment'].includes(
+    comp.type,
+  ),
 )
 const hasColspan = computed(
   () =>
@@ -346,7 +338,7 @@ const hasUnit = computed(() => isNumeric.value)
 const hasAutoWrap = computed(() => comp.type === 'textarea')
 const hasRareChars = computed(() => comp.type === 'textarea')
 const hasDateType = computed(() => ['date', 'date-range'].includes(comp.type))
-const hasImageSize = computed(() => ['image', 'singleImage'].includes(comp.type))
+const hasUploadSize = computed(() => ['file', 'image'].includes(comp.type))
 const hasHideWhenEmpty = computed(() => comp.type === 'point-out')
 const hasEnableSearch = computed(() => comp.type === 'tree-structure')
 const hasEnableSingle = computed(() => comp.type === 'tree-structure')
@@ -357,7 +349,7 @@ const hasValidation = computed(
     hasAutoWrap.value ||
     hasRareChars.value ||
     hasDateType.value ||
-    hasImageSize.value,
+    hasUploadSize.value,
 )
 const hasAdvanced = computed(
   () =>

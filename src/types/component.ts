@@ -21,8 +21,8 @@ export type ComponentType =
   | 'date'
   | 'date-range'
   // 文件/媒体
+  | 'file'
   | 'image'
-  | 'singleImage'
   | 'signature'
   // 评分
   | 'rate'

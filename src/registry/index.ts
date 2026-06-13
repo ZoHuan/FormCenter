@@ -119,10 +119,10 @@ export function createDefaultComponent(type: ComponentType): ComponentSchema {
         description: '请选择日期区间',
         props: { dateType: 'daterange' },
       }
+    case 'file':
+      return { ...base, type: 'file', label: '文件附件', props: { maxCount: 3, maxSize: 10240 } }
     case 'image':
-      return { ...base, type: 'image', label: '文件附件', props: { maxCount: 3, maxSize: 10240 } }
-    case 'singleImage':
-      return { ...base, type: 'singleImage', label: '图片', colspan: 1, props: { width: 200, height: 150 } }
+      return { ...base, type: 'image', label: '图片', colspan: 1, props: { width: 200, height: 150 } }
     case 'signature':
       return { ...base, type: 'signature', label: '签名' }
     case 'rate':
@@ -250,8 +250,8 @@ export const COMPONENT_MENU = [
   {
     category: '高级组件',
     items: [
+      'file',
       'image',
-      'singleImage',
       'signature',
       'table',
       'cross-table',
