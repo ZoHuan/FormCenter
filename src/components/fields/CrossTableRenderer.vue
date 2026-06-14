@@ -211,9 +211,9 @@ function getNextValue(current: string): string {
     width: 56px;
     height: 32px;
     border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all var(--duration-fast);
     font-size: 14px;
     color: var(--color-text-muted);
     background: var(--color-card);

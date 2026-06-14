@@ -116,7 +116,7 @@ function saveRules(list: Array<{ id: string; description: string; expression: st
   background: var(--color-page);
   margin-bottom: 6px;
   position: relative;
-  transition: border-color 0.15s;
+  transition: border-color var(--duration-fast);
 
   &:hover {
     border-color: var(--color-primary);
@@ -164,7 +164,7 @@ function saveRules(list: Array<{ id: string; description: string; expression: st
   code {
     background: var(--color-code-bg);
     padding: 1px 4px;
-    border-radius: 3px;
+    border-radius: var(--radius-xs);
   }
 }
 
@@ -176,7 +176,7 @@ function saveRules(list: Array<{ id: string; description: string; expression: st
   font-size: 13px;
   font-weight: 500;
   height: 36px;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   &:hover {
     background: var(--color-primary-bg);
   }

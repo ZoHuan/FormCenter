@@ -1,6 +1,6 @@
 <template>
   <header v-if="visible" class="app-header">
-    <div class="header-left" @click="$router.push('/forms')" style="cursor:pointer">
+    <div class="header-left" @click="$router.push('/forms')" style="cursor: pointer">
       <img src="/logo.svg" width="32" height="32" alt="FormCenter" />
       <span class="header-title">FormCenter</span>
     </div>
@@ -23,7 +23,7 @@ const visible = computed(() => !route.path.startsWith('/formDesigner') && !route
   padding: 0 24px;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--z-sticky);
   box-shadow: 0 1px 0 var(--color-border);
 
   .header-left {

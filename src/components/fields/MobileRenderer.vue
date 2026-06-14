@@ -404,9 +404,9 @@ function formatDate(date: Date) {
   color: var(--color-primary);
   background: transparent;
   border: 1px dashed var(--color-primary);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   &:active {
     opacity: 0.7;
   }
@@ -422,7 +422,7 @@ function formatDate(date: Date) {
   font-size: 13px;
   color: var(--color-text-secondary);
   background: var(--color-page);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   margin-bottom: 4px;
 }
 .file-text {
@@ -462,7 +462,7 @@ function formatDate(date: Date) {
     color: var(--color-text-muted);
     padding: 10px 16px;
     background: var(--color-primary-bg);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     line-height: 1.6;
   }
 }

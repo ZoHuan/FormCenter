@@ -91,7 +91,7 @@ function compressImage(dataURL: string, maxSide: number): Promise<string> {
   width: 200px;
   height: 150px;
   border: 2px dashed var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,6 +102,6 @@ function compressImage(dataURL: string, maxSide: number): Promise<string> {
 .preview img {
   max-width: 200px;
   max-height: 150px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 </style>

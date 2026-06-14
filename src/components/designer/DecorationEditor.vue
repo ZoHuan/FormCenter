@@ -60,26 +60,31 @@ function emitUpdate() {
 </script>
 
 <style scoped lang="scss">
-.decoration-editor .prop-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0;
-  padding: 6px 0;
-  gap: 8px;
-}
-.decoration-editor .prop-row label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  width: 72px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.decoration-editor :deep(.el-radio-group) label {
-  width: 60px;
-}
-.decoration-editor :deep(.el-radio-button--small .el-radio-button__inner) {
-  width: 100%;
+.decoration-editor {
+  .prop-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    padding: 6px 0;
+    gap: 8px;
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      width: 72px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
+
+  :deep(.el-radio-group) label {
+    width: 60px;
+  }
+
+  :deep(.el-radio-button--small .el-radio-button__inner) {
+    width: 100%;
+  }
 }
 </style>

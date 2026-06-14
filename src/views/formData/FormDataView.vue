@@ -202,9 +202,9 @@ function formatTime(ts: number) {
   font-weight: 500;
   color: var(--color-text-muted);
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   gap: 6px;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 
   &:hover {
     color: var(--color-primary);
@@ -238,7 +238,7 @@ function formatTime(ts: number) {
 /* ── 表格卡片 ── */
 .table-card {
   background: var(--color-card);
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   box-shadow:
     0 1px 2px rgba(28, 25, 23, 0.03),
     0 4px 12px rgba(28, 25, 23, 0.05);
@@ -276,7 +276,7 @@ function formatTime(ts: number) {
   .el-button {
     height: 36px;
     font-weight: 600;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 13px;
   }
 }
@@ -377,7 +377,7 @@ function formatTime(ts: number) {
 
   .el-button {
     height: 40px;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     font-weight: 600;
     padding: 0 28px;
   }
@@ -406,15 +406,6 @@ function formatTime(ts: number) {
 
   &:not(:last-child) {
     margin-right: 16px;
-  }
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
   }
 }
 </style>

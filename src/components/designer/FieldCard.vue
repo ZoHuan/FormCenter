@@ -105,7 +105,7 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
   overflow: hidden;
   cursor: grab;
-  transition: all 0.25s cubic-bezier(0.3, 0, 0.2, 1);
+  transition: all var(--duration-normal) var(--ease-in-out);
 
   &:hover {
     border-color: var(--color-primary);
@@ -188,7 +188,7 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   flex-shrink: 0;
   border-radius: var(--radius-sm);
   opacity: 0;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 }
 .btn-copy {
   width: 28px;
@@ -224,7 +224,7 @@ const isDate = computed(() => ['date', 'date-range'].includes(props.schema.type)
   font-size: 13px;
   background: var(--color-page);
   padding: 8px 12px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   width: 100%;
   height: 36px;
   display: flex;

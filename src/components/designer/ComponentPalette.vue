@@ -180,7 +180,7 @@ function typeLabel(t: string) {
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: color 0.15s;
+  transition: color var(--duration-fast);
   position: sticky;
   top: 49px;
   background: var(--color-page);
@@ -193,7 +193,7 @@ function typeLabel(t: string) {
 .arrow-icon {
   color: var(--color-text-muted);
   flex-shrink: 0;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal);
   &.open {
     transform: rotate(90deg);
     color: var(--color-primary);
@@ -211,7 +211,7 @@ function typeLabel(t: string) {
   font-weight: 600;
   color: var(--color-text-muted);
   background: var(--color-canvas);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 2px 6px;
   min-width: 18px;
   text-align: center;
@@ -225,8 +225,8 @@ function typeLabel(t: string) {
   max-height: 800px;
   overflow: hidden;
   transition:
-    max-height 0.3s cubic-bezier(0.3, 0, 0.2, 1),
-    padding 0.3s ease;
+    max-height var(--duration-slow) var(--ease-in-out),
+    padding var(--duration-slow);
   &.collapsed {
     max-height: 0;
     padding-top: 0;
@@ -245,12 +245,12 @@ function typeLabel(t: string) {
   color: var(--color-text);
   cursor: grab;
   border-radius: var(--radius-sm);
-  transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
+  transition: all var(--duration-normal) var(--ease-in-out);
 
   .item-icon {
     color: var(--color-text-muted);
     flex-shrink: 0;
-    transition: all 0.2s ease;
+    transition: all var(--duration-normal);
   }
   .item-label {
     flex: 1;
@@ -261,7 +261,7 @@ function typeLabel(t: string) {
   .item-grip {
     color: var(--color-border-hover);
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity var(--duration-normal);
     flex-shrink: 0;
   }
 

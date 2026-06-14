@@ -254,7 +254,7 @@ function handleReopen(row: FormSchema) {
 .list-content {
   max-width: 780px;
   margin: 0 auto;
-  padding: 48px 24px 64px;
+  padding: var(--space-12) var(--space-6) var(--space-16);
 }
 
 /* ── 品牌装饰条 ── */
@@ -327,9 +327,9 @@ function handleReopen(row: FormSchema) {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-xs);
   overflow: hidden;
-  animation: card-enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
+  animation: card-enter var(--duration-spring) both;
   border-left: 4px solid transparent;
-  transition: all 0.25s ease-out;
+  transition: all var(--duration-normal);
 
   &:hover {
     box-shadow: var(--shadow-sm);
@@ -358,7 +358,7 @@ function handleReopen(row: FormSchema) {
 .fc-body {
   padding: 20px 24px 16px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background var(--duration-fast);
 }
 
 .fc-header {
@@ -386,7 +386,7 @@ function handleReopen(row: FormSchema) {
   flex-shrink: 0;
   .el-button {
     gap: 4px;
-    transition: transform 0.1s ease-out;
+    transition: transform var(--duration-instant);
   }
   .el-button:active {
     transform: scale(0.97);
@@ -453,7 +453,7 @@ function handleReopen(row: FormSchema) {
     font-weight: 500;
     border-radius: var(--radius-md);
     gap: 6px;
-    transition: transform 0.1s ease-out;
+    transition: transform var(--duration-instant);
     &:active {
       transform: scale(0.98);
     }
@@ -464,7 +464,7 @@ function handleReopen(row: FormSchema) {
 .no-result {
   text-align: center;
   color: var(--color-text-muted);
-  padding: 48px 0;
+  padding: var(--space-12) 0;
   font-size: 15px;
 }
 
@@ -485,6 +485,7 @@ function handleReopen(row: FormSchema) {
   flex-direction: column;
   gap: 12px;
 }
+
 .skeleton-card {
   height: 76px;
   padding: 20px 24px;
@@ -492,6 +493,7 @@ function handleReopen(row: FormSchema) {
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
 }
+
 .sk-line {
   height: 14px;
   border-radius: 4px;
@@ -499,20 +501,13 @@ function handleReopen(row: FormSchema) {
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
 }
+
 .sk-title {
   width: 40%;
   margin-bottom: 10px;
 }
 .sk-meta {
   width: 65%;
-}
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
 }
 
 /* ── 模板弹窗 ── */
@@ -521,35 +516,41 @@ function handleReopen(row: FormSchema) {
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
+
 .template-card {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 24px 20px;
   cursor: pointer;
-  transition: all 0.2s ease-out;
+  transition: all var(--duration-normal);
   text-align: center;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+  }
 }
-.template-card:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-2px);
-}
+
 .tpl-icon {
   color: var(--color-primary);
   margin-bottom: 12px;
   display: flex;
   justify-content: center;
 }
+
 .tpl-name {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 6px;
 }
+
 .tpl-desc {
   font-size: 13px;
   color: var(--color-text-secondary);
   margin-bottom: 10px;
 }
+
 .tpl-count {
   font-size: 12px;
   color: var(--color-primary);

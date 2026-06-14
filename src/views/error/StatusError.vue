@@ -50,7 +50,7 @@ const msg = (useRoute().query.msg as string) ?? '操作失败'
 
   .el-button {
     height: 44px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     font-weight: 600;
     font-size: 15px;
     padding: 0 28px;

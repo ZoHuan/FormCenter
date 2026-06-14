@@ -357,3 +357,13 @@ a {
   --van-button-primary-background: var(--color-primary);
   --van-button-primary-border-color: var(--color-primary);
 }
+
+/* ── 骨架屏闪烁 ── */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

@@ -438,11 +438,9 @@ function getMultiSelectLabel(val: unknown, col: any): string {
 
 .mobile-row-card {
   background: var(--color-card);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-
-  // van-field 默认就有分割线，不需要额外处理
 }
 
 .mobile-row-head {

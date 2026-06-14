@@ -245,8 +245,8 @@ function handlePublish() {
     font-size: 13px;
     font-weight: 500;
     padding: 6px 10px;
-    border-radius: 8px;
-    transition: all 0.15s;
+    border-radius: var(--radius-md);
+    transition: all var(--duration-fast);
 
     &:hover {
       color: var(--color-primary);
@@ -304,12 +304,12 @@ function handlePublish() {
   align-items: center;
 
   .el-button {
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 13px;
     font-weight: 600;
     height: 36px;
     padding: 0 18px;
-    transition: all 0.15s;
+    transition: all var(--duration-fast);
   }
 
   .el-button--primary {
