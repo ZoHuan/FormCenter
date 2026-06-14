@@ -4,11 +4,15 @@
     <div class="data-content">
       <!-- 头区 -->
       <div class="page-hero">
-        <el-button link class="back-btn" @click="$router.push('/forms')">← 返回</el-button>
-        <h1>{{ schema?.title }}</h1>
-        <p class="hero-stat">
-          <span class="stat-num">{{ subStore.submissions.length }}</span> 条提交记录
-        </p>
+        <div class="hero-top">
+          <el-button link class="back-btn" @click="$router.push('/forms')"
+            ><ArrowLeft :size="16" />返回表单列表</el-button
+          >
+        </div>
+        <div class="hero-main">
+          <h1>{{ schema?.title }}</h1>
+          <span class="hero-accent"></span>
+        </div>
       </div>
 
       <!-- 骨架 -->
@@ -78,7 +82,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { exportToExcel } from '@/utils/excel'
 import { copyToClipboard } from '@/utils/clipboard'
-import { Download, Table2 } from 'lucide-vue-next'
+import { Download, Table2, ArrowLeft } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 
 const route = useRoute()
@@ -186,39 +190,49 @@ function formatTime(ts: number) {
 
 /* ── 头区 ── */
 .page-hero {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+}
 
-  .back-btn {
-    font-size: 13px;
-    color: var(--color-text-muted);
-    margin-bottom: 20px;
-    padding: 4px 8px;
-    border-radius: 6px;
+.hero-top {
+  margin-bottom: 20px;
+}
 
-    &:hover {
-      color: var(--color-primary);
-      background: rgba(45, 106, 79, 0.06);
-    }
+.back-btn {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  gap: 6px;
+  transition: all 0.15s;
+
+  &:hover {
+    color: var(--color-primary);
+    background: rgba(45, 106, 79, 0.06);
   }
+}
+
+.hero-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
   h1 {
     font-size: 28px;
     font-weight: 700;
     color: var(--color-text);
-    margin: 0 0 8px;
+    margin: 0;
     letter-spacing: -0.02em;
+    line-height: 1.3;
   }
 }
 
-.hero-stat {
-  font-size: 14px;
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
-.stat-num {
-  font-weight: 700;
-  color: var(--color-primary);
+.hero-accent {
+  width: 4px;
+  height: 28px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 /* ── 表格卡片 ── */
