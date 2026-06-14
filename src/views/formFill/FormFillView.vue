@@ -45,10 +45,16 @@
             <button :class="{ active: previewMode === 'pc' }" @click="previewMode = 'pc'">PC</button>
           </div>
         </div>
-        <div class="form-card" :class="{ 'phone-frame': isPreview && previewMode === 'mobile' }">
-          <div v-if="isPreview && previewMode === 'mobile'" class="phone-notch"></div>
+
+        <!-- 头区：独立于卡片 -->
+        <div class="form-hero">
           <h1 class="form-title">{{ schema?.title }}</h1>
           <p v-if="schema?.description" class="form-desc">{{ schema.description }}</p>
+        </div>
+
+        <!-- 卡片 -->
+        <div class="form-card" :class="{ 'phone-frame': isPreview && previewMode === 'mobile' }">
+          <div v-if="isPreview && previewMode === 'mobile'" class="phone-notch"></div>
 
           <div class="fields">
             <div v-for="(row, ri) in layoutRows" :key="ri" class="field-row">
@@ -83,19 +89,25 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="form-actions">
-            <Transition name="fade">
-              <p v-if="autoSaveHint" class="auto-save-hint">已自动保存</p>
-            </Transition>
-            <template v-if="!isPreview">
-              <el-button @click="handleSaveDraft">暂存</el-button>
-              <el-button type="primary" size="large" :loading="submitting" @click="handleSubmit">提交</el-button>
-            </template>
-            <el-tooltip v-else content="预览模式下无法提交" placement="top">
-              <el-button type="primary" size="large" disabled>提交</el-button>
-            </el-tooltip>
-          </div>
+        <!-- 按钮区 -->
+        <div class="form-actions">
+          <Transition name="fade">
+            <p v-if="autoSaveHint" class="auto-save-hint">已自动保存</p>
+          </Transition>
+          <template v-if="!isPreview">
+            <div class="actions-row">
+              <el-button class="btn-draft" @click="handleSaveDraft">暂存草稿</el-button>
+              <el-button class="btn-submit" :loading="submitting" @click="handleSubmit">确认提交</el-button>
+            </div>
+          </template>
+          <el-tooltip v-else content="预览模式下无法提交" placement="top">
+            <div class="actions-row">
+              <el-button class="btn-draft" disabled>暂存草稿</el-button>
+              <el-button class="btn-submit" disabled>确认提交</el-button>
+            </div>
+          </el-tooltip>
         </div>
       </div>
     </template>
@@ -348,11 +360,17 @@ function handleBackToDesigner() {
 <style scoped lang="scss">
 .fill-page {
   min-height: 100vh;
-  background: var(--color-page);
+  background:
+    radial-gradient(circle at 50% 0%, #f0f4ef 0%, var(--color-page) 60%),
+    radial-gradient(circle, rgba(45, 106, 79, 0.03) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    24px 24px;
   display: flex;
   justify-content: center;
-  padding: 24px 16px;
+  padding: 0 16px 64px;
 }
+
 .fill-center {
   max-width: 720px;
   width: 100%;
@@ -361,107 +379,203 @@ function handleBackToDesigner() {
   justify-content: center;
   min-height: 60vh;
 }
+
 .fill-success {
   flex-direction: column;
   text-align: center;
-  gap: 16px;
+  gap: 12px;
+  background: var(--color-card);
+  border-radius: 24px;
+  padding: 56px 32px;
+  box-shadow:
+    0 2px 4px rgba(28, 25, 23, 0.03),
+    0 8px 24px rgba(28, 25, 23, 0.06);
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
 }
+
 .success-icon {
-  width: 72px;
-  height: 72px;
-  background: var(--color-success);
-  color: var(--color-card);
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #5b7b4a, #4a6a3d);
+  color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  box-shadow: 0 4px 16px rgba(91, 123, 74, 0.2);
+  box-shadow: 0 8px 28px rgba(91, 123, 74, 0.3);
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
 }
+
 .success-actions {
   display: flex;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 20px;
+  justify-content: center;
 }
+
 .draft-dialog {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 8px 0;
+  gap: 12px;
+  padding: 48px 32px;
+  background: var(--color-card);
+  border-radius: 24px;
+  box-shadow:
+    0 2px 4px rgba(28, 25, 23, 0.03),
+    0 8px 24px rgba(28, 25, 23, 0.06);
+  max-width: 400px;
+  width: 100%;
 
-  .dialog-title {
+  p {
+    margin: 0;
     font-size: 16px;
-    font-weight: 600;
     color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .draft-time {
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+
+  .el-button {
+    height: 44px;
+    border-radius: 12px;
+    font-weight: 600;
   }
 }
-.draft-time {
-  color: var(--color-text-muted);
-  font-size: 13px;
-}
-.draft-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 8px;
-}
 .fill-form {
-  max-width: 720px;
+  max-width: 680px;
   width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
-.form-card {
-  background: var(--color-card);
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
-  border-top: 3px solid var(--color-primary);
+
+/* ── 头区 ── */
+.form-hero {
+  text-align: center;
+  padding: 40px 24px 64px;
+  position: relative;
+  z-index: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(45, 106, 79, 0.06) 0%, transparent 60%),
+      radial-gradient(circle at 80% 30%, rgba(45, 106, 79, 0.03) 0%, transparent 40%);
+    pointer-events: none;
+  }
 }
+
 .form-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.3;
+  position: relative;
+  z-index: 1;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 52px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), rgba(45, 106, 79, 0.3));
+    border-radius: 2px;
+    margin: 20px auto 0;
+  }
 }
+
 .form-desc {
   color: var(--color-text-secondary);
-  font-size: 14px;
-  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 20px 0 0;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
+  font-weight: 400;
 }
+
+/* ── 卡片·悬浮于头区之上 ── */
+.form-card {
+  background: var(--color-card);
+  border-radius: 24px;
+  padding: 40px 48px;
+  margin-top: -32px;
+  position: relative;
+  z-index: 2;
+  box-shadow:
+    0 2px 4px rgba(28, 25, 23, 0.03),
+    0 8px 24px rgba(28, 25, 23, 0.06),
+    0 24px 64px rgba(28, 25, 23, 0.08);
+  border: 1px solid rgba(28, 25, 23, 0.04);
+}
+
+/* ── 表单字段（保持不变） ── */
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
+
 .field-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
 }
+
 .field-item {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 
-  // APP排版：左右排列模式（桌面端默认）
+  // APP排版：左右排列模式
   &.app-style-horizontal {
     @media (min-width: 721px) {
-      // 装饰类组件不参与左右排列
       &:not(.is-decor) {
         flex-direction: row;
         align-items: flex-start;
+        gap: 20px;
 
         .field-label {
-          width: 80px;
+          width: 90px;
           flex-shrink: 0;
           text-align: right;
-          padding-right: 12px;
-          line-height: 1.4;
-          margin-top: 12px;
+          padding-right: 0;
+          line-height: 1.5;
+          margin-top: 10px;
         }
 
         .field-input {
           flex: 1;
+          min-width: 0;
         }
       }
     }
@@ -470,49 +584,127 @@ function handleBackToDesigner() {
   // APP排版：上下排列模式
   &.app-style-vertical {
     .field-label {
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
   }
 
-  // 移动端适配
+  // ── 真实移动端适配 ──
   @media (max-width: 720px) {
-    flex: 0 0 100% !important; // 移动端强制满宽
+    .field-item {
+      flex: 0 0 100% !important;
 
-    // 移动端所有组件标签都在上方
-    .field-label {
-      margin-bottom: 8px;
+      .field-label {
+        margin-bottom: 4px;
+      }
+    }
+
+    .form-hero {
+      padding: 24px 20px 44px;
+
+      &::before {
+        opacity: 0.6;
+      }
+    }
+
+    .form-title {
+      font-size: 22px;
+
+      &::after {
+        width: 36px;
+        height: 3px;
+        margin-top: 14px;
+      }
+    }
+
+    .form-desc {
+      font-size: 14px;
+      margin-top: 14px;
+    }
+
+    .form-card {
+      margin-top: -24px;
+      padding: 28px 16px;
+      border-radius: 20px 20px 0 0;
+      box-shadow:
+        0 -2px 12px rgba(28, 25, 23, 0.06),
+        0 -8px 32px rgba(28, 25, 23, 0.08);
+      border: none;
+    }
+
+    .form-actions {
+      margin-top: 32px;
+      padding: 0 16px 24px;
+    }
+
+    .actions-row {
+      gap: 10px;
     }
   }
 }
+
 .field-label {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.01em;
+
+  .required {
+    color: var(--color-error);
+    margin-left: 2px;
+  }
 }
+
 .field-label.stacked {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
-.required {
-  color: var(--color-error);
-}
+// ── 输入框下划线风格 ──
 .field-input :deep(.el-input__wrapper),
 .field-input :deep(.el-select__wrapper) {
   border-radius: 0;
   box-shadow: inset 0 -1px 0 0 var(--color-border);
   background: transparent;
-  padding: 0;
-  height: 48px;
-  transition: box-shadow 0.2s ease-out;
+  padding: 0 2px;
+  height: 44px;
+  transition:
+    box-shadow 0.2s ease,
+    background 0.15s;
 
   &:hover {
     box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+    background: rgba(246, 248, 245, 0.5);
   }
 }
+
 .field-input :deep(.el-input.is-focus .el-input__wrapper),
 .field-input :deep(.el-select.is-focus .el-select__wrapper) {
   box-shadow: inset 0 -2px 0 0 var(--color-primary);
+  background: rgba(45, 106, 79, 0.02);
 }
+
 .field-input :deep(.el-input.is-error .el-input__wrapper) {
   box-shadow: inset 0 -2px 0 0 var(--color-error);
+}
+
+.field-input :deep(.el-textarea__inner) {
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 0 var(--color-border);
+  background: transparent;
+  min-height: 80px;
+  padding: 8px 2px;
+  resize: vertical;
+  transition:
+    box-shadow 0.2s ease,
+    background 0.15s;
+
+  &:hover {
+    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+    background: rgba(246, 248, 245, 0.5);
+  }
+
+  &:focus {
+    box-shadow: inset 0 -2px 0 0 var(--color-primary);
+    background: rgba(45, 106, 79, 0.02);
+  }
 }
 
 @media (min-width: 768px) {
@@ -521,42 +713,78 @@ function handleBackToDesigner() {
     height: 40px;
   }
 }
-.field-input :deep(.el-textarea__inner) {
-  border-radius: 0;
-  box-shadow: inset 0 -1px 0 0 var(--color-border);
-  background: transparent;
-  min-height: 80px;
-  padding: 8px 0;
-  resize: vertical;
-  transition: box-shadow 0.2s ease-out;
-
-  &:hover {
-    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
-  }
-  &:focus {
-    box-shadow: inset 0 -2px 0 0 var(--color-primary);
-  }
-}
 .field-error {
   color: var(--color-error);
   font-size: 12px;
 }
 
+/* ── 按钮区 ── */
 .form-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid var(--color-canvas);
+  margin-top: 44px;
+  padding: 0 24px 32px;
+}
 
-  .el-button--large {
-    width: 100%;
-    max-width: 320px;
-    height: 48px;
-    font-size: 15px;
-    border-radius: var(--radius-full);
+.actions-row {
+  display: flex;
+  gap: 14px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.btn-draft {
+  flex: 1;
+  height: 52px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 14px;
+  color: var(--color-text-secondary);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.04);
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-border-hover);
+    color: var(--color-text);
+    box-shadow: 0 4px 12px rgba(28, 25, 23, 0.06);
+    transform: translateY(-1px);
+  }
+}
+
+.btn-submit {
+  flex: 1;
+  height: 52px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #3d7e5c 100%);
+  color: #fff;
+  border: none;
+  letter-spacing: 0.04em;
+  box-shadow:
+    0 4px 16px rgba(45, 106, 79, 0.2),
+    0 1px 4px rgba(45, 106, 79, 0.1);
+  transition:
+    all 0.2s ease,
+    transform 0.15s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 28px rgba(45, 106, 79, 0.28),
+      0 2px 6px rgba(45, 106, 79, 0.15);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(45, 106, 79, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 }
 
@@ -596,19 +824,19 @@ function handleBackToDesigner() {
   height: 48px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 20px;
   background: var(--color-card);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   gap: 12px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: 0 1px 0 var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.06);
 }
 
 .preview-tag {
   font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  background: var(--color-canvas);
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
   border-radius: 4px;
   padding: 2px 10px;
   margin-left: 12px;
@@ -618,15 +846,16 @@ function handleBackToDesigner() {
   margin-left: auto;
   display: flex;
   background: var(--color-canvas);
-  border-radius: var(--radius-md);
-  padding: 2px;
+  border-radius: 8px;
+  padding: 3px;
   gap: 2px;
 
   button {
-    padding: 4px 14px;
+    padding: 4px 16px;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: 6px;
     font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     background: transparent;
     color: var(--color-text-muted);
@@ -635,7 +864,7 @@ function handleBackToDesigner() {
     &.active {
       background: var(--color-card);
       color: var(--color-primary);
-      box-shadow: var(--shadow-xs);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     }
   }
 }
@@ -648,19 +877,27 @@ function handleBackToDesigner() {
 .phone-frame {
   max-width: 375px;
   margin: 0 auto;
-  border: 7px solid var(--color-text);
-  border-radius: 28px;
-  padding: 24px 16px;
+  border: 8px solid #2c2c2e;
+  border-radius: 32px;
+  padding: 32px 18px 24px;
   min-height: 600px;
   position: relative;
   background: var(--color-card);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+
+  .form-card {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+  }
 }
 
 .phone-notch {
   width: 120px;
-  height: 28px;
-  background: var(--color-text);
-  border-radius: 0 0 14px 14px;
-  margin: -24px auto 16px;
+  height: 30px;
+  background: #2c2c2e;
+  border-radius: 0 0 16px 16px;
+  margin: -32px auto 20px;
 }
 </style>
