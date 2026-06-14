@@ -25,7 +25,7 @@ export const useFormListStore = defineStore('formList', () => {
       let hasFix = false
       forms.value.forEach((f) => {
         f.components?.forEach((c) => {
-          if (!c.field && !DECOR_TYPES.includes(c.type as any)) {
+          if (!c.field && !(DECOR_TYPES as readonly string[]).includes(c.type)) {
             c.field = `${c.type}_${c.id.slice(0, 8)}`
             hasFix = true
           }

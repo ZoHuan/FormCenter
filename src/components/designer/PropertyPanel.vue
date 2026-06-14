@@ -178,7 +178,7 @@
       <div :class="{ collapsed: !openSections.crossTable }" class="section-body">
         <div class="prop-row">
           <label>行标签</label>
-          <span class="label-count">{{ (crossRowLabels as any[]).length }}项</span>
+          <span class="label-count">{{ crossRowLabels.length }}项</span>
         </div>
         <div class="options-list" style="margin-bottom: 6px">
           <div v-for="(opt, i) in crossRowLabels" :key="i" class="option-row">
@@ -191,7 +191,7 @@
         <el-button class="btn-add" @click="addCrossRowLabel"><Plus :size="14" />添加行标签</el-button>
         <div class="prop-row" style="margin-top: 12px">
           <label>列标签</label>
-          <span class="label-count">{{ (crossColLabels as any[]).length }}项</span>
+          <span class="label-count">{{ crossColLabels.length }}项</span>
         </div>
         <div class="options-list" style="margin-bottom: 6px">
           <div v-for="(opt, i) in crossColLabels" :key="i" class="option-row">
@@ -396,8 +396,9 @@ const hasAdvanced = computed(
     hasAppStyle.value,
 )
 
-const optionList = computed<any[]>({
-  get: () => ((comp.props as Record<string, unknown>)?.options as any[]) ?? [],
+type OptionItem = { label: string; value: string; children?: OptionItem[] }
+const optionList = computed<OptionItem[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.options as OptionItem[]) ?? [],
   set: () => {},
 })
 
@@ -589,13 +590,14 @@ function onTableInitialRowsChange(v: number) {
 }
 
 // ── 交叉表 ──
-const crossRowLabels = computed<any[]>({
-  get: () => ((comp.props as Record<string, unknown>)?.rowLabels as any[]) ?? [],
+type CrossLabel = { label: string; value: string }
+const crossRowLabels = computed<CrossLabel[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.rowLabels as CrossLabel[]) ?? [],
   set: () => {},
 })
 
-const crossColLabels = computed<any[]>({
-  get: () => ((comp.props as Record<string, unknown>)?.colLabels as any[]) ?? [],
+const crossColLabels = computed<CrossLabel[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.colLabels as CrossLabel[]) ?? [],
   set: () => {},
 })
 
@@ -605,11 +607,11 @@ const crossTableShowIndex = computed({
 })
 
 function addCrossRowLabel() {
-  const list = [
-    ...(crossRowLabels.value as any[]),
+  const list: CrossLabel[] = [
+    ...crossRowLabels.value,
     {
-      label: `行${(crossRowLabels.value as any[]).length + 1}`,
-      value: `r${(crossRowLabels.value as any[]).length + 1}`,
+      label: `行${crossRowLabels.value.length + 1}`,
+      value: `r${crossRowLabels.value.length + 1}`,
     },
   ]
   ensureProps().rowLabels = list
@@ -617,17 +619,17 @@ function addCrossRowLabel() {
 }
 
 function removeCrossRowLabel(i: number) {
-  const list = (crossRowLabels.value as any[]).filter((_: unknown, idx: number) => idx !== i)
+  const list = crossRowLabels.value.filter((_, idx) => idx !== i)
   ensureProps().rowLabels = list
   emitUpdate()
 }
 
 function addCrossColLabel() {
-  const list = [
-    ...(crossColLabels.value as any[]),
+  const list: CrossLabel[] = [
+    ...crossColLabels.value,
     {
-      label: `列${(crossColLabels.value as any[]).length + 1}`,
-      value: `c${(crossColLabels.value as any[]).length + 1}`,
+      label: `列${crossColLabels.value.length + 1}`,
+      value: `c${crossColLabels.value.length + 1}`,
     },
   ]
   ensureProps().colLabels = list
@@ -635,7 +637,7 @@ function addCrossColLabel() {
 }
 
 function removeCrossColLabel(i: number) {
-  const list = (crossColLabels.value as any[]).filter((_: unknown, idx: number) => idx !== i)
+  const list = crossColLabels.value.filter((_, idx) => idx !== i)
   ensureProps().colLabels = list
   emitUpdate()
 }

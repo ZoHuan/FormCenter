@@ -272,10 +272,6 @@ function applyTriggerRule(comps: ComponentSchema[], rule: TriggerRule, match: bo
   }
 }
 
-function isSelectType(t: string) {
-  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree-structure'].includes(t)
-}
-
 function isDecorType(t: string) {
   return (DECOR_TYPES as string[]).includes(t)
 }
@@ -330,11 +326,15 @@ async function handleSubmit() {
       document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     return
   }
-  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
+  try {
+    await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+  } catch {
+    return
+  }
   submitting.value = true
   const ok = subStore.submit(schema.value.id, { ...formData })
   submitting.value = false

@@ -273,8 +273,8 @@ const dateRangeLabel = computed(() => {
   return Array.isArray(v) && v.length === 2 ? `${v[0]} 至 ${v[1]}` : ''
 })
 
-const fileList = ref<Array<{ url: string }>>([])
-const singleImageList = ref<Array<{ url: string }>>([])
+const fileList = ref<Array<{ file?: File; url?: string }>>([])
+const singleImageList = ref<Array<{ file?: File; url?: string }>>([])
 const showPicker = ref(false),
   showCascader = ref(false),
   showTree = ref(false),
@@ -307,14 +307,14 @@ function onDateRangeConfirm(dates: Date[]) {
   showDateRangePicker.value = false
 }
 function onUploadChange(list: Array<{ file?: File; url?: string }>) {
-  fileList.value = list as any
+  fileList.value = list
   emit(
     'update:modelValue',
     list.map((f) => (f.file ? f.file.name : '')),
   )
 }
 function onSingleImageChange(list: Array<{ file?: File; url?: string }>) {
-  singleImageList.value = list as any
+  singleImageList.value = list
   if (list.length && list[0].file) emit('update:modelValue', list[0].file.name)
 }
 function removeFile(i: number) {

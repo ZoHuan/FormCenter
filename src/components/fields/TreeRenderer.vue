@@ -13,5 +13,12 @@ import { computed } from 'vue'
 import type { ComponentSchema } from '@/types'
 const props = defineProps<{ comp: ComponentSchema; modelValue: unknown }>()
 defineEmits<{ 'update:modelValue': [value: unknown] }>()
-const treeData = computed(() => ((props.comp.props as Record<string, unknown>)?.options as any[]) ?? [])
+const treeData = computed<Array<{ label: string; value: string; children?: unknown[] }>>(
+  () =>
+    ((props.comp.props as Record<string, unknown>)?.options as Array<{
+      label: string
+      value: string
+      children?: unknown[]
+    }>) ?? [],
+)
 </script>

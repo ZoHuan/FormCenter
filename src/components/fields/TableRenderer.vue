@@ -341,11 +341,6 @@ function getSelectLabel(val: unknown, col: any): string {
   const opts = getColumnOptions(col)
   return opts.find((o) => o.value === val)?.label ?? ''
 }
-function getMultiSelectLabel(val: unknown, col: any): string {
-  const opts = getColumnOptions(col)
-  if (!Array.isArray(val)) return ''
-  return (val as string[]).map((v) => opts.find((o) => o.value === v)?.label ?? v).join(', ')
-}
 </script>
 
 <style scoped lang="scss">

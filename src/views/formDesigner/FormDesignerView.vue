@@ -175,31 +175,17 @@ function handleMoveComponent(from: number, to: number) {
 
 async function handleBack() {
   if (store.isDirty) {
-    await ElMessageBox.confirm('有未保存的修改，是否离开？', '提示', {
-      confirmButtonText: '不保存',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
+    try {
+      await ElMessageBox.confirm('有未保存的修改，是否离开？', '提示', {
+        confirmButtonText: '不保存',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+    } catch {
+      return
+    }
   }
   router.push('/forms')
-}
-
-function handleSave() {
-  if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
-  const id = store.save()
-  ElMessage.success('保存成功')
-  if (route.path === '/formDesigner') router.replace(`/formDesigner/${id}`)
-}
-
-function toggleStatus(status: 'draft' | 'open' | 'closed') {
-  if (status === 'open' && store.components.length === 0) return ElMessage.warning('请先添加组件')
-  if (store.schema) {
-    store.schema.status = status
-    store.save()
-  }
-  ElMessage.success(
-    status === 'open' ? '已发布，可通过链接收集数据' : status === 'closed' ? '已停止收集' : '已切换为草稿',
-  )
 }
 
 function handleSaveDraft() {
