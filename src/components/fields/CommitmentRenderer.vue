@@ -27,20 +27,25 @@ function handleChange(checked: boolean) {
 <style scoped lang="scss">
 .commitment-field {
   width: 100%;
-  height: 32px;
   display: flex;
   align-items: center;
 
   :deep(.el-checkbox) {
     display: flex;
-    align-items: center;
+    align-items: start;
     gap: 8px;
     height: auto;
+
+    .el-checkbox__input {
+      display: flex;
+      align-items: center;
+      height: 30px;
+    }
   }
 
   :deep(.el-checkbox__label) {
     white-space: normal;
-    line-height: 1.6;
+    line-height: 30px;
     font-size: 14px;
     color: var(--color-text-secondary);
   }

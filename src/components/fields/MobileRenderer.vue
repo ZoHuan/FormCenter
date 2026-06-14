@@ -138,13 +138,23 @@
       is-link
       :placeholder="comp.description"
     />
-    <van-cell v-else-if="comp.type === 'commitment'">
-      <template #title
-        ><van-checkbox :model-value="!!modelValue" @update:model-value="(v) => onChange(v ? [{ value: '1' }] : [])">{{
-          comp.description || '本人确认以上信息属实'
-        }}</van-checkbox></template
-      >
-    </van-cell>
+    <van-field
+      v-else-if="comp.type === 'commitment'"
+      :label="comp.label"
+      :required="comp.required"
+      class="commitment-field"
+    >
+      <template #input>
+        <van-checkbox
+          :model-value="!!modelValue"
+          shape="square"
+          icon-size="16"
+          @update:model-value="(v) => onChange(v ? [{ value: '1' }] : [])"
+        >
+          {{ comp.description || '本人确认以上信息属实' }}</van-checkbox
+        >
+      </template>
+    </van-field>
     <van-field
       v-else-if="comp.type === 'tree-structure'"
       :model-value="cascaderText"
@@ -368,6 +378,21 @@ function formatDate(date: Date) {
   }
   :deep(.van-uploader__input-wrapper) {
     display: flex !important;
+  }
+}
+.commitment-field {
+  :deep(.van-checkbox) {
+    align-items: start;
+
+    .van-checkbox__icon {
+      display: flex;
+      align-items: center;
+      height: 24px;
+    }
+
+    .van-checkbox__label {
+      line-height: 24px;
+    }
   }
 }
 .upload-btn {

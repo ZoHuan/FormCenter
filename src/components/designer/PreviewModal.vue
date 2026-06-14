@@ -342,7 +342,7 @@ const layoutRows = computed(() => {
       width: 64px;
       flex-shrink: 0;
       text-align: right;
-      line-height: 32px;
+      line-height: 30px;
       font-size: 14px;
       font-weight: 500;
       color: var(--color-text-secondary);
