@@ -57,7 +57,7 @@
     />
     <van-field
       v-else-if="comp.type === 'cascader'"
-      :model-value="cascaderDisplay"
+      :model-value="cascaderText"
       :label="comp.label"
       :required="comp.required"
       readonly
@@ -147,7 +147,7 @@
     </van-cell>
     <van-field
       v-else-if="comp.type === 'tree-structure'"
-      :model-value="(modelValue as string) || ''"
+      :model-value="cascaderText"
       :label="comp.label"
       :required="comp.required"
       readonly
@@ -268,6 +268,7 @@ const singleImageList = ref<Array<{ url: string }>>([])
 const showPicker = ref(false),
   showCascader = ref(false),
   showTree = ref(false),
+  cascaderText = ref(''),
   showDatePicker = ref(false),
   showDateRangePicker = ref(false)
 
@@ -282,6 +283,7 @@ function onPickerConfirm({ selectedOptions }: any) {
   showPicker.value = false
 }
 function onCascaderFinish({ selectedOptions }: any) {
+  cascaderText.value = selectedOptions.map((o: any) => o.text).join(' / ')
   emit('update:modelValue', selectedOptions.map((o: any) => o.value).join('/'))
   showCascader.value = false
   showTree.value = false
@@ -318,25 +320,6 @@ function formatDate(date: Date) {
     d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
 }
-const cascaderDisplay = computed(() => {
-  const v = props.modelValue
-  if (!v) return ''
-  const val = String(v)
-  const find = (opts: any[], t: string): string => {
-    for (const o of opts) {
-      if (o.value === t) return o.label
-      if (o.children) {
-        const f = find(o.children, t)
-        if (f) return f
-      }
-    }
-    return t
-  }
-  return val
-    .split('/')
-    .map((v2) => find(options.value, v2))
-    .join(' / ')
-})
 </script>
 
 <style scoped lang="scss">
