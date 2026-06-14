@@ -75,20 +75,23 @@ function emitUpdate() {
 </script>
 
 <style scoped lang="scss">
-.sig-editor .prop-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0;
-  padding: 6px 0;
-  gap: 8px;
-}
-.sig-editor .prop-row label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  width: 72px;
-  flex-shrink: 0;
-  white-space: nowrap;
+.sig-editor {
+  .prop-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    padding: 6px 0;
+    gap: 8px;
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      width: 72px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
 }
 </style>

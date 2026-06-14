@@ -1,5 +1,12 @@
 <template>
-  <div class="canvas" :class="{ 'drag-over': isDragOver }" @drop.prevent="onDrop" @dragover.prevent="onDragOver" @dragleave="onDragLeave" @click="$emit('select', null)">
+  <div
+    class="canvas"
+    :class="{ 'drag-over': isDragOver }"
+    @drop.prevent="onDrop"
+    @dragover.prevent="onDragOver"
+    @dragleave="onDragLeave"
+    @click="$emit('select', null)"
+  >
     <div v-if="components.length === 0" class="canvas-empty">
       <div class="empty-box">
         <div class="empty-icon"><Layers :size="32" /></div>
@@ -45,7 +52,9 @@ const emit = defineEmits<{ select: [id: string | null]; remove: [id: string]; mo
 const isDragOver = ref(false)
 const localComponents = computed(() => [...props.components])
 
-function onDragOver() { isDragOver.value = true }
+function onDragOver() {
+  isDragOver.value = true
+}
 function onDragLeave(e: DragEvent) {
   if (!(e.currentTarget as HTMLElement)?.contains(e.relatedTarget as HTMLElement)) {
     isDragOver.value = false
@@ -70,39 +79,75 @@ function gridSpan(colspan: number): string {
 </script>
 
 <style scoped lang="scss">
-.canvas { min-height: 400px; }
+.canvas {
+  min-height: 400px;
+
+  &.drag-over {
+    .canvas-card {
+      border-color: var(--color-primary-light);
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+    }
+
+    .canvas-empty .empty-box {
+      border-color: var(--color-primary);
+      background: var(--color-primary-bg);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+  }
+}
 
 .canvas-empty {
-  display: flex; align-items: center; justify-content: center;
-  min-height: 350px; border-radius: var(--radius-lg);
-  background: var(--color-card); box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  box-shadow: var(--shadow-xs);
 }
 
 .empty-box {
   border: 2px dashed var(--color-primary-light);
-  border-radius: var(--radius-lg); padding: 56px 64px; text-align: center;
-  transition: all 0.3s;
+  border-radius: var(--radius-lg);
+  padding: 56px var(--space-16);
+  text-align: center;
+  transition: all var(--duration-slow);
 
   .empty-icon {
-    color: var(--color-primary-light); margin-bottom: 16px;
-    display: flex; justify-content: center; opacity: 0.6;
+    color: var(--color-primary-light);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    opacity: 0.6;
     animation: float 3s ease-in-out infinite;
   }
 
-  p { color: var(--color-text-muted); font-size: 14px; line-height: 1.6; margin: 0; }
-  .empty-main { font-size: 16px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 6px; }
-  .empty-sub { font-size: 13px; }
-}
+  p {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  .empty-main {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .empty-sub {
+    font-size: 13px;
+  }
 }
 
 .canvas-card {
-  background: var(--color-card); border-radius: var(--radius-lg);
-  padding: 28px; box-shadow: 0 2px 12px rgba(28, 25, 23, 0.06);
-  min-height: 400px; border: 1px solid rgba(45, 106, 79, 0.06);
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: 0 2px 12px rgba(28, 25, 23, 0.06);
+  min-height: 400px;
+  border: 1px solid rgba(45, 106, 79, 0.06);
 }
 
 .canvas-list {
@@ -111,8 +156,9 @@ function gridSpan(colspan: number): string {
   gap: 12px;
   align-items: start;
 }
+
 .canvas-row {
-  animation: card-enter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+  animation: card-enter var(--duration-spring);
   min-width: 0;
 }
 
@@ -123,33 +169,5 @@ function gridSpan(colspan: number): string {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   transform: scale(1.02);
-}
-
-.canvas.drag-over {
-  .canvas-card {
-    border-color: var(--color-primary-light);
-    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
-  }
-  .canvas-empty .empty-box {
-    border-color: var(--color-primary);
-    background: var(--color-primary-bg);
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0); }
-  50% { box-shadow: 0 0 0 8px rgba(45, 106, 79, 0.05); }
-}
-
-@keyframes card-enter {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
 </style>

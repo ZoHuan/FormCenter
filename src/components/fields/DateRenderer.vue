@@ -45,9 +45,12 @@ const dateType = computed(() => {
   if (props.comp.type === 'date-range') {
     // 日期区间类型
     switch (configuredType) {
-      case 'yearrange': return 'yearrange'
-      case 'monthrange': return 'monthrange'
-      case 'datetimerange': return 'datetimerange'
+      case 'yearrange':
+        return 'yearrange'
+      case 'monthrange':
+        return 'monthrange'
+      case 'datetimerange':
+        return 'datetimerange'
       case 'daterange':
       default:
         return 'daterange'
@@ -55,10 +58,14 @@ const dateType = computed(() => {
   } else {
     // 单个日期类型
     switch (configuredType) {
-      case 'year': return 'year'
-      case 'month': return 'month'
-      case 'datetime': return 'datetime'
-      case 'timeperiod': return 'datetime' // 时间段使用 datetime
+      case 'year':
+        return 'year'
+      case 'month':
+        return 'month'
+      case 'datetime':
+        return 'datetime'
+      case 'timeperiod':
+        return 'datetime' // 时间段使用 datetime
       case 'date':
       default:
         return 'date'

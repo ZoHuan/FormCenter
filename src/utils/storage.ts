@@ -13,7 +13,12 @@ function getTotalSize(): number {
 }
 
 export function getItem<T>(key: string): T | null {
-  try { const raw = localStorage.getItem(PREFIX + key); return raw ? JSON.parse(raw) : null } catch { return null }
+  try {
+    const raw = localStorage.getItem(PREFIX + key)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
 }
 
 export function setItem<T>(key: string, value: T): boolean {
@@ -25,12 +30,19 @@ export function setItem<T>(key: string, value: T): boolean {
       console.warn(`Storage 已使用 ${pct}%，建议清理旧数据`)
       window.dispatchEvent(new CustomEvent('storage-quota', { detail: { size, pct } }))
     }
-    localStorage.setItem(PREFIX + key, json); return true
-  } catch { return false }
+    localStorage.setItem(PREFIX + key, json)
+    return true
+  } catch {
+    return false
+  }
 }
 
 export function removeItem(key: string): void {
-  try { localStorage.removeItem(PREFIX + key) } catch { /* ignore */ }
+  try {
+    localStorage.removeItem(PREFIX + key)
+  } catch {
+    /* ignore */
+  }
 }
 
 export function getAllKeys(): string[] {
@@ -45,7 +57,9 @@ export function getAllKeys(): string[] {
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION)
-    req.onupgradeneeded = () => { req.result.createObjectStore('files') }
+    req.onupgradeneeded = () => {
+      req.result.createObjectStore('files')
+    }
     req.onsuccess = () => resolve(req.result)
     req.onerror = () => reject(req.error)
   })
@@ -68,7 +82,10 @@ export async function setFile(fileId: string, dataURL: string): Promise<boolean>
   try {
     const db = await openDB()
     return new Promise((resolve) => {
-      const req = db.transaction('files', 'readwrite').objectStore('files').put({ dataURL, createdAt: Date.now() }, fileId)
+      const req = db
+        .transaction('files', 'readwrite')
+        .objectStore('files')
+        .put({ dataURL, createdAt: Date.now() }, fileId)
       req.onsuccess = () => resolve(true)
       req.onerror = () => resolve(false)
     })

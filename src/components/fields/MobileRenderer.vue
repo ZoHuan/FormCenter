@@ -273,8 +273,8 @@ const dateRangeLabel = computed(() => {
   return Array.isArray(v) && v.length === 2 ? `${v[0]} 至 ${v[1]}` : ''
 })
 
-const fileList = ref<Array<{ url: string }>>([])
-const singleImageList = ref<Array<{ url: string }>>([])
+const fileList = ref<Array<{ file?: File; url?: string }>>([])
+const singleImageList = ref<Array<{ file?: File; url?: string }>>([])
 const showPicker = ref(false),
   showCascader = ref(false),
   showTree = ref(false),
@@ -307,14 +307,14 @@ function onDateRangeConfirm(dates: Date[]) {
   showDateRangePicker.value = false
 }
 function onUploadChange(list: Array<{ file?: File; url?: string }>) {
-  fileList.value = list as any
+  fileList.value = list
   emit(
     'update:modelValue',
     list.map((f) => (f.file ? f.file.name : '')),
   )
 }
 function onSingleImageChange(list: Array<{ file?: File; url?: string }>) {
-  singleImageList.value = list as any
+  singleImageList.value = list
   if (list.length && list[0].file) emit('update:modelValue', list[0].file.name)
 }
 function removeFile(i: number) {
@@ -404,9 +404,9 @@ function formatDate(date: Date) {
   color: var(--color-primary);
   background: transparent;
   border: 1px dashed var(--color-primary);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   &:active {
     opacity: 0.7;
   }
@@ -422,7 +422,7 @@ function formatDate(date: Date) {
   font-size: 13px;
   color: var(--color-text-secondary);
   background: var(--color-page);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   margin-bottom: 4px;
 }
 .file-text {
@@ -462,7 +462,7 @@ function formatDate(date: Date) {
     color: var(--color-text-muted);
     padding: 10px 16px;
     background: var(--color-primary-bg);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     line-height: 1.6;
   }
 }

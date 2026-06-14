@@ -126,7 +126,7 @@ const layoutRows = computed(() => {
 .preview-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--z-tooltip);
   background: rgba(22, 20, 19, 0.92);
   backdrop-filter: blur(12px);
   display: flex;
@@ -152,22 +152,22 @@ const layoutRows = computed(() => {
 .preview-toggle {
   display: flex;
   background: rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 3px;
 
   button {
     padding: 6px 18px;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     cursor: pointer;
     background: transparent;
     color: rgba(255, 255, 255, 0.45);
-    transition: all 0.2s;
+    transition: all var(--duration-normal);
 
     &.active {
       background: rgba(255, 255, 255, 0.12);
-      color: #fff;
+      color: var(--color-card);
     }
   }
 }
@@ -187,12 +187,12 @@ const layoutRows = computed(() => {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: all 0.2s;
+  transition: all var(--duration-normal);
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    color: var(--color-card);
   }
 }
 
@@ -210,8 +210,8 @@ const layoutRows = computed(() => {
 
 .form-card {
   background: var(--color-card);
-  border-radius: 16px;
-  padding: 48px 44px;
+  border-radius: var(--radius-xl);
+  padding: var(--space-12) 44px;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.06) inset,
     0 12px 40px rgba(0, 0, 0, 0.14);
@@ -220,7 +220,7 @@ const layoutRows = computed(() => {
     max-width: 375px;
     margin: 0 auto;
     padding: 28px 0 32px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
 
     .form-title {
       font-size: 22px;
@@ -288,7 +288,7 @@ const layoutRows = computed(() => {
       border-top: none;
 
       .el-button--large {
-        border-radius: 8px;
+        border-radius: var(--radius-md);
       }
     }
   }
@@ -380,72 +380,83 @@ const layoutRows = computed(() => {
   margin-left: 3px;
 }
 
-.field-input :deep(.el-input__wrapper),
-.field-input :deep(.el-select__wrapper) {
-  border-radius: 0;
-  box-shadow: inset 0 -1px 0 0 var(--color-border);
-  background: transparent;
-  padding: 0 4px;
-  transition: box-shadow 0.25s ease;
+.field-input {
+  :deep(.el-input__wrapper),
+  :deep(.el-select__wrapper) {
+    height: 32px; // PC 端小尺寸
+    padding: 0 4px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: inset 0 -1px 0 0 var(--color-border);
+    transition: box-shadow var(--duration-normal);
 
-  &:hover {
-    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+    &:hover {
+      box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+    }
   }
-}
-.field-input :deep(.el-input.is-focus .el-input__wrapper),
-.field-input :deep(.el-select.is-focus .el-select__wrapper) {
-  box-shadow: inset 0 -2px 0 0 var(--color-primary);
-}
-.field-input :deep(.el-textarea__inner) {
-  border-radius: 0;
-  box-shadow: inset 0 -1px 0 0 var(--color-border);
-  background: transparent;
-  min-height: 80px;
-  padding: 6px 4px;
-  resize: vertical;
-  transition: box-shadow 0.25s ease;
 
-  &:hover {
-    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
-  }
-  &:focus {
+  :deep(.el-input.is-focus .el-input__wrapper),
+  :deep(.el-select.is-focus .el-select__wrapper) {
     box-shadow: inset 0 -2px 0 0 var(--color-primary);
   }
-}
-.field-input :deep(.el-rate) {
-  vertical-align: middle;
-}
-.field-input :deep(.el-input-number) {
-  width: 140px;
-}
-.field-input :deep(.el-input-number .el-input__wrapper) {
-  padding-right: 30px;
-}
-.field-input :deep(.el-input-number__decrease),
-.field-input :deep(.el-input-number__increase) {
-  width: 26px;
-  height: 50%;
-  background: transparent;
-  border-left: 1px solid transparent;
-  color: var(--color-text-muted);
-  border-radius: 0;
-  transition: all 0.15s;
 
-  &:hover {
-    color: var(--color-primary);
-    background: var(--color-primary-bg);
-    border-left-color: var(--color-border);
-  }
-}
-.field-input :deep(.el-input-number__decrease) {
-  border-bottom: 1px solid transparent;
+  :deep(.el-textarea__inner) {
+    min-height: 80px;
+    padding: 6px 4px;
+    border-radius: 0;
+    background: transparent;
+    resize: vertical;
+    box-shadow: inset 0 -1px 0 0 var(--color-border);
+    transition: box-shadow var(--duration-normal);
 
-  &:hover {
-    border-bottom-color: var(--color-border);
+    &:hover {
+      box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+    }
+    &:focus {
+      box-shadow: inset 0 -2px 0 0 var(--color-primary);
+    }
   }
-}
-.field-input :deep(.relation-field .van-cell) {
-  padding: 0;
+
+  :deep(.el-rate) {
+    vertical-align: middle;
+  }
+
+  :deep(.el-input-number) {
+    width: 140px;
+
+    :deep(.el-input__wrapper) {
+      padding-right: 30px;
+    }
+  }
+
+  :deep(.el-input-number__decrease),
+  :deep(.el-input-number__increase) {
+    width: 26px;
+    height: 50%;
+    border-radius: 0;
+    border-left: 1px solid transparent;
+    background: transparent;
+    color: var(--color-text-muted);
+    transition: all var(--duration-fast);
+
+    &:hover {
+      color: var(--color-primary);
+      background: var(--color-primary-bg);
+      border-left-color: var(--color-border);
+    }
+  }
+
+  :deep(.el-input-number__decrease) {
+    border-bottom: 1px solid transparent;
+
+    &:hover {
+      border-bottom-color: var(--color-border);
+    }
+  }
+
+  :deep(.relation-field .van-cell) {
+    padding: 0;
+  }
 }
 
 /* ── footer ── */
@@ -461,7 +472,7 @@ const layoutRows = computed(() => {
     font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.5px;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     opacity: 0.45;
   }
 }
@@ -474,10 +485,10 @@ const layoutRows = computed(() => {
 
 /* ── transition ── */
 .preview-fade-enter-active {
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-slow);
 }
 .preview-fade-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity var(--duration-normal);
 }
 .preview-fade-enter-from,
 .preview-fade-leave-to {

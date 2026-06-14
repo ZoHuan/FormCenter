@@ -148,7 +148,7 @@ function pickIcon(v: string) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   &:hover {
     border-color: var(--color-primary);
     background: var(--color-card);

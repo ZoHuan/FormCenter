@@ -178,7 +178,7 @@
       <div :class="{ collapsed: !openSections.crossTable }" class="section-body">
         <div class="prop-row">
           <label>行标签</label>
-          <span class="label-count">{{ (crossRowLabels as any[]).length }}项</span>
+          <span class="label-count">{{ crossRowLabels.length }}项</span>
         </div>
         <div class="options-list" style="margin-bottom: 6px">
           <div v-for="(opt, i) in crossRowLabels" :key="i" class="option-row">
@@ -191,7 +191,7 @@
         <el-button class="btn-add" @click="addCrossRowLabel"><Plus :size="14" />添加行标签</el-button>
         <div class="prop-row" style="margin-top: 12px">
           <label>列标签</label>
-          <span class="label-count">{{ (crossColLabels as any[]).length }}项</span>
+          <span class="label-count">{{ crossColLabels.length }}项</span>
         </div>
         <div class="options-list" style="margin-bottom: 6px">
           <div v-for="(opt, i) in crossColLabels" :key="i" class="option-row">
@@ -396,8 +396,9 @@ const hasAdvanced = computed(
     hasAppStyle.value,
 )
 
-const optionList = computed<any[]>({
-  get: () => ((comp.props as Record<string, unknown>)?.options as any[]) ?? [],
+type OptionItem = { label: string; value: string; children?: OptionItem[] }
+const optionList = computed<OptionItem[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.options as OptionItem[]) ?? [],
   set: () => {},
 })
 
@@ -589,13 +590,14 @@ function onTableInitialRowsChange(v: number) {
 }
 
 // ── 交叉表 ──
-const crossRowLabels = computed<any[]>({
-  get: () => ((comp.props as Record<string, unknown>)?.rowLabels as any[]) ?? [],
+type CrossLabel = { label: string; value: string }
+const crossRowLabels = computed<CrossLabel[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.rowLabels as CrossLabel[]) ?? [],
   set: () => {},
 })
 
-const crossColLabels = computed<any[]>({
-  get: () => ((comp.props as Record<string, unknown>)?.colLabels as any[]) ?? [],
+const crossColLabels = computed<CrossLabel[]>({
+  get: () => ((comp.props as Record<string, unknown>)?.colLabels as CrossLabel[]) ?? [],
   set: () => {},
 })
 
@@ -605,11 +607,11 @@ const crossTableShowIndex = computed({
 })
 
 function addCrossRowLabel() {
-  const list = [
-    ...(crossRowLabels.value as any[]),
+  const list: CrossLabel[] = [
+    ...crossRowLabels.value,
     {
-      label: `行${(crossRowLabels.value as any[]).length + 1}`,
-      value: `r${(crossRowLabels.value as any[]).length + 1}`,
+      label: `行${crossRowLabels.value.length + 1}`,
+      value: `r${crossRowLabels.value.length + 1}`,
     },
   ]
   ensureProps().rowLabels = list
@@ -617,17 +619,17 @@ function addCrossRowLabel() {
 }
 
 function removeCrossRowLabel(i: number) {
-  const list = (crossRowLabels.value as any[]).filter((_: unknown, idx: number) => idx !== i)
+  const list = crossRowLabels.value.filter((_, idx) => idx !== i)
   ensureProps().rowLabels = list
   emitUpdate()
 }
 
 function addCrossColLabel() {
-  const list = [
-    ...(crossColLabels.value as any[]),
+  const list: CrossLabel[] = [
+    ...crossColLabels.value,
     {
-      label: `列${(crossColLabels.value as any[]).length + 1}`,
-      value: `c${(crossColLabels.value as any[]).length + 1}`,
+      label: `列${crossColLabels.value.length + 1}`,
+      value: `c${crossColLabels.value.length + 1}`,
     },
   ]
   ensureProps().colLabels = list
@@ -635,7 +637,7 @@ function addCrossColLabel() {
 }
 
 function removeCrossColLabel(i: number) {
-  const list = (crossColLabels.value as any[]).filter((_: unknown, idx: number) => idx !== i)
+  const list = crossColLabels.value.filter((_, idx) => idx !== i)
   ensureProps().colLabels = list
   emitUpdate()
 }
@@ -776,7 +778,7 @@ function onEnableSingleChange(v: boolean) {
   align-items: center;
   gap: 6px;
   color: var(--color-text);
-  transition: background 0.15s;
+  transition: background var(--duration-fast);
 
   &:hover {
     color: var(--color-primary);
@@ -787,21 +789,22 @@ function onEnableSingleChange(v: boolean) {
 .section-arrow {
   color: var(--color-text-muted);
   transition:
-    transform 0.2s ease,
-    color 0.15s;
+    transform var(--duration-normal),
+    color var(--duration-fast);
   flex-shrink: 0;
-}
-.section-arrow.open {
-  transform: rotate(90deg);
-  color: var(--color-primary);
+
+  &.open {
+    transform: rotate(90deg);
+    color: var(--color-primary);
+  }
 }
 .section-body {
   padding: 8px 16px 12px;
   max-height: 600px;
   overflow-y: auto;
   transition:
-    max-height 0.3s cubic-bezier(0.3, 0, 0.2, 1),
-    padding 0.3s ease;
+    max-height var(--duration-slow) var(--ease-in-out),
+    padding var(--duration-slow);
   &.collapsed {
     max-height: 0;
     padding-top: 0;
@@ -817,7 +820,7 @@ function onEnableSingleChange(v: boolean) {
   padding: 6px 0;
   gap: 8px;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.15s;
+  transition: border-color var(--duration-fast);
 
   &:last-child {
     border-bottom: none;
@@ -839,8 +842,8 @@ function onEnableSingleChange(v: boolean) {
     box-shadow: none;
     border-radius: var(--radius-sm);
     transition:
-      border-color 0.2s,
-      box-shadow 0.2s;
+      border-color var(--duration-normal),
+      box-shadow var(--duration-normal);
   }
   :deep(.el-input.is-focus .el-input__wrapper) {
     border-color: var(--color-primary);
@@ -878,7 +881,7 @@ function onEnableSingleChange(v: boolean) {
   gap: 6px;
   padding: 4px 6px;
   border-radius: var(--radius-sm);
-  transition: background 0.15s;
+  transition: background var(--duration-fast);
 
   &:hover {
     background: var(--color-primary-bg);
@@ -929,7 +932,7 @@ function onEnableSingleChange(v: boolean) {
   width: 28px;
   height: 28px;
   border-radius: var(--radius-sm);
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   &:hover {
     color: var(--color-error);
     background: rgba(181, 74, 58, 0.06);
@@ -944,7 +947,7 @@ function onEnableSingleChange(v: boolean) {
   font-size: 13px;
   font-weight: 500;
   height: 36px;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   &:hover {
     border-color: var(--color-primary);
     background: var(--color-primary-bg);
@@ -973,7 +976,7 @@ function onEnableSingleChange(v: boolean) {
   border-radius: var(--radius-md);
   margin-bottom: 8px;
   overflow: hidden;
-  transition: box-shadow 0.15s;
+  transition: box-shadow var(--duration-fast);
 
   &:hover {
     box-shadow: 0 1px 4px rgba(45, 106, 79, 0.08);
@@ -1012,7 +1015,7 @@ function onEnableSingleChange(v: boolean) {
 .col-del {
   color: var(--color-text-muted);
   flex-shrink: 0;
-  transition: color 0.15s;
+  transition: color var(--duration-fast);
 
   &:hover {
     color: var(--color-error);
@@ -1059,7 +1062,7 @@ function onEnableSingleChange(v: boolean) {
   color: var(--color-primary);
   font-size: 13px;
   height: 36px;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 
   &:hover {
     background: var(--color-primary-bg);
@@ -1071,7 +1074,7 @@ function onEnableSingleChange(v: boolean) {
   color: var(--color-primary);
   background: var(--color-primary-bg);
   padding: 1px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   flex-shrink: 0;
 }
 </style>

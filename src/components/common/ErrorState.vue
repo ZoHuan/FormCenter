@@ -17,7 +17,7 @@ const icon = AlertTriangle
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 64px 0;
+  padding: var(--space-16) 0;
   gap: 16px;
 }
 
@@ -44,7 +44,7 @@ const icon = AlertTriangle
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease-out;
+  transition: all var(--duration-fast);
 
   &:hover {
     background: var(--color-primary-bg);
