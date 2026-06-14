@@ -63,7 +63,6 @@ const options = computed(() => {
 
 // 级联/树形选择选项（直接透传嵌套数据）
 const cascaderOptions = computed(() => (props.comp.props as Record<string, unknown>)?.options || [])
-const treeData = computed(() => (props.comp.props as Record<string, unknown>)?.options || [])
 </script>
 
 <style scoped lang="scss">

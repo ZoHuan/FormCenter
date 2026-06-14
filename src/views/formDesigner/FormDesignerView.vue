@@ -7,7 +7,7 @@
         <input v-model="formDesc" class="desc-input" placeholder="添加描述（选填）" @blur="onDescBlur" />
       </div>
       <div class="toolbar-right">
-        <el-button @click="showPreview = true">预览</el-button>
+        <el-button :disabled="store.components.length === 0" @click="handlePreview">预览</el-button>
         <el-button plain @click="handleSaveDraft">保存草稿</el-button>
         <el-button type="primary" @click="handlePublish">发布</el-button>
       </div>
@@ -71,6 +71,11 @@ const store = useFormDesignerStore()
 const formTitle = ref('')
 const formDesc = ref('')
 const showPreview = ref(false)
+
+function handlePreview() {
+  if (store.components.length === 0) return ElMessage.warning('请先添加至少一个组件')
+  showPreview.value = true
+}
 
 onMounted(() => {
   const id = route.params.id as string
