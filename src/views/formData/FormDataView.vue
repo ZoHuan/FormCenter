@@ -2,65 +2,69 @@
   <div class="data-page">
     <AppHeader />
     <div class="data-content">
-      <div class="data-header">
-        <div class="header-left">
-          <el-button link @click="$router.push('/forms')">← 返回</el-button>
-          <div class="header-info">
-            <h2>{{ schema?.title }}</h2>
-            <span class="header-badge">提交数据 · {{ subStore.submissions.length }} 条</span>
-          </div>
-        </div>
-        <div class="header-actions">
-          <el-button @click="handleCopyLink"><Copy :size="15" />复制链接</el-button>
-          <el-button type="primary" size="large" @click="handleExport"><Download :size="16" />导出 Excel</el-button>
-        </div>
+      <!-- 头区 -->
+      <div class="page-hero">
+        <el-button link class="back-btn" @click="$router.push('/forms')">← 返回</el-button>
+        <h1>{{ schema?.title }}</h1>
+        <p class="hero-stat">
+          <span class="stat-num">{{ subStore.submissions.length }}</span> 条提交记录
+        </p>
       </div>
 
-      <div v-if="subStore.loading" class="skeleton-table">
-        <div class="sk-row"><div class="sk-cell" v-for="i in 5" :key="i" /></div>
+      <!-- 骨架 -->
+      <div v-if="subStore.loading" class="table-card">
         <div class="sk-row" v-for="i in 5" :key="i">
-          <div class="sk-cell" v-for="j in 5" :key="j" :style="{ width: 40 + Math.random() * 40 + '%' }" />
+          <div class="sk-cell" v-for="j in 6" :key="j" :style="{ width: 60 + Math.random() * 30 + '%' }" />
         </div>
       </div>
 
-      <EmptyState
-        v-else-if="subStore.submissions.length === 0"
-        text="暂无提交数据"
-        desc="分享表单链接，填写者提交后数据会出现在这里"
-        action-text="复制链接"
-        @action="handleCopyLink"
-      />
+      <!-- 空 -->
+      <div v-else-if="subStore.submissions.length === 0" class="table-card table-empty">
+        <div class="empty-icon"><Table2 :size="28" /></div>
+        <p class="empty-title">暂无提交数据</p>
+        <p class="empty-desc">分享链接后，填写者提交的数据会出现在这里</p>
+        <el-button type="primary" @click="handleCopyLink">复制表单链接</el-button>
+      </div>
 
+      <!-- 数据表格 -->
       <div v-else class="table-card">
-        <el-table :data="pagedData" stripe>
-          <el-table-column prop="submittedAt" label="提交时间" width="180">
-            <template #default="{ row }">{{ formatTime(row.submittedAt) }}</template>
-          </el-table-column>
-          <el-table-column
-            v-for="col in columns"
-            :key="col.field"
-            :prop="col.field"
-            :label="col.title"
-            min-width="140"
-            show-overflow-tooltip
-          >
-            <template #default="{ row }">
-              <span v-if="row[col.field] === undefined || row[col.field] === ''" class="cell-empty">—</span>
-              <template v-else-if="Array.isArray(row[col.field])">
-                <el-tag v-for="(item, i) in row[col.field]" :key="i" size="small" class="cell-tag">{{ item }}</el-tag>
+        <div class="table-toolbar">
+          <span class="toolbar-count">共 {{ subStore.submissions.length }} 条记录</span>
+          <el-button type="primary" size="default" @click="handleExport"><Download :size="15" />导出 Excel</el-button>
+        </div>
+        <div class="table-scroll">
+          <el-table :data="pagedData" stripe>
+            <el-table-column prop="submittedAt" label="提交时间" width="170">
+              <template #default="{ row }">{{ formatTime(row.submittedAt) }}</template>
+            </el-table-column>
+            <el-table-column
+              v-for="col in columns"
+              :key="col.field"
+              :prop="col.field"
+              :label="col.title"
+              min-width="120"
+              show-overflow-tooltip
+            >
+              <template #default="{ row }">
+                <template v-if="row[col.field] === undefined || row[col.field] === ''">
+                  <span class="cell-empty">—</span>
+                </template>
+                <template v-else-if="Array.isArray(row[col.field])">
+                  <span v-for="(item, i) in row[col.field]" :key="i" class="cell-tag">{{ item }}</span>
+                </template>
+                <span v-else class="cell-value">{{ formatCellValue(col, row[col.field]) }}</span>
               </template>
-              <span v-else class="cell-value">{{ formatCellValue(col, row[col.field]) }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          v-if="subStore.submissions.length > pageSize"
-          v-model:current-page="page"
-          :page-size="pageSize"
-          :total="subStore.submissions.length"
-          layout="prev,pager,next"
-          class="data-pagination"
-        />
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="table-footer" v-if="subStore.submissions.length > pageSize">
+          <el-pagination
+            v-model:current-page="page"
+            :page-size="pageSize"
+            :total="subStore.submissions.length"
+            layout="prev,pager,next"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -74,10 +78,8 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { exportToExcel } from '@/utils/excel'
 import { copyToClipboard } from '@/utils/clipboard'
-import { Download, Copy } from 'lucide-vue-next'
+import { Download, Table2 } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
-import LoadingState from '@/components/common/LoadingState.vue'
-import EmptyState from '@/components/common/EmptyState.vue'
 
 const route = useRoute()
 const listStore = useFormListStore()
@@ -131,9 +133,7 @@ onMounted(() => {
 })
 
 function formatCellValue(col: { type: string; props?: Record<string, unknown> }, val: unknown): string {
-  if (typeof val === 'object' && val !== null) {
-    return JSON.stringify(val)
-  }
+  if (typeof val === 'object' && val !== null) return JSON.stringify(val)
   if (col.type === 'chooser' || col.type === 'selection' || col.type === 'cascader') {
     const opts = col.props?.options as Array<{ label: string; value: string }> | undefined
     if (opts) {
@@ -142,7 +142,7 @@ function formatCellValue(col: { type: string; props?: Record<string, unknown> },
     }
   }
   if (col.type === 'file' || col.type === 'image' || col.type === 'signature') {
-    if (typeof val === 'string' && val.length > 100) return '已上传'
+    if (typeof val === 'string' && val.length > 100) return '[已上传]'
   }
   return String(val ?? '')
 }
@@ -179,70 +179,46 @@ function formatTime(ts: number) {
 }
 
 .data-content {
-  max-width: 1100px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 48px 24px 64px;
+  padding: 48px 24px 80px;
 }
 
 /* ── 头区 ── */
-.data-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+.page-hero {
   margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-border);
-  position: relative;
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 48px;
-    height: 3px;
-    background: var(--color-primary);
-    border-radius: 2px 2px 0 0;
+  .back-btn {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: 20px;
+    padding: 4px 8px;
+    border-radius: 6px;
+
+    &:hover {
+      color: var(--color-primary);
+      background: rgba(45, 106, 79, 0.06);
+    }
   }
-}
 
-.header-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-
-  .el-button {
-    margin-top: 2px;
-  }
-}
-
-.header-info {
-  h2 {
-    font-size: 22px;
+  h1 {
+    font-size: 28px;
     font-weight: 700;
     color: var(--color-text);
-    margin: 0;
-    line-height: 1.35;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
   }
 }
 
-.header-badge {
-  font-size: 13px;
+.hero-stat {
+  font-size: 14px;
   color: var(--color-text-muted);
-  margin-top: 4px;
-  display: block;
+  margin: 0;
 }
 
-.header-actions {
-  display: flex;
-  gap: 10px;
-  flex-shrink: 0;
-
-  .el-button {
-    height: 38px;
-    font-weight: 500;
-    border-radius: 10px;
-  }
+.stat-num {
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
 /* ── 表格卡片 ── */
@@ -250,36 +226,73 @@ function formatTime(ts: number) {
   background: var(--color-card);
   border-radius: 16px;
   box-shadow:
-    0 1px 3px rgba(28, 25, 23, 0.04),
-    0 4px 16px rgba(28, 25, 23, 0.06);
+    0 1px 2px rgba(28, 25, 23, 0.03),
+    0 4px 12px rgba(28, 25, 23, 0.05);
   border: 1px solid rgba(28, 25, 23, 0.04);
   overflow: hidden;
+}
+
+/* ── 工具栏 ── */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-canvas);
+
+  .toolbar-count {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .el-button {
+    height: 36px;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+}
+
+/* ── 表格 ── */
+.table-scroll {
+  overflow-x: auto;
 
   :deep(.el-table) {
     --el-table-bg-color: transparent;
     --el-table-tr-bg-color: transparent;
-    --el-table-header-bg-color: #f8f9f7;
+    --el-table-header-bg-color: #f8faf6;
     font-size: 13px;
 
     th.el-table__cell {
       font-weight: 600;
       color: var(--color-text);
       border-bottom: 1px solid var(--color-border);
+      padding: 12px 16px;
     }
 
     td.el-table__cell {
+      padding: 12px 16px;
       border-bottom: 1px solid var(--color-canvas);
+      color: var(--color-text);
     }
 
     .el-table__body tr:hover > td {
-      background: rgba(45, 106, 79, 0.02);
+      background: rgba(45, 106, 79, 0.025);
     }
   }
 }
 
+.table-footer {
+  display: flex;
+  justify-content: center;
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-canvas);
+}
+
+/* ── 单元格 ── */
 .cell-empty {
   color: var(--color-text-muted);
-  font-style: italic;
 }
 
 .cell-value {
@@ -287,33 +300,56 @@ function formatTime(ts: number) {
 }
 
 .cell-tag {
-  margin: 1px 2px;
+  display: inline-block;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 1px 8px;
+  border-radius: 4px;
+  margin: 1px 3px 1px 0;
+}
 
-  & + & {
-    margin-left: 2px;
+/* ── 空状态 ── */
+.table-empty {
+  padding: 64px 32px;
+  text-align: center;
+
+  .empty-icon {
+    color: var(--color-text-muted);
+    opacity: 0.4;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .empty-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 8px;
+  }
+
+  .empty-desc {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin: 0 0 24px;
+  }
+
+  .el-button {
+    height: 40px;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0 24px;
   }
 }
 
-.data-pagination {
-  display: flex;
-  justify-content: center;
-  padding: 16px 24px;
-}
-
-/* ── 骨架屏 ── */
-.skeleton-table {
-  background: var(--color-card);
-  border-radius: 16px;
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
-}
-
+/* ── 骨架 ── */
 .sk-row {
   display: flex;
   gap: 0;
   border-bottom: 1px solid var(--color-canvas);
-  padding: 0 16px;
+  padding: 14px 20px;
 
   &:last-child {
     border-bottom: none;
@@ -322,7 +358,6 @@ function formatTime(ts: number) {
 
 .sk-cell {
   height: 14px;
-  margin: 17px 0;
   border-radius: 4px;
   background: linear-gradient(90deg, var(--color-canvas) 0%, var(--color-page) 40%, var(--color-canvas) 80%);
   background-size: 200% 100%;
@@ -331,7 +366,7 @@ function formatTime(ts: number) {
   min-width: 60px;
 
   &:not(:last-child) {
-    margin-right: 12px;
+    margin-right: 16px;
   }
 }
 
