@@ -81,7 +81,7 @@
                   size="small"
                   @change="onRowChange"
                 >
-                  <el-checkbox v-for="opt in getColumnOptions(col)" :key="opt.value" :label="opt.value" size="small">{{
+                  <el-checkbox v-for="opt in getColumnOptions(col)" :key="opt.value" :value="opt.value" size="small">{{
                     opt.label
                   }}</el-checkbox>
                 </el-checkbox-group>

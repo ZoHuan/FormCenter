@@ -6,7 +6,7 @@
         :model-value="(modelValue as string[]) || []"
         @update:model-value="(v) => $emit('update:modelValue', v)"
       >
-        <el-checkbox v-for="opt in options" :key="opt.value" :label="opt.value">
+        <el-checkbox v-for="opt in options" :key="opt.value" :value="opt.value">
           {{ opt.label }}
         </el-checkbox>
       </el-checkbox-group>
@@ -15,7 +15,7 @@
     <!-- 单选框 (chooser) -->
     <template v-else-if="comp.type === 'chooser'">
       <el-radio-group :model-value="modelValue as string" @update:model-value="(v) => $emit('update:modelValue', v)">
-        <el-radio v-for="opt in options" :key="opt.value" :label="opt.value">
+        <el-radio v-for="opt in options" :key="opt.value" :value="opt.value">
           {{ opt.label }}
         </el-radio>
       </el-radio-group>
