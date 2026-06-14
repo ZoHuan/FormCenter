@@ -251,13 +251,26 @@ function formatTime(ts: number) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 16px 24px;
+  background: linear-gradient(180deg, #fafbf9 0%, var(--color-card) 100%);
   border-bottom: 1px solid var(--color-canvas);
 
   .toolbar-count {
     font-size: 14px;
     color: var(--color-text-secondary);
     font-weight: 500;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      margin-top: -1px;
+    }
   }
 
   .el-button {
@@ -278,11 +291,16 @@ function formatTime(ts: number) {
     --el-table-header-bg-color: #f8faf6;
     font-size: 13px;
 
+    &::before {
+      display: none;
+    }
+
     th.el-table__cell {
       font-weight: 600;
       color: var(--color-text);
-      border-bottom: 1px solid var(--color-border);
-      padding: 12px 16px;
+      border-bottom: 2px solid rgba(45, 106, 79, 0.12);
+      padding: 14px 16px;
+      background: #f8faf6;
     }
 
     td.el-table__cell {
@@ -299,9 +317,11 @@ function formatTime(ts: number) {
 
 .table-footer {
   display: flex;
+  align-items: center;
   justify-content: center;
   padding: 16px 24px;
   border-top: 1px solid var(--color-canvas);
+  background: #fafbf9;
 }
 
 /* ── 单元格 ── */
@@ -326,15 +346,20 @@ function formatTime(ts: number) {
 
 /* ── 空状态 ── */
 .table-empty {
-  padding: 64px 32px;
+  padding: 72px 32px;
   text-align: center;
+  background: radial-gradient(circle at 50% 30%, rgba(45, 106, 79, 0.03) 0%, transparent 50%);
 
   .empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-canvas);
     color: var(--color-text-muted);
-    opacity: 0.4;
-    margin-bottom: 20px;
     display: flex;
+    align-items: center;
     justify-content: center;
+    margin: 0 auto 24px;
   }
 
   .empty-title {
@@ -354,7 +379,7 @@ function formatTime(ts: number) {
     height: 40px;
     border-radius: 10px;
     font-weight: 600;
-    padding: 0 24px;
+    padding: 0 28px;
   }
 }
 
