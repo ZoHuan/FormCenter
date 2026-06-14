@@ -37,15 +37,7 @@ export type ComponentType =
   | 'QRCode'
 
 // 表格列支持的类型
-export type TableColumnType =
-  | 'input'
-  | 'textarea'
-  | 'numeric'
-  | 'date'
-  | 'selection'
-  | 'chooser'
-  | 'multi-chooser'
-  | 'image'
+export type TableColumnType = 'input' | 'numeric' | 'date' | 'selection' | 'chooser' | 'multi-chooser'
 
 export interface TriggerRule {
   id: string
@@ -96,6 +88,7 @@ export interface TableColumnSchema {
   editable?: boolean
   description?: string
   defaultValue?: unknown
+  props?: Record<string, unknown>
 }
 
 export type ComponentProps = Record<string, unknown>

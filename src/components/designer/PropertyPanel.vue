@@ -233,12 +233,43 @@
             <div class="prop-row">
               <label>必填</label><el-switch v-model="col.required" size="small" @change="emitUpdate" />
             </div>
+            <!-- 选项列表（仅 selection / chooser / multi-chooser） -->
+            <div v-if="colHasOptions(col.type)" class="col-options">
+              <div v-for="(opt, oi) in col.props?.options || []" :key="oi" class="option-row">
+                <span class="opt-num">{{ oi + 1 }}</span>
+                <el-input v-model="opt.label" size="small" placeholder="选项名" @input="emitUpdate" />
+                <el-input v-model="opt.value" size="small" placeholder="值" @input="emitUpdate" />
+                <el-button link class="btn-del" @click="removeColOption(i, oi)"><X :size="14" /></el-button>
+              </div>
+              <el-button class="btn-add" @click="addColOption(i)"><Plus :size="14" />添加选项</el-button>
+            </div>
           </div>
         </div>
         <el-button class="btn-add-col" @click="addTableCol"><Plus :size="14" />添加字段</el-button>
         <div class="table-footer">
           <div class="prop-row">
+            <label>显示标题</label><el-switch v-model="tableShowTitle" size="small" @change="onTableShowTitleChange" />
+          </div>
+          <div class="prop-row">
             <label>显示序号</label><el-switch v-model="tableShowIndex" size="small" @change="onTableShowIndexChange" />
+          </div>
+          <div class="prop-row">
+            <label>行列编辑</label
+            ><el-switch v-model="tableRowControl" size="small" @change="onTableRowControlChange" />
+          </div>
+          <div class="prop-row">
+            <label>显示摘要</label
+            ><el-switch v-model="tableShowSummary" size="small" @change="onTableShowSummaryChange" />
+          </div>
+          <div class="prop-row">
+            <label>初始行数</label
+            ><el-input-number
+              v-model="tableInitialRows"
+              :min="1"
+              :max="50"
+              size="small"
+              @change="onTableInitialRowsChange"
+            />
           </div>
         </div>
       </div>
@@ -279,16 +310,14 @@ const openSections = reactive<Record<string, boolean>>({
   crossTable: true,
 })
 
-const colTypes = ['input', 'textarea', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser', 'image']
+const colTypes = ['input', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser']
 const colTypeLabels: Record<string, string> = {
   input: '单行文本',
-  textarea: '多行文本',
   numeric: '数字',
   date: '日期',
   selection: '下拉框',
   chooser: '单选框',
   'multi-chooser': '复选框',
-  image: '图片',
 }
 function toggleSection(key: string) {
   const isOpen = openSections[key]
@@ -449,14 +478,31 @@ const tableColumns = computed<Array<{ title: string; type: string; width?: numbe
 })
 
 const tableShowIndex = computed({
-  get: () => ((comp.props as Record<string, unknown>)?.showIndex as boolean) ?? false,
+  get: () => ((comp.props as Record<string, unknown>)?.showIndex as boolean) ?? true,
+  set: () => {},
+})
+const tableShowTitle = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.showTitle as boolean) ?? true,
+  set: () => {},
+})
+const tableRowControl = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.rowControl as boolean) ?? true,
+  set: () => {},
+})
+const tableShowSummary = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.showSummary as boolean) ?? false,
+  set: () => {},
+})
+const tableInitialRows = computed({
+  get: () => ((comp.props as Record<string, unknown>)?.initialRows as number) ?? 1,
   set: () => {},
 })
 
 function addTableCol() {
+  const n = tableColumns.value.length + 1
   const cols = [
     ...tableColumns.value,
-    { title: `列${tableColumns.value.length + 1}`, type: 'input', width: 120, required: false },
+    { title: `列${n}`, type: 'input', field: `col${n}`, width: 120, required: false },
   ]
   ensureProps().columns = cols
   emitUpdate()
@@ -469,11 +515,76 @@ function removeTableCol(index: number) {
 }
 
 function onColTypeChange(index: number) {
+  // 切换到需要选项的列类型时，自动初始化空选项列表
+  const typesNeedingOptions = new Set(['selection', 'chooser', 'multi-chooser'])
+  const col = tableColumns.value[index]
+  if (typesNeedingOptions.has(col.type)) {
+    ensureColProps(index)
+    const colProps = (col as Record<string, unknown>).props as Record<string, unknown>
+    if (!Array.isArray(colProps.options)) {
+      colProps.options = [
+        { label: '选项1', value: '1' },
+        { label: '选项2', value: '2' },
+      ]
+    }
+  }
+  emitUpdate()
+}
+
+function colHasOptions(type: string): boolean {
+  return ['selection', 'chooser', 'multi-chooser'].includes(type)
+}
+
+function ensureColProps(index: number): Record<string, unknown> {
+  const col = tableColumns.value[index] as Record<string, unknown>
+  if (!col.props) {
+    col.props = {}
+  }
+  return col.props as Record<string, unknown>
+}
+
+function addColOption(colIdx: number) {
+  const col = tableColumns.value[colIdx] as Record<string, unknown>
+  ensureColProps(colIdx)
+  const colProps = col.props as Record<string, unknown>
+  const opts = (colProps.options || []) as Array<{ label: string; value: string }>
+  opts.push({ label: `选项${opts.length + 1}`, value: String(opts.length + 1) })
+  colProps.options = opts
+  emitUpdate()
+}
+
+function removeColOption(colIdx: number, optIdx: number) {
+  const col = tableColumns.value[colIdx] as Record<string, unknown>
+  ensureColProps(colIdx)
+  const colProps = col.props as Record<string, unknown>
+  const opts = (colProps.options || []) as Array<{ label: string; value: string }>
+  opts.splice(optIdx, 1)
+  colProps.options = opts
   emitUpdate()
 }
 
 function onTableShowIndexChange(v: boolean) {
   ensureProps().showIndex = v
+  emitUpdate()
+}
+
+function onTableShowTitleChange(v: boolean) {
+  ensureProps().showTitle = v
+  emitUpdate()
+}
+
+function onTableRowControlChange(v: boolean) {
+  ensureProps().rowControl = v
+  emitUpdate()
+}
+
+function onTableShowSummaryChange(v: boolean) {
+  ensureProps().showSummary = v
+  emitUpdate()
+}
+
+function onTableInitialRowsChange(v: number) {
+  ensureProps().initialRows = v
   emitUpdate()
 }
 
@@ -918,10 +1029,28 @@ function onEnableSingleChange(v: boolean) {
     width: 100px;
   }
 }
+
+.col-options {
+  border-top: 1px solid var(--color-border);
+  margin-top: 4px;
+  padding-top: 6px;
+
+  .option-row {
+    padding: 2px 0;
+  }
+
+  .btn-add {
+    margin-top: 4px;
+  }
+}
 .table-footer {
   border-top: 1px solid var(--color-border);
   margin: 4px 0 0;
   padding-top: 8px;
+
+  :deep(.el-input-number) {
+    width: 100px;
+  }
 }
 .btn-add-col {
   width: 100%;

@@ -349,6 +349,7 @@ const layoutRows = computed(() => {
     }
     .field-input {
       flex: 1;
+      min-width: 0;
     }
   }
 

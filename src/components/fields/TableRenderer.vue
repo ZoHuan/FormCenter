@@ -3,13 +3,20 @@
     <div v-if="showTitle" class="table-title">{{ comp.label }}</div>
 
     <!-- PC 模式：表格 -->
-    <template v-if="mode !== 'mobile'">
+    <div v-if="mode !== 'mobile'" class="pc-wrapper">
       <div class="table-wrapper">
         <table class="inner-table">
           <thead>
             <tr>
               <th v-if="showIndex" class="index-col">#</th>
-              <th v-for="col in columns" :key="col.field">
+              <th
+                v-for="col in columns"
+                :key="col.field"
+                :style="{
+                  minWidth: col.width ? col.width + 'px' : undefined,
+                  width: col.width ? col.width + 'px' : undefined,
+                }"
+              >
                 {{ col.title }}<span v-if="col.required" class="required">*</span>
               </th>
               <th v-if="rowControl" class="action-col">操作</th>
@@ -20,11 +27,10 @@
               <td v-if="showIndex" class="index-col">{{ ri + 1 }}</td>
               <td v-for="col in columns" :key="col.field">
                 <el-input
-                  v-if="col.type === 'input' || col.type === 'textarea'"
+                  v-if="col.type === 'input'"
                   v-model="row[col.field]"
                   size="small"
                   :placeholder="col.description"
-                  :type="col.type === 'textarea' ? 'textarea' : 'text'"
                   @input="onRowChange"
                 />
                 <el-input-number
@@ -45,7 +51,7 @@
                   @change="onRowChange"
                 />
                 <el-select
-                  v-else-if="col.type === 'chooser' || col.type === 'selection'"
+                  v-else-if="col.type === 'selection'"
                   v-model="row[col.field]"
                   size="small"
                   placeholder="请选择"
@@ -59,31 +65,26 @@
                     :value="opt.value"
                   />
                 </el-select>
-                <el-select
+                <el-radio-group
+                  v-else-if="col.type === 'chooser'"
+                  v-model="row[col.field]"
+                  size="small"
+                  @change="onRowChange"
+                >
+                  <el-radio v-for="opt in getColumnOptions(col)" :key="opt.value" :value="opt.value" size="small">{{
+                    opt.label
+                  }}</el-radio>
+                </el-radio-group>
+                <el-checkbox-group
                   v-else-if="col.type === 'multi-chooser'"
                   v-model="row[col.field]"
                   size="small"
-                  placeholder="请选择"
-                  multiple
-                  clearable
                   @change="onRowChange"
                 >
-                  <el-option
-                    v-for="opt in getColumnOptions(col)"
-                    :key="opt.value"
-                    :label="opt.label"
-                    :value="opt.value"
-                  />
-                </el-select>
-                <el-upload
-                  v-else-if="col.type === 'file'"
-                  :show-file-list="false"
-                  :auto-upload="false"
-                  :on-change="(file) => handleImageChange(file, row, col.field)"
-                  size="small"
-                >
-                  <el-button size="small">上传</el-button>
-                </el-upload>
+                  <el-checkbox v-for="opt in getColumnOptions(col)" :key="opt.value" :label="opt.value" size="small">{{
+                    opt.label
+                  }}</el-checkbox>
+                </el-checkbox-group>
                 <el-input
                   v-else
                   v-model="row[col.field]"
@@ -105,67 +106,140 @@
         >
         <span v-if="showSummary" class="summary-info">共 {{ tableData.length }} 行</span>
       </div>
-    </template>
+    </div>
 
-    <!-- 移动模式：卡片列表 -->
+    <!-- 移动模式 -->
     <div v-else class="mobile-rows">
-      <van-cell-group v-for="(row, ri) in tableData" :key="ri" inset style="margin-bottom: 8px">
-        <van-cell :title="'#' + (ri + 1)" :value="`共${columns.length}项`" />
+      <div v-for="(row, ri) in tableData" :key="ri" class="mobile-row-card">
+        <div class="mobile-row-head">
+          <span class="mobile-row-num">{{ ri + 1 }}</span>
+          <span v-if="rowControl" class="mobile-row-del" @click="removeRow(ri)">删除</span>
+        </div>
         <van-field
-          v-for="col in columns"
+          v-for="col in columns.filter((c) => c.type === 'input')"
           :key="col.field"
           :label="col.title"
           :required="col.required"
-          :placeholder="col.description"
-        >
-          <template #input>
-            <van-field
-              v-if="col.type === 'input' || col.type === 'textarea'"
-              :model-value="row[col.field]"
-              :placeholder="col.description"
-              @update:model-value="
-                (v) => {
-                  row[col.field] = v
-                  onRowChange()
-                }
-              "
-            />
-            <van-field
-              v-else-if="col.type === 'numeric'"
-              :model-value="row[col.field]"
-              type="digit"
-              @update:model-value="
-                (v) => {
-                  row[col.field] = v
-                  onRowChange()
-                }
-              "
-            />
-            <van-field
-              v-else-if="col.type === 'date'"
-              :model-value="row[col.field]"
-              readonly
-              is-link
-              placeholder="选择日期"
-              @click="openTableDate(ri, col.field)"
-            />
-            <van-field
-              v-else
-              :model-value="row[col.field]"
-              @update:model-value="
-                (v) => {
-                  row[col.field] = v
-                  onRowChange()
-                }
-              "
-            />
-          </template>
-        </van-field>
-        <van-button v-if="rowControl" size="small" type="danger" block @click="removeRow(ri)">删除此行</van-button>
-      </van-cell-group>
-      <van-button v-if="rowControl" size="small" type="primary" block @click="addRow">+ 添加行</van-button>
+          :model-value="row[col.field]"
+          :placeholder="col.description || '请输入'"
+          @update:model-value="
+            (v) => {
+              row[col.field] = v
+              onRowChange()
+            }
+          "
+        />
+        <van-field
+          v-for="col in columns.filter((c) => c.type === 'numeric')"
+          :key="col.field"
+          :label="col.title"
+          :required="col.required"
+          :model-value="row[col.field]"
+          type="digit"
+          :placeholder="col.description || '请输入'"
+          @update:model-value="
+            (v) => {
+              row[col.field] = v
+              onRowChange()
+            }
+          "
+        />
+        <van-field
+          v-for="col in columns.filter((c) => c.type === 'date')"
+          :key="col.field"
+          :label="col.title"
+          :required="col.required"
+          :model-value="row[col.field] || ''"
+          readonly
+          is-link
+          placeholder="选择日期"
+          @click="openTableDate(ri, col.field)"
+        />
+        <van-field
+          v-for="col in columns.filter((c) => c.type === 'selection')"
+          :key="col.field"
+          :label="col.title"
+          :required="col.required"
+          :model-value="getSelectLabel(row[col.field], col)"
+          readonly
+          is-link
+          placeholder="请选择"
+          @click="openTableSelect(ri, col.field, col)"
+        />
+        <template v-for="col in columns.filter((c) => c.type === 'chooser')" :key="col.field">
+          <van-field :label="col.title" :required="col.required">
+            <template #input>
+              <van-radio-group
+                :model-value="row[col.field]"
+                direction="horizontal"
+                @update:model-value="
+                  (v) => {
+                    row[col.field] = v
+                    onRowChange()
+                  }
+                "
+              >
+                <van-radio
+                  v-for="opt in getColumnOptions(col)"
+                  :key="opt.value"
+                  :name="opt.value"
+                  icon-size="16px"
+                  checked-color="var(--color-primary)"
+                  >{{ opt.label }}</van-radio
+                >
+              </van-radio-group>
+            </template>
+          </van-field>
+        </template>
+        <template v-for="col in columns.filter((c) => c.type === 'multi-chooser')" :key="col.field">
+          <van-field :label="col.title" :required="col.required">
+            <template #input>
+              <van-checkbox-group
+                :model-value="row[col.field]"
+                direction="horizontal"
+                @update:model-value="
+                  (v) => {
+                    row[col.field] = v
+                    onRowChange()
+                  }
+                "
+              >
+                <van-checkbox
+                  v-for="opt in getColumnOptions(col)"
+                  :key="opt.value"
+                  :name="opt.value"
+                  shape="square"
+                  icon-size="16px"
+                  checked-color="var(--color-primary)"
+                  >{{ opt.label }}</van-checkbox
+                >
+              </van-checkbox-group>
+            </template>
+          </van-field>
+        </template>
+        <van-field
+          v-for="col in columns.filter(
+            (c) => !['input', 'numeric', 'date', 'selection', 'chooser', 'multi-chooser'].includes(c.type),
+          )"
+          :key="col.field"
+          :label="col.title"
+          :required="col.required"
+          :model-value="row[col.field]"
+          :placeholder="col.description || '请输入'"
+          @update:model-value="
+            (v) => {
+              row[col.field] = v
+              onRowChange()
+            }
+          "
+        />
+      </div>
+      <van-button v-if="rowControl" block type="primary" @click="addRow">+ 添加行</van-button>
     </div>
     <van-calendar v-if="mode === 'mobile'" v-model:show="tableDateShow" @confirm="onTableDateConfirm" />
+    <van-popup v-if="mode === 'mobile'" v-model:show="tableSelectShow" round position="bottom">
+      <van-picker :columns="tableSelectColumns" @confirm="onTableSelectConfirm" @cancel="tableSelectShow = false" />
+    </van-popup>
   </div>
 </template>
 
@@ -173,11 +247,15 @@
 import { ref, computed, onMounted } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import {
-  CellGroup as VanCellGroup,
-  Cell as VanCell,
   Field as VanField,
   Button as VanButton,
   Calendar as VanCalendar,
+  Popup as VanPopup,
+  Picker as VanPicker,
+  RadioGroup as VanRadioGroup,
+  Radio as VanRadio,
+  CheckboxGroup as VanCheckboxGroup,
+  Checkbox as VanCheckbox,
 } from 'vant'
 import type { ComponentSchema, TableColumnSchema } from '@/types'
 
@@ -241,19 +319,39 @@ function onTableDateConfirm(date: Date) {
   tableDateShow.value = false
 }
 
-function handleImageChange(file: { raw: File }, row: Record<string, unknown>, field: string) {
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    row[field] = e.target?.result as string
+const tableSelectShow = ref(false)
+let tableSelectRow = -1,
+  tableSelectField = ''
+const tableSelectColumns = ref<Array<{ text: string; value: string }>>([])
+function openTableSelect(ri: number, field: string, col: any) {
+  tableSelectRow = ri
+  tableSelectField = field
+  const opts = getColumnOptions(col)
+  tableSelectColumns.value = opts.map((o) => ({ text: o.label, value: o.value }))
+  tableSelectShow.value = true
+}
+function onTableSelectConfirm({ selectedOptions }: any) {
+  if (tableSelectRow >= 0 && tableSelectField) {
+    tableData.value[tableSelectRow][tableSelectField] = selectedOptions[0]?.value ?? ''
     onRowChange()
   }
-  reader.readAsDataURL(file.raw)
+  tableSelectShow.value = false
+}
+function getSelectLabel(val: unknown, col: any): string {
+  const opts = getColumnOptions(col)
+  return opts.find((o) => o.value === val)?.label ?? ''
+}
+function getMultiSelectLabel(val: unknown, col: any): string {
+  const opts = getColumnOptions(col)
+  if (!Array.isArray(val)) return ''
+  return (val as string[]).map((v) => opts.find((o) => o.value === v)?.label ?? v).join(', ')
 }
 </script>
 
 <style scoped lang="scss">
 .table-field {
   width: 100%;
+  min-width: 0;
 }
 
 .table-title {
@@ -267,14 +365,14 @@ function handleImageChange(file: { raw: File }, row: Record<string, unknown>, fi
 }
 
 .inner-table {
-  width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+  table-layout: fixed;
 
   th,
   td {
     border: 1px solid var(--color-border);
-    padding: 8px 12px;
+    padding: 4px 6px;
     text-align: left;
   }
 
@@ -282,6 +380,24 @@ function handleImageChange(file: { raw: File }, row: Record<string, unknown>, fi
     background: var(--color-canvas);
     font-weight: 500;
     white-space: nowrap;
+  }
+
+  // 约束表格内组件宽度
+  :deep(.el-input),
+  :deep(.el-select),
+  :deep(.el-date-editor) {
+    width: 100%;
+    min-width: 0;
+  }
+
+  :deep(.el-input-number) {
+    width: 100%;
+    min-width: 0;
+
+    .el-input__wrapper {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
   }
 
   .required {
@@ -311,5 +427,53 @@ function handleImageChange(file: { raw: File }, row: Record<string, unknown>, fi
 .summary-info {
   font-size: 12px;
   color: var(--color-text-muted);
+}
+
+/* ── 移动端 ── */
+.mobile-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-row-card {
+  background: var(--color-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  // van-field 默认就有分割线，不需要额外处理
+}
+
+.mobile-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #f5f7f4;
+}
+
+.mobile-row-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-row-del {
+  font-size: 13px;
+  color: var(--color-error);
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &:active {
+    background: rgba(181, 74, 58, 0.08);
+  }
 }
 </style>

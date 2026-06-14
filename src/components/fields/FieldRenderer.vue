@@ -55,6 +55,7 @@
       <CrossTableRenderer
         v-else-if="comp.type === 'cross-table'"
         :comp="comp"
+        :mode="mode"
         :model-value="modelValue"
         @update:model-value="(v) => $emit('update:modelValue', v)"
       />
