@@ -443,6 +443,9 @@ const layoutRows = computed(() => {
     border-bottom-color: var(--color-border);
   }
 }
+.field-input :deep(.relation-field .van-cell) {
+  padding: 0;
+}
 
 /* ── footer ── */
 .form-footer {
