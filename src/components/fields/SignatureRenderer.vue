@@ -120,7 +120,7 @@ function touchPos(e: TouchEvent) {
 .signature-field {
   .sig-canvas-wrap {
     border: 2px dashed var(--color-border);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
   canvas {

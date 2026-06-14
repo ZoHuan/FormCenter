@@ -81,7 +81,7 @@
                   size="small"
                   @change="onRowChange"
                 >
-                  <el-checkbox v-for="opt in getColumnOptions(col)" :key="opt.value" :label="opt.value" size="small">{{
+                  <el-checkbox v-for="opt in getColumnOptions(col)" :key="opt.value" :value="opt.value" size="small">{{
                     opt.label
                   }}</el-checkbox>
                 </el-checkbox-group>
@@ -341,11 +341,6 @@ function getSelectLabel(val: unknown, col: any): string {
   const opts = getColumnOptions(col)
   return opts.find((o) => o.value === val)?.label ?? ''
 }
-function getMultiSelectLabel(val: unknown, col: any): string {
-  const opts = getColumnOptions(col)
-  if (!Array.isArray(val)) return ''
-  return (val as string[]).map((v) => opts.find((o) => o.value === v)?.label ?? v).join(', ')
-}
 </script>
 
 <style scoped lang="scss">
@@ -438,11 +433,9 @@ function getMultiSelectLabel(val: unknown, col: any): string {
 
 .mobile-row-card {
   background: var(--color-card);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-
-  // van-field 默认就有分割线，不需要额外处理
 }
 
 .mobile-row-head {

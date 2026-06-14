@@ -7,7 +7,7 @@
         <input v-model="formDesc" class="desc-input" placeholder="添加描述（选填）" @blur="onDescBlur" />
       </div>
       <div class="toolbar-right">
-        <el-button @click="showPreview = true">预览</el-button>
+        <el-button :disabled="store.components.length === 0" @click="handlePreview">预览</el-button>
         <el-button plain @click="handleSaveDraft">保存草稿</el-button>
         <el-button type="primary" @click="handlePublish">发布</el-button>
       </div>
@@ -71,6 +71,11 @@ const store = useFormDesignerStore()
 const formTitle = ref('')
 const formDesc = ref('')
 const showPreview = ref(false)
+
+function handlePreview() {
+  if (store.components.length === 0) return ElMessage.warning('请先添加至少一个组件')
+  showPreview.value = true
+}
 
 onMounted(() => {
   const id = route.params.id as string
@@ -175,31 +180,17 @@ function handleMoveComponent(from: number, to: number) {
 
 async function handleBack() {
   if (store.isDirty) {
-    await ElMessageBox.confirm('有未保存的修改，是否离开？', '提示', {
-      confirmButtonText: '不保存',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
+    try {
+      await ElMessageBox.confirm('有未保存的修改，是否离开？', '提示', {
+        confirmButtonText: '不保存',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+    } catch {
+      return
+    }
   }
   router.push('/forms')
-}
-
-function handleSave() {
-  if (!formTitle.value.trim()) return ElMessage.warning('请输入表单标题')
-  const id = store.save()
-  ElMessage.success('保存成功')
-  if (route.path === '/formDesigner') router.replace(`/formDesigner/${id}`)
-}
-
-function toggleStatus(status: 'draft' | 'open' | 'closed') {
-  if (status === 'open' && store.components.length === 0) return ElMessage.warning('请先添加组件')
-  if (store.schema) {
-    store.schema.status = status
-    store.save()
-  }
-  ElMessage.success(
-    status === 'open' ? '已发布，可通过链接收集数据' : status === 'closed' ? '已停止收集' : '已切换为草稿',
-  )
 }
 
 function handleSaveDraft() {
@@ -245,8 +236,8 @@ function handlePublish() {
     font-size: 13px;
     font-weight: 500;
     padding: 6px 10px;
-    border-radius: 8px;
-    transition: all 0.15s;
+    border-radius: var(--radius-md);
+    transition: all var(--duration-fast);
 
     &:hover {
       color: var(--color-primary);
@@ -304,12 +295,12 @@ function handlePublish() {
   align-items: center;
 
   .el-button {
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 13px;
     font-weight: 600;
     height: 36px;
     padding: 0 18px;
-    transition: all 0.15s;
+    transition: all var(--duration-fast);
   }
 
   .el-button--primary {

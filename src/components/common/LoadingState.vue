@@ -13,7 +13,7 @@ defineProps<{ text?: string }>()
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 64px 0;
+  padding: var(--space-16) 0;
   gap: 16px;
 }
 

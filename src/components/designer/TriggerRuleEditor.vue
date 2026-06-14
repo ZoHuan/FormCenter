@@ -183,7 +183,7 @@ function confirmRule() {
   background: var(--color-page);
   margin-bottom: 6px;
   position: relative;
-  transition: border-color 0.15s;
+  transition: border-color var(--duration-fast);
 
   &:hover {
     border-color: var(--color-primary);
@@ -238,7 +238,7 @@ function confirmRule() {
   font-size: 13px;
   font-weight: 500;
   height: 36px;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   &:hover {
     background: var(--color-primary-bg);
   }

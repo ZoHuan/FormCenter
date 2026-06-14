@@ -272,10 +272,6 @@ function applyTriggerRule(comps: ComponentSchema[], rule: TriggerRule, match: bo
   }
 }
 
-function isSelectType(t: string) {
-  return ['chooser', 'multi-chooser', 'selection', 'cascader', 'tree-structure'].includes(t)
-}
-
 function isDecorType(t: string) {
   return (DECOR_TYPES as string[]).includes(t)
 }
@@ -330,11 +326,15 @@ async function handleSubmit() {
       document.querySelector(`[data-field="${first.field}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     return
   }
-  await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
+  try {
+    await ElMessageBox.confirm('提交后不可修改，是否确认？', '确认提交', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+  } catch {
+    return
+  }
   submitting.value = true
   const ok = subStore.submit(schema.value.id, { ...formData })
   submitting.value = false
@@ -409,7 +409,7 @@ function handleBackToDesigner() {
   width: 80px;
   height: 80px;
   background: linear-gradient(135deg, #5b7b4a, #4a6a3d);
-  color: #fff;
+  color: var(--color-card);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -458,7 +458,7 @@ function handleBackToDesigner() {
 
   .el-button {
     height: 44px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     font-weight: 600;
   }
 }
@@ -652,65 +652,67 @@ function handleBackToDesigner() {
     color: var(--color-error);
     margin-left: 2px;
   }
-}
 
-.field-label.stacked {
-  margin-bottom: 4px;
+  &.stacked {
+    margin-bottom: 4px;
+  }
 }
 // ── 输入框下划线风格 ──
-.field-input :deep(.el-input__wrapper),
-.field-input :deep(.el-select__wrapper) {
-  border-radius: 0;
-  box-shadow: inset 0 -1px 0 0 var(--color-border);
-  background: transparent;
-  padding: 0 2px;
-  height: 44px;
-  transition:
-    box-shadow 0.2s ease,
-    background 0.15s;
+.field-input {
+  :deep(.el-input__wrapper),
+  :deep(.el-select__wrapper) {
+    height: 44px;
+    padding: 0 2px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: inset 0 -1px 0 0 var(--color-border);
+    transition:
+      box-shadow var(--duration-normal),
+      background var(--duration-fast);
 
-  &:hover {
-    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
-    background: rgba(246, 248, 245, 0.5);
-  }
-}
-
-.field-input :deep(.el-input.is-focus .el-input__wrapper),
-.field-input :deep(.el-select.is-focus .el-select__wrapper) {
-  box-shadow: inset 0 -2px 0 0 var(--color-primary);
-  background: rgba(45, 106, 79, 0.02);
-}
-
-.field-input :deep(.el-input.is-error .el-input__wrapper) {
-  box-shadow: inset 0 -2px 0 0 var(--color-error);
-}
-
-.field-input :deep(.el-textarea__inner) {
-  border-radius: 0;
-  box-shadow: inset 0 -1px 0 0 var(--color-border);
-  background: transparent;
-  min-height: 80px;
-  padding: 8px 2px;
-  resize: vertical;
-  transition:
-    box-shadow 0.2s ease,
-    background 0.15s;
-
-  &:hover {
-    box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
-    background: rgba(246, 248, 245, 0.5);
+    &:hover {
+      box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+      background: rgba(246, 248, 245, 0.5);
+    }
   }
 
-  &:focus {
+  :deep(.el-input.is-focus .el-input__wrapper),
+  :deep(.el-select.is-focus .el-select__wrapper) {
     box-shadow: inset 0 -2px 0 0 var(--color-primary);
     background: rgba(45, 106, 79, 0.02);
   }
-}
 
-@media (min-width: 768px) {
-  .field-input :deep(.el-input__wrapper),
-  .field-input :deep(.el-select__wrapper) {
-    height: 40px;
+  :deep(.el-input.is-error .el-input__wrapper) {
+    box-shadow: inset 0 -2px 0 0 var(--color-error);
+  }
+
+  :deep(.el-textarea__inner) {
+    min-height: 80px;
+    padding: 8px 2px;
+    border-radius: 0;
+    background: transparent;
+    resize: vertical;
+    box-shadow: inset 0 -1px 0 0 var(--color-border);
+    transition:
+      box-shadow var(--duration-normal),
+      background var(--duration-fast);
+
+    &:hover {
+      box-shadow: inset 0 -1px 0 0 var(--color-border-hover);
+      background: rgba(246, 248, 245, 0.5);
+    }
+
+    &:focus {
+      box-shadow: inset 0 -2px 0 0 var(--color-primary);
+      background: rgba(45, 106, 79, 0.02);
+    }
+  }
+
+  @media (min-width: 768px) {
+    :deep(.el-input__wrapper),
+    :deep(.el-select__wrapper) {
+      height: 40px;
+    }
   }
 }
 .field-error {
@@ -741,7 +743,7 @@ function handleBackToDesigner() {
   background: var(--color-card);
   border: 1px solid var(--color-border);
   letter-spacing: 0.04em;
-  transition: all 0.2s;
+  transition: all var(--duration-normal);
   box-shadow: 0 2px 8px rgba(28, 25, 23, 0.04);
 
   &:hover:not(:disabled) {
@@ -759,15 +761,15 @@ function handleBackToDesigner() {
   font-weight: 600;
   border-radius: 14px;
   background: linear-gradient(135deg, var(--color-primary) 0%, #3d7e5c 100%);
-  color: #fff;
+  color: var(--color-card);
   border: none;
   letter-spacing: 0.04em;
   box-shadow:
     0 4px 16px rgba(45, 106, 79, 0.2),
     0 1px 4px rgba(45, 106, 79, 0.1);
   transition:
-    all 0.2s ease,
-    transform 0.15s;
+    all var(--duration-normal),
+    transform var(--duration-fast);
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
@@ -796,8 +798,9 @@ function handleBackToDesigner() {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-normal);
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
@@ -828,7 +831,7 @@ function handleBackToDesigner() {
   background: var(--color-card);
   margin-bottom: 20px;
   gap: 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 1px 3px rgba(28, 25, 23, 0.06);
 }
 
@@ -846,20 +849,20 @@ function handleBackToDesigner() {
   margin-left: auto;
   display: flex;
   background: var(--color-canvas);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 3px;
   gap: 2px;
 
   button {
     padding: 4px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     background: transparent;
     color: var(--color-text-muted);
-    transition: all 0.2s;
+    transition: all var(--duration-normal);
 
     &.active {
       background: var(--color-card);

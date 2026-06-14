@@ -65,21 +65,24 @@ function emitUpdate() {
 </script>
 
 <style scoped lang="scss">
-.relation-section .prop-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0;
-  padding: 6px 0;
-  gap: 8px;
-}
-.relation-section .prop-row label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  width: 72px;
-  flex-shrink: 0;
-  white-space: nowrap;
+.relation-section {
+  .prop-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    padding: 6px 0;
+    gap: 8px;
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      width: 72px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
 }
 
 .output-row {
@@ -107,7 +110,7 @@ function emitUpdate() {
 .btn-out-del {
   color: var(--color-text-muted);
   flex-shrink: 0;
-  transition: color 0.15s;
+  transition: color var(--duration-fast);
 
   &:hover {
     color: var(--color-error);
@@ -122,7 +125,7 @@ function emitUpdate() {
   color: var(--color-primary);
   font-size: 13px;
   height: 36px;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 
   &:hover {
     background: var(--color-primary-bg);

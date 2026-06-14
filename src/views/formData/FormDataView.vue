@@ -4,11 +4,15 @@
     <div class="data-content">
       <!-- 头区 -->
       <div class="page-hero">
-        <el-button link class="back-btn" @click="$router.push('/forms')">← 返回</el-button>
-        <h1>{{ schema?.title }}</h1>
-        <p class="hero-stat">
-          <span class="stat-num">{{ subStore.submissions.length }}</span> 条提交记录
-        </p>
+        <div class="hero-top">
+          <el-button link class="back-btn" @click="$router.push('/forms')"
+            ><ArrowLeft :size="16" />返回表单列表</el-button
+          >
+        </div>
+        <div class="hero-main">
+          <h1>{{ schema?.title }}</h1>
+          <span class="hero-accent"></span>
+        </div>
       </div>
 
       <!-- 骨架 -->
@@ -78,7 +82,7 @@ import { useFormListStore } from '@/stores/formList'
 import { useFormSubmissionStore } from '@/stores/formSubmission'
 import { exportToExcel } from '@/utils/excel'
 import { copyToClipboard } from '@/utils/clipboard'
-import { Download, Table2 } from 'lucide-vue-next'
+import { Download, Table2, ArrowLeft } from 'lucide-vue-next'
 import AppHeader from '@/components/common/AppHeader.vue'
 
 const route = useRoute()
@@ -186,45 +190,55 @@ function formatTime(ts: number) {
 
 /* ── 头区 ── */
 .page-hero {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+}
 
-  .back-btn {
-    font-size: 13px;
-    color: var(--color-text-muted);
-    margin-bottom: 20px;
-    padding: 4px 8px;
-    border-radius: 6px;
+.hero-top {
+  margin-bottom: 20px;
+}
 
-    &:hover {
-      color: var(--color-primary);
-      background: rgba(45, 106, 79, 0.06);
-    }
+.back-btn {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  gap: 6px;
+  transition: all var(--duration-fast);
+
+  &:hover {
+    color: var(--color-primary);
+    background: rgba(45, 106, 79, 0.06);
   }
+}
+
+.hero-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
   h1 {
     font-size: 28px;
     font-weight: 700;
     color: var(--color-text);
-    margin: 0 0 8px;
+    margin: 0;
     letter-spacing: -0.02em;
+    line-height: 1.3;
   }
 }
 
-.hero-stat {
-  font-size: 14px;
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
-.stat-num {
-  font-weight: 700;
-  color: var(--color-primary);
+.hero-accent {
+  width: 4px;
+  height: 28px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 /* ── 表格卡片 ── */
 .table-card {
   background: var(--color-card);
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   box-shadow:
     0 1px 2px rgba(28, 25, 23, 0.03),
     0 4px 12px rgba(28, 25, 23, 0.05);
@@ -237,19 +251,32 @@ function formatTime(ts: number) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 16px 24px;
+  background: linear-gradient(180deg, #fafbf9 0%, var(--color-card) 100%);
   border-bottom: 1px solid var(--color-canvas);
 
   .toolbar-count {
     font-size: 14px;
     color: var(--color-text-secondary);
     font-weight: 500;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      margin-top: -1px;
+    }
   }
 
   .el-button {
     height: 36px;
     font-weight: 600;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 13px;
   }
 }
@@ -264,11 +291,16 @@ function formatTime(ts: number) {
     --el-table-header-bg-color: #f8faf6;
     font-size: 13px;
 
+    &::before {
+      display: none;
+    }
+
     th.el-table__cell {
       font-weight: 600;
       color: var(--color-text);
-      border-bottom: 1px solid var(--color-border);
-      padding: 12px 16px;
+      border-bottom: 2px solid rgba(45, 106, 79, 0.12);
+      padding: 14px 16px;
+      background: #f8faf6;
     }
 
     td.el-table__cell {
@@ -285,9 +317,11 @@ function formatTime(ts: number) {
 
 .table-footer {
   display: flex;
+  align-items: center;
   justify-content: center;
   padding: 16px 24px;
   border-top: 1px solid var(--color-canvas);
+  background: #fafbf9;
 }
 
 /* ── 单元格 ── */
@@ -312,15 +346,20 @@ function formatTime(ts: number) {
 
 /* ── 空状态 ── */
 .table-empty {
-  padding: 64px 32px;
+  padding: 72px 32px;
   text-align: center;
+  background: radial-gradient(circle at 50% 30%, rgba(45, 106, 79, 0.03) 0%, transparent 50%);
 
   .empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-canvas);
     color: var(--color-text-muted);
-    opacity: 0.4;
-    margin-bottom: 20px;
     display: flex;
+    align-items: center;
     justify-content: center;
+    margin: 0 auto 24px;
   }
 
   .empty-title {
@@ -338,9 +377,9 @@ function formatTime(ts: number) {
 
   .el-button {
     height: 40px;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     font-weight: 600;
-    padding: 0 24px;
+    padding: 0 28px;
   }
 }
 
@@ -367,15 +406,6 @@ function formatTime(ts: number) {
 
   &:not(:last-child) {
     margin-right: 16px;
-  }
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
   }
 }
 </style>

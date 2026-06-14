@@ -26,7 +26,7 @@ const max = computed(() => (compProps.value.maxScore as number) ?? 5)
 const icon = computed(() => (compProps.value.icon as string) ?? 'star')
 const iconColor = computed(() => compProps.value.iconColor as string | undefined)
 const prompts = computed(() => (compProps.value.prompts as string[]) || [])
-const allowHalf = computed(() => compProps.value.allowHalf as boolean ?? false)
+const allowHalf = computed(() => (compProps.value.allowHalf as boolean) ?? false)
 const showText = computed(() => prompts.value.length > 0)
 
 // 根据图标类型设置默认颜色

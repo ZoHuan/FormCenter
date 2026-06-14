@@ -3,7 +3,9 @@
     <component :is="icon" class="state-icon" :size="48" stroke-width="2" aria-hidden="true" />
     <p class="state-title">{{ text }}</p>
     <p v-if="desc" class="state-desc">{{ desc }}</p>
-    <button v-if="actionText" class="action-btn" @click="$emit('action')" :aria-label="actionText">{{ actionText }}</button>
+    <button v-if="actionText" class="action-btn" @click="$emit('action')" :aria-label="actionText">
+      {{ actionText }}
+    </button>
   </div>
 </template>
 <script setup lang="ts">
@@ -17,7 +19,7 @@ const icon = FileText
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 64px 0;
+  padding: var(--space-16) 0;
   gap: 8px;
   position: relative;
 
@@ -59,7 +61,7 @@ const icon = FileText
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease-out;
+  transition: all var(--duration-fast);
 
   &:hover {
     background: var(--color-primary-hover);

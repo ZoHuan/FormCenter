@@ -30,11 +30,7 @@
 
     <!-- 编号（自动生成只读） -->
     <template v-else-if="comp.type === 'serial-number'">
-      <el-input
-        :model-value="(modelValue as string) || autoSn"
-        placeholder="自动生成"
-        disabled
-      />
+      <el-input :model-value="(modelValue as string) || autoSn" placeholder="自动生成" disabled />
     </template>
 
     <!-- 单行文本 -->
@@ -93,7 +89,7 @@ const unit = computed(() => compProps.value.unit as string | undefined)
 // 文本配置
 const maxLength = computed(() => compProps.value.maxLength as number | undefined)
 const rows = computed(() => (compProps.value.defaultRows as number) || 3)
-const autoSize = computed(() => compProps.value.autoSize as boolean ?? true)
+const autoSize = computed(() => (compProps.value.autoSize as boolean) ?? true)
 
 // 格式校验配置
 const format = computed(() => compProps.value.format as string | undefined)
@@ -101,11 +97,16 @@ const customRegex = computed(() => compProps.value.customRegex as string | undef
 
 const formatHint = computed(() => {
   switch (format.value) {
-    case 'phone': return '请输入11位手机号'
-    case 'idCard': return '请输入18位身份证号'
-    case 'email': return '请输入邮箱地址'
-    case 'custom': return customRegex.value ? '请输入符合格式的内容' : ''
-    default: return ''
+    case 'phone':
+      return '请输入11位手机号'
+    case 'idCard':
+      return '请输入18位身份证号'
+    case 'email':
+      return '请输入邮箱地址'
+    case 'custom':
+      return customRegex.value ? '请输入符合格式的内容' : ''
+    default:
+      return ''
   }
 })
 

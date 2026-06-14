@@ -17,8 +17,8 @@ function c(type: string, label: string, field: string, overrides: Partial<Compon
 }
 
 export const leaveTemplate: Omit<ComponentSchema, 'components'> & { components: ComponentSchema[] } = {
-  title: '请假申请表',
-  description: '请如实填写请假信息',
+  title: '请假申请',
+  description: '员工请假审批表',
   components: [
     c('title', '请假申请表', '', { colspan: 1 }),
     c('input', '姓名', 'name', { required: true, description: '请输入姓名' }),
@@ -51,8 +51,8 @@ export const leaveTemplate: Omit<ComponentSchema, 'components'> & { components: 
 }
 
 export const eventTemplate: Omit<ComponentSchema, 'components'> & { components: ComponentSchema[] } = {
-  title: '活动报名表',
-  description: '欢迎报名参加本次活动',
+  title: '活动报名',
+  description: '活动参与报名登记表',
   components: [
     c('title', '活动报名表', '', { colspan: 1 }),
     c('input', '姓名', 'name', { required: true }),
@@ -84,7 +84,7 @@ export const eventTemplate: Omit<ComponentSchema, 'components'> & { components: 
 
 export const surveyTemplate: Omit<ComponentSchema, 'components'> & { components: ComponentSchema[] } = {
   title: '满意度调查',
-  description: '感谢你抽出时间填写',
+  description: '产品与服务满意度评价',
   components: [
     c('title', '满意度调查', '', { colspan: 1 }),
     c('rate', '整体满意度', 'overall', { required: true, props: { maxScore: 5 } }),
@@ -126,8 +126,8 @@ export const surveyTemplate: Omit<ComponentSchema, 'components'> & { components:
 }
 
 export const collectTemplate: Omit<ComponentSchema, 'components'> & { components: ComponentSchema[] } = {
-  title: '信息收集表',
-  description: '请完整填写以下信息',
+  title: '信息登记',
+  description: '人员信息登记收集表',
   components: [
     c('title', '信息收集表', '', { colspan: 1 }),
     c('input', '姓名', 'name', { required: true }),

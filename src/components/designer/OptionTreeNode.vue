@@ -76,7 +76,7 @@ function toggleCollapse(i: number) {
   gap: 2px;
   padding: 2px 4px;
   border-radius: var(--radius-sm);
-  transition: background 0.15s;
+  transition: background var(--duration-fast);
 
   &:hover {
     background: var(--color-primary-bg);
@@ -124,7 +124,7 @@ function toggleCollapse(i: number) {
   cursor: pointer;
   color: var(--color-text-muted);
   border-radius: var(--radius-xs);
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 
   &:hover {
     color: var(--color-primary);
@@ -139,7 +139,7 @@ function toggleCollapse(i: number) {
 }
 
 .toggle-icon {
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal);
   &.expanded {
     transform: rotate(90deg);
   }
@@ -153,7 +153,7 @@ function toggleCollapse(i: number) {
   height: 22px;
   margin: 0;
   border-radius: var(--radius-sm);
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 
   &:hover {
     color: var(--color-primary);

@@ -95,7 +95,7 @@ h3 {
   gap: 8px;
   padding: 12px 16px;
   background: var(--color-primary-bg);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border-left: 3px solid var(--color-primary);
 
   .point-out-icon {
